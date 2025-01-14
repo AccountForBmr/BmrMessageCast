@@ -6,7 +6,7 @@ var MESSAGECAST = {};
 var runOption = false;
 var useWhitelist = false;
 var mesWhitelist = [];
-var NotificationEnabled=true;
+var NotificationsEnabled=true;
 
 var messageCast = function() {
 
@@ -110,6 +110,7 @@ var messageCast = function() {
             ACTION_BAR.SaveMacro(ACTION_BAR.macros.length-1, 0, "Whitelist Toggle", macro);
             MENU.Macros.Redraw();
         }
+        return true;
     }
 
     MESSAGECAST.cast = cast;
