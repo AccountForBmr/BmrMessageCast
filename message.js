@@ -112,13 +112,16 @@ var messageCast = function() {
         }
     }
 
-    MESSAGECAST.load = messageCast.load;
     MESSAGECAST.displayBrowserNotification = messageCast.displayBrowserNotification;
     MESSAGECAST.toggle$ = messageCast.toggle$;
     MESSAGECAST.toggleWhitelist = messageCast.toggleWhitelist;
 
-    GUI.instance.DisplayMessage("Loaded, Hopefully!")
+    load();
+
+    GUI.instance.DisplayMessage("Loaded, Hopefully!");
 }
+
+MESSAGECAST.load = messageCast;
 
 /*
 AsyncFunction = (async function() {}).constructor;
