@@ -25,6 +25,8 @@ var messageCast = function() {
             newFunc += "}";
 
             NOTIFICATION.PrivateMessage = new AsyncFunction("params",newFunc);
+
+            ACTION_BAR.TriggerMacro("","/run MesWhitelist")
         }
     }
 
