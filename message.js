@@ -111,12 +111,14 @@ var messageCast = function() {
             MENU.Macros.Redraw();
         }
     }
-}
 
-MESSAGECAST.load = messageCast.load;
-MESSAGECAST.displayBrowserNotification = messageCast.displayBrowserNotification;
-MESSAGECAST.toggle$ = messageCast.toggle$;
-MESSAGECAST.toggleWhitelist = messageCast.toggleWhitelist;
+    MESSAGECAST.load = messageCast.load;
+    MESSAGECAST.displayBrowserNotification = messageCast.displayBrowserNotification;
+    MESSAGECAST.toggle$ = messageCast.toggle$;
+    MESSAGECAST.toggleWhitelist = messageCast.toggleWhitelist;
+
+    GUI.instance.DisplayMessage("Loaded, Hopefully!")
+}
 
 /*
 AsyncFunction = (async function() {}).constructor;
