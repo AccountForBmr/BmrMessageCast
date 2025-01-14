@@ -26,7 +26,8 @@ var messageCast = function() {
 
             NOTIFICATION.PrivateMessage = new AsyncFunction("params",newFunc);
 
-            ACTION_BAR.TriggerMacro("","/run MesWhitelist")
+            ACTION_BAR.TriggerMacro("","/run MesWhitelist");
+            ACTION_BAR.TriggerMacro("","/run MessageCast Settings");
         }
     }
 
@@ -110,6 +111,17 @@ var messageCast = function() {
             ACTION_BAR.CreateMacro(55);
             MENU.Macros.Select(ACTION_BAR.macros.length);
             ACTION_BAR.SaveMacro(ACTION_BAR.macros.length-1, 0, "Whitelist Toggle", macro);
+            MENU.Macros.Redraw();
+        }
+        if(!ACTION_BAR.GetMacroByName("MessageCast Settings")) {
+            if(ACTION_BAR.macrosCount==55) {
+                GUI.instance.DisplayMessage("There isn't enough room to add the 'MessageCast Settings' macro");
+                return false;
+            }
+            let macro = '${runOption = false; useWhitelist = false; GUI.instance.DisplayMessage("Your settings have been updated.");}';
+            ACTION_BAR.CreateMacro(55);
+            MENU.Macros.Select(ACTION_BAR.macros.length);
+            ACTION_BAR.SaveMacro(ACTION_BAR.macros.length-1, 0, "MessageCast Settings", macro);
             MENU.Macros.Redraw();
         }
         return true;
