@@ -112,9 +112,9 @@ var messageCast = function() {
         }
     }
 
-    MESSAGECAST.displayBrowserNotification = messageCast.displayBrowserNotification;
-    MESSAGECAST.toggle$ = messageCast.toggle$;
-    MESSAGECAST.toggleWhitelist = messageCast.toggleWhitelist;
+    MESSAGECAST.displayBrowserNotification = displayBrowserNotification;
+    MESSAGECAST.toggle$ = toggle$;
+    MESSAGECAST.toggleWhitelist = toggleWhitelist;
 
     load();
 
