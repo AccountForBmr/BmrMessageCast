@@ -16,9 +16,8 @@ var messageCast = function() {
         icon: `${window.location.origin}/game/assets/gui/default_icon.png`
     };
 
-    if(notAddedAlready()) {
-        const oldNotification = NOTIFICATION.PrivateMessage;
-    }
+
+    const oldNotification = NOTIFICATION.PrivateMessage;
 
     function load() {
         if(insertHelperMacros()) {
@@ -31,8 +30,10 @@ var messageCast = function() {
                 newFunc += "}";
 
                 NOTIFICATION.PrivateMessage = new AsyncFunction("params",newFunc);*/
-
+                console.log("I'm here loading");
+                console.log(oldNotification.toString());
                 NOTIFICATION.PrivateMessage = newNotification;
+                console.log(NOTIFICATION.PrivateMessage.toString());
                 //changing append messages too cause if you have the page in focus with the person that sent you a message you don't get notified
                 let oldAppendMessage = MENU.Messages.AppendMessage;
                 MENU.Messages.AppendMessage = (message) => {
