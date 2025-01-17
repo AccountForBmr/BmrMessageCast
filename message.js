@@ -16,12 +16,13 @@ var messageCast = function() {
         icon: `${window.location.origin}/game/assets/gui/default_icon.png`
     };
 
-
-    const oldNotification = NOTIFICATION.PrivateMessage;
+    if(!addedAlready()) {
+        const oldNotification = NOTIFICATION.PrivateMessage;
+    }
 
     function load() {
         if(insertHelperMacros()) {
-            if(notAddedAlready()) {
+            if(!addedAlready()) {
                 /*let AsyncFunction = (async function() {}).constructor;
                 let curFunc = NOTIFICATION.PrivateMessage.toString();
                 let newFunc = curFunc.substring(curFunc.indexOf("{")+1,curFunc.length-1);
@@ -201,7 +202,7 @@ var messageCast = function() {
         }
     }
 
-    function notAddedAlready() {
+    function addedAlready() {
         return NOTIFICATION.PrivateMessage.toString().includes("MESSAGECAST");
     }
 
