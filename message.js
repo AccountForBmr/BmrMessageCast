@@ -16,7 +16,9 @@ var messageCast = function() {
         icon: `${window.location.origin}/game/assets/gui/default_icon.png`
     };
 
-    const oldNotification = notAddedAlready()?NOTIFICATION.PrivateMessage:oldNotification;
+    if(notAddedAlready()) {
+        const oldNotification = NOTIFICATION.PrivateMessage;
+    }
 
     function load() {
         if(insertHelperMacros()) {
