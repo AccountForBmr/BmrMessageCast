@@ -27,7 +27,7 @@ var messageCast = function() {
                 newFunc += "}";
 
                 NOTIFICATION.PrivateMessage = new AsyncFunction("params",newFunc);*/
-                const oldNotification = NOTIFICATION.PrivateMessage;
+                let oldNotification = NOTIFICATION.PrivateMessage;
                 console.log("I'm here loading");
                 console.log(oldNotification.toString());
                 NOTIFICATION.PrivateMessage = async function (params) {
@@ -36,7 +36,7 @@ var messageCast = function() {
                         oldNotification(params);
                     }
                 };
-                console.log(NOTIFICATION.PrivateMessage.toString());
+                console.log(oldNotification.toString());
                 //changing append messages too cause if you have the page in focus with the person that sent you a message you don't get notified
                 let oldAppendMessage = MENU.Messages.AppendMessage;
                 MENU.Messages.AppendMessage = (message) => {
