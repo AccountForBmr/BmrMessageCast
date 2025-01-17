@@ -37,6 +37,7 @@ var messageCast = function() {
                     }
                 };
                 console.log(oldNotification.toString());
+                MESSAGECAST.test = oldNotification;
                 //changing append messages too cause if you have the page in focus with the person that sent you a message you don't get notified
                 let oldAppendMessage = MENU.Messages.AppendMessage;
                 MENU.Messages.AppendMessage = (message) => {
