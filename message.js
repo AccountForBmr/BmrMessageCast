@@ -34,7 +34,7 @@ var messageCast = function() {
                     console.log("casting...")
                     MESSAGECAST.cast(params);
                     console.log("Do I delete notif?");
-                    if(!deleteNotification(params)) {
+                    if(await !deleteNotification(params)) {
                         console.log("Nope");
                         oldNotification(params);
                         console.log("I called oldNotif with");
