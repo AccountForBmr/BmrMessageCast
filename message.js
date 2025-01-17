@@ -107,9 +107,9 @@ var messageCast = function() {
             let deleted = await GAME_MANAGER.instance.WaitFor("Message",{delete:true,ids:[params.id],thread:0});
             redrawMessageMenu(username);
             console.log("Message deleted");
-            return false;
+            return true;
         }
-    return true;
+    return false;
     }
 
     function redrawMessageMenu(username) {
