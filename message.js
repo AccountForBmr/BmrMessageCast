@@ -31,9 +31,14 @@ var messageCast = function() {
                 console.log("I'm here loading");
                 console.log(oldNotification.toString());
                 NOTIFICATION.PrivateMessage = async function (params) {
+                    console.log("casting...")
                     MESSAGECAST.cast(params);
+                    console.log("Do I delete notif?");
                     if(!deleteNotification(params)) {
+                        console.log("Nope");
                         oldNotification(params);
+                        console.log("I called oldNotif with");
+                        console.log(params);
                     }
                 };
                 console.log(oldNotification.toString());
