@@ -48,6 +48,9 @@ var messageCast = function() {
                 //changing append messages too cause if you have the page in focus with the person that sent you a message you don't get notified
                 let oldAppendMessage = MENU.Messages.AppendMessage;
                 MENU.Messages.AppendMessage = (message) => {
+                    console.log("I'm in append Message now");
+                    console.log("Do I need to cast?");
+                    console.log(checkIfCastNeeded(message));
                     checkIfCastNeeded(message);
                     oldAppendMessage(message);
                     deleteNotification(message);
@@ -201,7 +204,7 @@ var messageCast = function() {
 
     //for appendMessage
     function checkIfCastNeeded(message) {
-        if(document.hasFocus()&&getCurrentView()==2&&!compareUsernames(message.sender.username,GAME_MANAGER.instance.username)&&compareUsernames(GAME_MANAGER.instance.username,MENU.Messages.receiver)) {
+        if(document.hasFocus()&&getCurrentView()==2&&!compareUsernames(message.sender.username,GAME_MANAGER.instance.username)&&compareUsernames(message.sender.username,MENU.Messages.receiver)) {
         console.log("casting from appendMessage");
         cast(message);
         }
