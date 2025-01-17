@@ -34,7 +34,9 @@ var messageCast = function() {
                     console.log("casting...")
                     MESSAGECAST.cast(params);
                     console.log("Do I delete notif?");
-                    if(deleteNotification(params)) {
+                    let deleteNotif = await deleteNotification(params);
+                    console.log(deleteNotif);
+                    if(!deleteNotif) {
                         console.log("Nope");
                         oldNotification(params);
                         console.log("I called oldNotif with");
@@ -108,10 +110,10 @@ var messageCast = function() {
             let deleted = await GAME_MANAGER.instance.WaitFor("Message",{delete:true,ids:[params.id],thread:0});
             redrawMessageMenu(username);
             console.log("Message deleted");
-            return false;
+            return true;
         }
         console.log("I'm returning false");
-        return true;
+        return false;
     }
 
     function redrawMessageMenu(username) {
