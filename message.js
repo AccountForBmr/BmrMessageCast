@@ -47,13 +47,13 @@ var messageCast = function() {
                 MESSAGECAST.test = oldNotification;
                 //changing append messages too cause if you have the page in focus with the person that sent you a message you don't get notified
                 let oldAppendMessage = MENU.Messages.AppendMessage;
-                MENU.Messages.AppendMessage = (message) => {
+                MENU.Messages.AppendMessage = async (message) => {
                     console.log("I'm in append Message now");
                     console.log("Do I need to cast?");
                     console.log(checkIfCastNeeded(message));
                     checkIfCastNeeded(message);
                     oldAppendMessage(message);
-                    deleteNotification(message);
+                    await deleteNotification(message);
                 };
             }
             ACTION_BAR.TriggerMacro("","/run MesWhitelist");
