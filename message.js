@@ -16,6 +16,8 @@ var messageCast = function() {
         icon: `${window.location.origin}/game/assets/gui/default_icon.png`
     };
 
+    const oldNotification = notAddedAlready()?NOTIFICATION.PrivateMessage:oldNotification;
+
     function load() {
         if(insertHelperMacros()) {
             if(notAddedAlready()) {
@@ -28,13 +30,7 @@ var messageCast = function() {
 
                 NOTIFICATION.PrivateMessage = new AsyncFunction("params",newFunc);*/
 
-                let oldNotification = NOTIFICATION.PrivateMessage;
-                NOTIFICATION.PrivateMessage = async (params) => {
-                    MESSAGECAST.cast(params);
-                    if(!deleteNotification(params)) {
-                        oldNotification(params);
-                    }
-                }
+                NOTIFICATION.PrivateMessage = newNotification;
                 //changing append messages too cause if you have the page in focus with the person that sent you a message you don't get notified
                 let oldAppendMessage = MENU.Messages.AppendMessage;
                 MENU.Messages.AppendMessage = (message) => {
@@ -72,6 +68,13 @@ var messageCast = function() {
         GUI.instance.DisplayMessage(`${mesUser} is not whitelisted`);
         return false;
     }
+
+    async function newNotification(params) {
+        MESSAGECAST.cast(params);
+        if(!deleteNotification(params)) {
+            oldNotification(params);
+        }
+    } 
 
     function cast(params) {
         mes = params.message;
