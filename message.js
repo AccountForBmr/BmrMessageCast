@@ -6,7 +6,8 @@ var MESSAGECAST = {};
 var runOption = false;
 var useWhitelist = false;
 var mesWhitelist = [];
-var NotificationsEnabled=true;
+var NotificationsEnabled = true;
+var deleteKeyword = 'DELETETHIS="";';
 
 var messageCast = function() {
 
@@ -17,15 +18,31 @@ var messageCast = function() {
 
     function load() {
         if(insertHelperMacros()) {
-            let AsyncFunction = (async function() {}).constructor;
-            let curFunc = NOTIFICATION.PrivateMessage.toString();
-            let newFunc = curFunc.substring(curFunc.indexOf("{")+1,curFunc.length-1);
-            newFunc = newFunc.replace(/TITLE\.Message\("New private message"\);/gm,'MESSAGECAST.cast(params);if(NotificationsEnabled){TITLE.Message("New private message");');
-            newFunc = newFunc.replace(/displayBrowserNotification/gm,'MESSAGECAST.displayBrowserNotification');
-            newFunc += "}";
+            if(notAddedAlready()) {
+                /*let AsyncFunction = (async function() {}).constructor;
+                let curFunc = NOTIFICATION.PrivateMessage.toString();
+                let newFunc = curFunc.substring(curFunc.indexOf("{")+1,curFunc.length-1);
+                newFunc = newFunc.replace(/TITLE\.Message\("New private message"\);/gm,'MESSAGECAST.cast(params);if(!MESSAGECAST.deleteNotification(params)){TITLE.Message("New private message");');
+                newFunc = newFunc.replace(/displayBrowserNotification/gm,'MESSAGECAST.displayBrowserNotification');
+                newFunc += "}";
 
-            NOTIFICATION.PrivateMessage = new AsyncFunction("params",newFunc);
+                NOTIFICATION.PrivateMessage = new AsyncFunction("params",newFunc);*/
 
+                let oldNotification = NOTIFICATION.PrivateMessage;
+                NOTIFICATION.PrivateMessage = async (params) => {
+                    cast(params);
+                    if(!deleteNotification(params)) {
+                        oldNotification(params);
+                    }
+                }
+                //changing append messages too cause if you have the page in focus with the person that sent you a message you don't get notified
+                let oldAppendMessage = MENU.Messages.AppendMessage;
+                MENU.Messages.AppendMessage = (message) => {
+                    checkIfCastNeeded(message);
+                    oldAppendMessage(message);
+                    deleteNotification(message);
+                };
+            }
             ACTION_BAR.TriggerMacro("","/run MesWhitelist");
             ACTION_BAR.TriggerMacro("","/run MessageCast Settings");
         }
@@ -64,6 +81,49 @@ var messageCast = function() {
                 return;
             }
             ACTION_BAR.TriggerMacro("",`${mes}`);
+        }
+    }
+
+    function getCurrentView() {
+        return MENU.Messages.elm.classList.contains("sent") ? 1 : MENU.Messages.elm.classList.contains("new") ? 2 : 0;
+    }
+
+    async function deleteNotification(params) {
+        if(params.message.includes(deleteKeyword)) {
+            console.log("Deleting message");
+            console.log("----------------");
+            let username = params.sender.username;
+            //let howManyUnread = Number(document.getElementById("frame_top_right").getElementsByClassName("unread_messages")[0].getElementsByTagName("div")[1].textContent);
+            //GUI.instance.SetUnreadMessages(howManyUnread-1);
+            //let isInbox = getCurrentView() === 0;
+            let deleted = await GAME_MANAGER.instance.WaitFor("Message",{delete:true,ids:[params.id],thread:0});
+            redrawMessageMenu(username);
+            console.log("Message deleted");
+            return false;
+        }
+    return true;
+    }
+
+    function redrawMessageMenu(username) {
+        if(!MENU.Messages.active) {
+            MENU.Messages.Open(username);
+            MENU.Messages.Toggle();
+        } else {
+            let currentView = getCurrentView();
+            switch (currentView) {
+                case 0:
+                    MENU.Messages.Toggle();
+                    MENU.Messages.Toggle();
+                    break;
+                case 1:
+                    MENU.Messages.ShowInbox();
+                    MENU.Messages.ShowSent();
+                    break;
+                default:
+                    //does not work when in chat with specifically you! TODO
+                    MENU.Messages.ShowInbox();
+                    MENU.Messages.Open(MENU.Messages.receiver);
+            }
         }
     }
 
@@ -127,10 +187,23 @@ var messageCast = function() {
         return true;
     }
 
+    //for appendMessage
+    function checkIfCastNeeded(message) {
+        if(document.hasFocus()&&getCurrentView()==2&&!compareUsernames(message.sender.username,GAME_MANAGER.instance.username)&&compareUsernames(GAME_MANAGER.instance.username,MENU.Messages.receiver)) {
+        console.log("casting from appendMessage");
+        cast(message);
+        }
+    }
+
+    function notAddedAlready() {
+        return NOTIFICATION.PrivateMessage.toString().includes("MESSAGECAST");
+    }
+
     MESSAGECAST.cast = cast;
     MESSAGECAST.displayBrowserNotification = displayBrowserNotification;
     MESSAGECAST.toggle$ = toggle$;
     MESSAGECAST.toggleWhitelist = toggleWhitelist;
+    MESSAGECAST.deleteNotification = deleteNotification;
 
     load();
 
@@ -169,3 +242,47 @@ castMes=(params)=>{
     }
 }
 */
+
+//APPENDED MEssages, TODO?
+/*
+MENU.Messages.AppendMessage = (message)=>{
+	console.log("appending");
+	if(MENU.Messages.active) {
+		let currentView = getCurrentView();
+    switch (currentView) {
+    	case 0:
+            console.log("In inbox, close show");	    
+            MENU.Messages.ShowSent();
+            MENU.Messages.ShowInbox();
+            break;
+    	case 1:
+            console.log("In sent, never here I think");
+            MENU.Messages.ShowInbox();
+            MENU.Messages.ShowSent();
+        break;
+   	 default:
+		console.log("In chat!");
+		let mesDiv = document.getElementsByClassName("editable format")[0].firstChild;
+		if(message.sender.username == GAME_MANAGER.instance.username) {
+			mesDiv.textContent = "";
+		}
+		if(window.getSelection()!=undefined) {
+			console.log("I was writing here");
+			let selection = window.getSelection();
+			range = document.createRange();
+			range.setStart(selection.anchorNode, selection.anchorOffset);
+			range.setEnd(selection.anchorNode, selection.anchorOffset);
+			window.getSelection().addRange(range);
+		}
+        	MENU.Messages.ShowInbox();
+        	MENU.Messages.Open(MENU.Messages.receiver);
+  		}
+	}
+};
+
+function getCurrentView() {
+        return MENU.Messages.elm.classList.contains("sent") ? 1 : MENU.Messages.elm.classList.contains("new") ? 2 : 0;
+    }
+
+*/
+
