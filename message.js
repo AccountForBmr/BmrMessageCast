@@ -30,7 +30,7 @@ var messageCast = function() {
 
                 let oldNotification = NOTIFICATION.PrivateMessage;
                 NOTIFICATION.PrivateMessage = async (params) => {
-                    cast(params);
+                    MESSAGECAST.cast(params);
                     if(!deleteNotification(params)) {
                         oldNotification(params);
                     }
