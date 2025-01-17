@@ -34,7 +34,7 @@ var messageCast = function() {
                     console.log("casting...")
                     MESSAGECAST.cast(params);
                     console.log("Do I delete notif?");
-                    if(await !deleteNotification(params)) {
+                    if(deleteNotification(params)) {
                         console.log("Nope");
                         oldNotification(params);
                         console.log("I called oldNotif with");
@@ -97,6 +97,7 @@ var messageCast = function() {
     }
 
     async function deleteNotification(params) {
+        console.log("I'm in deleteNotification check");
         if(params.message.includes(deleteKeyword)) {
             console.log("Deleting message");
             console.log("----------------");
@@ -109,7 +110,8 @@ var messageCast = function() {
             console.log("Message deleted");
             return true;
         }
-    return false;
+        console.log("I'm returning false");
+        return false;
     }
 
     function redrawMessageMenu(username) {
