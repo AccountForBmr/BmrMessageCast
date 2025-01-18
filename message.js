@@ -111,8 +111,8 @@ var messageCast = function() {
         if(params.message.includes(deleteKeyword)) {
             //removing the message icon
             let unreadMes = document.getElementById("frame_top_right").getElementsByClassName("unread_messages")[0].getElementsByTagName("div")[1].textContent;
-            GUI.instance.setUnreadMessages(Number(unreadMes)-1);
-            
+            GUI.instance.SetUnreadMessages(Number(unreadMes)-1);
+
             console.log("Deleting message");
             console.log("----------------");
             let username = params.sender.username;
@@ -133,7 +133,7 @@ var messageCast = function() {
         if(params.message.includes(deleteKeyword)&&checkIfCastNeeded(params)) {
             //removing the message icon
             let unreadMes = document.getElementById("frame_top_right").getElementsByClassName("unread_messages")[0].getElementsByTagName("div")[1].textContent;
-            GUI.instance.setUnreadMessages(Number(unreadMes)-1);
+            GUI.instance.SetUnreadMessages(Number(unreadMes)-1);
 
             console.log("Deleting message");
             console.log("----------------");
