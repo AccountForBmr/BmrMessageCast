@@ -109,6 +109,10 @@ var messageCast = function() {
     async function deleteNotification(params) {
         console.log("I'm in deleteNotification check");
         if(params.message.includes(deleteKeyword)) {
+            //removing the message icon
+            let unreadMes = document.getElementById("frame_top_right").getElementsByClassName("unread_messages")[0].getElementsByTagName("div")[1].textContent;
+            GUI.instance.setUnreadMessages(Number(unreadMes)-1);
+            
             console.log("Deleting message");
             console.log("----------------");
             let username = params.sender.username;
@@ -127,6 +131,10 @@ var messageCast = function() {
     async function deleteNotificationFromAppend(params) {
         console.log("I'm in deleteNotification check");
         if(params.message.includes(deleteKeyword)&&checkIfCastNeeded(params)) {
+            //removing the message icon
+            let unreadMes = document.getElementById("frame_top_right").getElementsByClassName("unread_messages")[0].getElementsByTagName("div")[1].textContent;
+            GUI.instance.setUnreadMessages(Number(unreadMes)-1);
+
             console.log("Deleting message");
             console.log("----------------");
             let username = params.sender.username;
@@ -158,7 +166,6 @@ var messageCast = function() {
                     MENU.Messages.ShowSent();
                     break;
                 default:
-                    //does not work when in chat with specifically you! TODO
                     MENU.Messages.ShowInbox();
                     MENU.Messages.Open(MENU.Messages.receiver);
             }
