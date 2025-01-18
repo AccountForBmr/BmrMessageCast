@@ -50,10 +50,15 @@ var messageCast = function() {
                 MENU.Messages.AppendMessage = async (message) => {
                     console.log("I'm in append Message now");
                     console.log("Do I need to cast?");
-                    console.log(checkIfCastNeeded(message));
-                    checkIfCastNeeded(message);
+
+                    let checkCast = checkIfCastNeeded(message);
+                    console.log(checkCast);
                     oldAppendMessage(message);
-                    await deleteNotification(message);
+                    if (checkCast) {
+                        console.log("casting from appendMessage");
+                        cast(message);
+                        await deleteNotificationFromAppend(message);
+                    }
                 };
             }
             ACTION_BAR.TriggerMacro("","/run MesWhitelist");
@@ -119,6 +124,24 @@ var messageCast = function() {
         return false;
     }
 
+    async function deleteNotificationFromAppend(params) {
+        console.log("I'm in deleteNotification check");
+        if(params.message.includes(deleteKeyword)&&checkIfCastNeeded(params)) {
+            console.log("Deleting message");
+            console.log("----------------");
+            let username = params.sender.username;
+            //let howManyUnread = Number(document.getElementById("frame_top_right").getElementsByClassName("unread_messages")[0].getElementsByTagName("div")[1].textContent);
+            //GUI.instance.SetUnreadMessages(howManyUnread-1);
+            //let isInbox = getCurrentView() === 0;
+            let deleted = await GAME_MANAGER.instance.WaitFor("Message",{delete:true,ids:[params.id],thread:0});
+            redrawMessageMenu(username);
+            console.log("Message deleted");
+            return true;
+        }
+        console.log("I'm returning false");
+        return false;
+    }
+
     function redrawMessageMenu(username) {
         if(!MENU.Messages.active) {
             MENU.Messages.Open(username);
@@ -127,8 +150,8 @@ var messageCast = function() {
             let currentView = getCurrentView();
             switch (currentView) {
                 case 0:
-                    MENU.Messages.Toggle();
-                    MENU.Messages.Toggle();
+                    MENU.Messages.ShowSent();
+                    MENU.Messages.ShowInbox();
                     break;
                 case 1:
                     MENU.Messages.ShowInbox();
@@ -204,10 +227,7 @@ var messageCast = function() {
 
     //for appendMessage
     function checkIfCastNeeded(message) {
-        if(document.hasFocus()&&getCurrentView()==2&&!compareUsernames(message.sender.username,GAME_MANAGER.instance.username)&&compareUsernames(message.sender.username,MENU.Messages.receiver)) {
-        console.log("casting from appendMessage");
-        cast(message);
-        }
+        return document.hasFocus()&&getCurrentView()==2&&!compareUsernames(message.sender.username,GAME_MANAGER.instance.username)&&compareUsernames(message.sender.username,MENU.Messages.receiver);
     }
 
     function addedAlready() {
