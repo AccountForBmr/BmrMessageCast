@@ -35,6 +35,9 @@ var messageCast = function() {
                 };
                 //Adding settings to Menu
                 document.getElementById("menu").getElementsByClassName("button")[0].onclick = rewrittenDropdownFunction();
+                //Adding dropdown helper menu in open chat with someone
+                // TODO
+                //remove the menu when message closed, maybe? TODO
             }
             ACTION_BAR.TriggerMacro("","/run MesWhitelist");
             ACTION_BAR.TriggerMacro("","/run MessageCast Settings");
@@ -219,17 +222,10 @@ var messageCast = function() {
     
     //To update the settings Macro
     function updateMacroSettings(setting$,settingWhitelist) {
-        let settingsPosition = 55;
-        for(i in ACTION_BAR.macros) {
-            if(ACTION_BAR.macros[i][2]=='MessageCast Settings') {
-                settingsPosition = i;
-                break;
-            }
-        }
-        let macroToUpdate = ACTION_BAR.macros[settingsPosition];
+        let macroToUpdate = ACTION_BAR.GetMacroByName('MessageCast Settings');
         let oldMacro = macroToUpdate[3];
         let updatedMacro = oldMacro.replace(/runOption\s*=\s*(true|false|1|0);/gm,`runOption=${setting$};`).replace(/useWhitelist\s*=\s*(true|false|1|0);/gm,`useWhitelist=${settingWhitelist};`);
-        ACTION_BAR.SaveMacro(settingsPosition,macroToUpdate[1],macroToUpdate[2],updatedMacro);
+        ACTION_BAR.SaveMacro(macroToUpdate[0],macroToUpdate[1],macroToUpdate[2],updatedMacro);
         MENU.Macros.Redraw();
 
     }
@@ -266,7 +262,7 @@ var messageCast = function() {
     load();
 
     let scriptCss=document.createElement('link');
-    scriptCss.href='https://cdn.jsdelivr.net/gh/AccountForBmr/BmrMessageCast@v0.1.81/message.css';
+    scriptCss.href='https://cdn.jsdelivr.net/gh/AccountForBmr/BmrMessageCast@v0.1.82/message.css';
     scriptCss.rel="stylesheet";
     document.body.appendChild(scriptCss);
     scriptCss.onload = () => {
