@@ -11,11 +11,6 @@ var deleteKeyword = 'DELETETHIS="";';
 
 var messageCast = function() {
 
-    /*const _options = {
-        badge: `${window.location.origin}/assets/favicon/favicon.ico`,
-        icon: `${window.location.origin}/game/assets/gui/default_icon.png`
-    };*/
-
     function load() {
         if(insertHelperMacros()) {
             if(!addedAlready()) {
@@ -253,7 +248,7 @@ var messageCast = function() {
         let curFunc = _menuButton.onclick.toString(); 
         let newFunc = curFunc.substring(curFunc.indexOf("{")+1,curFunc.length-1);
         newFunc = newFunc.replace(/_menuButton/gm,'document.getElementById("menu").getElementsByClassName("button")[0]');
-        let restOfTheFunc = 'MENU.Spells.Open({}) },\n{ label: "MessageCast Settings", onclick: () => MESSAGECAST.openSettings();}'
+        let restOfTheFunc = 'MENU.Spells.Open({}) },\n{ label: "MessageCast Settings", onclick: () => MESSAGECAST.openSettings()}'
         newFunc = newFunc.replace(/MENU\.Spells\.Open\({}\) }/gm,restOfTheFunc);
         newFunc = newFunc.replace(/this\.ExitAlert\(\)/gm,"GUI.instance.ExitAlert()");
         
@@ -271,7 +266,7 @@ var messageCast = function() {
     load();
 
     let scriptCss=document.createElement('link');
-    scriptCss.href='https://cdn.jsdelivr.net/gh/AccountForBmr/BmrMessageCast@v0.1.8/message.css';
+    scriptCss.href='https://cdn.jsdelivr.net/gh/AccountForBmr/BmrMessageCast@v0.1.81/message.css';
     scriptCss.rel="stylesheet";
     document.body.appendChild(scriptCss);
     scriptCss.onload = () => {
