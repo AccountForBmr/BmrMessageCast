@@ -225,8 +225,8 @@ var messageCast = function() {
         let macroToUpdate = ACTION_BAR.GetMacroByName('MessageCast Settings');
         let oldMacro = macroToUpdate[3];
         let updatedMacro = oldMacro.replace(/runOption\s*=\s*(true|false|1|0);/gm,`runOption=${setting$};`).replace(/useWhitelist\s*=\s*(true|false|1|0);/gm,`useWhitelist=${settingWhitelist};`);
-        MENU.Macros.Select(ACTION_BAR.MacroIdToIndex( macroToUpdate[0]));
-        ACTION_BAR.SaveMacro(ACTION_BAR.MacroIdToIndex( macroToUpdate[0]),macroToUpdate[1],macroToUpdate[2],updatedMacro);
+        MENU.Macros.Select(ACTION_BAR.MacroIdToIndex(macroToUpdate[0])-1);
+        ACTION_BAR.SaveMacro(ACTION_BAR.MacroIdToIndex(macroToUpdate[0]),macroToUpdate[1],macroToUpdate[2],updatedMacro);
         MENU.Macros.Redraw();
 
     }
@@ -263,7 +263,7 @@ var messageCast = function() {
     load();
 
     let scriptCss=document.createElement('link');
-    scriptCss.href='https://cdn.jsdelivr.net/gh/AccountForBmr/BmrMessageCast@v0.1.83/message.css';
+    scriptCss.href='https://cdn.jsdelivr.net/gh/AccountForBmr/BmrMessageCast@v0.1.84/message.css';
     scriptCss.rel="stylesheet";
     document.body.appendChild(scriptCss);
     scriptCss.onload = () => {
