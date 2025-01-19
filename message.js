@@ -11,62 +11,52 @@ var deleteKeyword = 'DELETETHIS="";';
 
 var messageCast = function() {
 
-    const _options = {
+    /*const _options = {
         badge: `${window.location.origin}/assets/favicon/favicon.ico`,
         icon: `${window.location.origin}/game/assets/gui/default_icon.png`
-    };
+    };*/
 
     function load() {
         if(insertHelperMacros()) {
             if(!addedAlready()) {
-                /*let AsyncFunction = (async function() {}).constructor;
-                let curFunc = NOTIFICATION.PrivateMessage.toString();
-                let newFunc = curFunc.substring(curFunc.indexOf("{")+1,curFunc.length-1);
-                newFunc = newFunc.replace(/TITLE\.Message\("New private message"\);/gm,'MESSAGECAST.cast(params);if(!MESSAGECAST.deleteNotification(params)){TITLE.Message("New private message");');
-                newFunc = newFunc.replace(/displayBrowserNotification/gm,'MESSAGECAST.displayBrowserNotification');
-                newFunc += "}";
-
-                NOTIFICATION.PrivateMessage = new AsyncFunction("params",newFunc);*/
                 let oldNotification = NOTIFICATION.PrivateMessage;
-                console.log("I'm here loading");
-                console.log(oldNotification.toString());
                 NOTIFICATION.PrivateMessage = async function (params) {
-                    console.log("casting...")
                     MESSAGECAST.cast(params);
-                    console.log("Do I delete notif?");
                     let deleteNotif = await deleteNotification(params);
-                    console.log(deleteNotif);
                     if(!deleteNotif) {
-                        console.log("Nope");
                         oldNotification(params);
-                        console.log("I called oldNotif with");
-                        console.log(params);
                     }
                 };
-                console.log(oldNotification.toString());
                 MESSAGECAST.test = oldNotification;
-                //changing append messages too cause if you have the page in focus with the person that sent you a message you don't get notified
+                //Changing append messages too cause if you have the page in focus with the person that sent you a message you don't get notified
                 let oldAppendMessage = MENU.Messages.AppendMessage;
                 MENU.Messages.AppendMessage = async (message) => {
-                    console.log("I'm in append Message now");
-                    console.log("Do I need to cast?");
-
                     let checkCast = checkIfCastNeeded(message);
-                    console.log(checkCast);
                     oldAppendMessage(message);
                     if (checkCast) {
-                        console.log("casting from appendMessage");
                         cast(message);
                         await deleteNotificationFromAppend(message);
                     }
                 };
+                //Adding settings to Menu
+                document.getElementById("menu").getElementsByClassName("button")[0].onclick = rewrittenDropdownFunction();
             }
             ACTION_BAR.TriggerMacro("","/run MesWhitelist");
             ACTION_BAR.TriggerMacro("","/run MessageCast Settings");
         }
     }
 
-    function displayBrowserNotification(title,options,onclick) {
+    function openSettings() {
+        let settingsMenu = document.createElement("div");
+        settingsMenu.id = "messageCastSettingsMenu";
+        settingsMenuHTML = `
+        
+        `;
+        settingsMenu.insertAdjacentHTML("beforeend",settingsMenuHTML);
+        document.getElementById("menus").appendChild(settingsMenu);
+    }
+
+    /*function displayBrowserNotification(title,options,onclick) {
         if(displayBrowserNotificationCheck()) {
             notif=new Notification(title,{... _options,...options});
             notif.onclick = () => {
@@ -81,7 +71,7 @@ var messageCast = function() {
     
     function displayBrowserNotificationCheck() {
         return (!document.hasFocus()&&NOTIFICATION.browserSupport&&Notification.permission==="granted"&&SETTINGS.Get("browser_notifications",false));
-    }
+    }*/
 
     function checkWhiteList(mesUser) {
         if(mesWhitelist.includes(mesUser)) {
@@ -231,6 +221,23 @@ var messageCast = function() {
         }
         return true;
     }
+    
+    //To update the settings Macro
+    function updateMacroSettings(setting$,settingWhitelist) {
+        let settingsPosition = 55;
+        for(i in ACTION_BAR.macros) {
+            if(ACTION_BAR.macros[i][2]=='MessageCast Settings') {
+                settingsPosition = i;
+                break;
+            }
+        }
+        let macroToUpdate = ACTION_BAR.macros[settingsPosition];
+        let oldMacro = macroToUpdate[3];
+        let updatedMacro = oldMacro.replace(/runOption\s*=\s*(true|false|1|0);/gm,`runOption=${setting$};`).replace(/useWhitelist\s*=\s*(true|false|1|0);/gm,`useWhitelist=${settingWhitelist};`);
+        ACTION_BAR.SaveMacro(settingsPosition,macroToUpdate[1],macroToUpdate[2],updatedMacro);
+        MENU.Macros.Redraw();
+
+    }
 
     //for appendMessage
     function checkIfCastNeeded(message) {
@@ -241,13 +248,35 @@ var messageCast = function() {
         return NOTIFICATION.PrivateMessage.toString().includes("MESSAGECAST");
     }
 
+    function rewrittenDropdownFunction(e) {
+        let _menuButton = document.getElementById("menu").getElementsByClassName("button")[0];
+        let curFunc = _menuButton.onclick.toString(); 
+        let newFunc = curFunc.substring(curFunc.indexOf("{")+1,curFunc.length-1);
+        newFunc = newFunc.replace(/_menuButton/gm,'document.getElementById("menu").getElementsByClassName("button")[0]');
+        let restOfTheFunc = 'MENU.Spells.Open({}) },\n{ label: "MessageCast Settings", onclick: () => MESSAGECAST.openSettings();}'
+        newFunc = newFunc.replace(/MENU\.Spells\.Open\({}\) }/gm,restOfTheFunc);
+        newFunc = newFunc.replace(/this\.ExitAlert\(\)/gm,"GUI.instance.ExitAlert()");
+        
+        return new Function("e",newFunc);
+    }
+
     MESSAGECAST.cast = cast;
-    MESSAGECAST.displayBrowserNotification = displayBrowserNotification;
+    //MESSAGECAST.displayBrowserNotification = displayBrowserNotification;
     MESSAGECAST.toggle$ = toggle$;
     MESSAGECAST.toggleWhitelist = toggleWhitelist;
     MESSAGECAST.deleteNotification = deleteNotification;
+    MESSAGECAST.openSettings = openSettings;
+    MESSAGECAST.updateMacroSettings = updateMacroSettings;
 
     load();
+
+    let scriptCss=document.createElement('link');
+    scriptCss.href='https://cdn.jsdelivr.net/gh/AccountForBmr/BmrMessageCast@v0.1.8/message.css';
+    scriptCss.rel="stylesheet";
+    document.body.appendChild(scriptCss);
+    scriptCss.onload = () => {
+      GUI.instance.DisplayMessage("Css Loaded");
+    }
 
     GUI.instance.DisplayMessage("Loaded, Hopefully!");
 }
