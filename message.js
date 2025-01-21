@@ -16,22 +16,27 @@ var messageCast = function() {
             if(!addedAlready()) {
                 let oldNotification = NOTIFICATION.PrivateMessage;
                 NOTIFICATION.PrivateMessage = async function (params) {
-                    MESSAGECAST.cast(params);
+                    if(!MENU.Messages.active) {
+                        MESSAGECAST.cast(params);
+                    }
                     let deleteNotif = await deleteNotification(params);
                     if(!deleteNotif) {
                         oldNotification(params);
                     }
                 };
-                MESSAGECAST.test = oldNotification;
                 //Changing append messages too cause if you have the page in focus with the person that sent you a message you don't get notified
                 let oldAppendMessage = MENU.Messages.AppendMessage;
                 MENU.Messages.AppendMessage = async (message) => {
                     let checkCast = checkIfCastNeeded(message);
-                    oldAppendMessage(message);
+                    //oldAppendMessage(message);
                     if (checkCast) {
                         cast(message);
                         await deleteNotificationFromAppend(message);
                     }
+                    if (checkCast && message.message.includes(deleteKeyword)) {
+                        return;
+                    }
+                    oldAppendMessage(message);
                 };
                 //Adding settings to Menu
                 document.getElementById("menu").getElementsByClassName("button")[0].onclick = rewrittenDropdownFunction();
@@ -170,7 +175,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
             //GUI.instance.SetUnreadMessages(howManyUnread-1);
             //let isInbox = getCurrentView() === 0;
             let deleted = await GAME_MANAGER.instance.WaitFor("Message",{delete:true,ids:[params.id],thread:0});
-            redrawMessageMenu(username);
+            //redrawMessageMenu(username);
             console.log("Message deleted");
             return true;
         }
@@ -192,7 +197,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
             //GUI.instance.SetUnreadMessages(howManyUnread-1);
             //let isInbox = getCurrentView() === 0;
             let deleted = await GAME_MANAGER.instance.WaitFor("Message",{delete:true,ids:[params.id],thread:0});
-            redrawMessageMenu(username);
+            //redrawMessageMenu(username);
             console.log("Message deleted");
             return true;
         }
@@ -300,7 +305,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
 
     //for appendMessage
     function checkIfCastNeeded(message) {
-        return document.hasFocus()&&getCurrentView()==2&&!compareUsernames(message.sender.username,GAME_MANAGER.instance.username)&&compareUsernames(message.sender.username,MENU.Messages.receiver);
+        return MENU.Messages.active;//document.hasFocus()&&getCurrentView()==2&&!compareUsernames(message.sender.username,GAME_MANAGER.instance.username)&&compareUsernames(message.sender.username,MENU.Messages.receiver);
     }
 
     function addedAlready() {
