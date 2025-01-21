@@ -85,13 +85,10 @@ var messageCast = function() {
         //$ toggle
         let allow$Toggle = document.getElementById("allow$Toggle");
         allow$Toggle.innerHTML = runOption?"Currently Allowed":"Currently Not Allowed";
+        allow$Toggle.classList.add(runOption?"messageCastToggleActive":"messageCastToggleInactive");
         allow$Toggle.addEventListener("click",(e)=>{
-            if(allow$Toggle.classList.contains("messageCastToggleActive")) {
-                allow$Toggle.innerHTML = "Currently Allowed";
-            } else {
-                allow$Toggle.innerHTML = "Currently Not Allowed";
-            }
             toggle$();
+            allow$Toggle.innerHTML = runOption?"Currently Allowed":"Currently Not Allowed";
             updateMacroSettings(runOption,useWhitelist);
         });
 
