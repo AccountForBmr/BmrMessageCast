@@ -63,6 +63,10 @@ var messageCast = function() {
         settingsMenu.insertAdjacentHTML("beforeend",settingsMenuHTML);
         document.getElementById("menus").appendChild(settingsMenu);
 
+        //The close button
+        let messageCastCloseButton = document.getElementById("messageCastCloseButton");
+        messageCastCloseButton.onclick = () => {document.getElementById("messageCastSettingsMenu").remove();}
+
         //making all toggles swap between red and green
         let toggles=document.getElementsByClassName("messageCastToggle");
         for(let i=0;i<toggles.length;i++) {
@@ -80,14 +84,15 @@ var messageCast = function() {
 
         //$ toggle
         let allow$Toggle = document.getElementById("allow$Toggle");
+        allow$Toggle.innerHTML = runOption?"Currently Allowed"?"Currently Not Allowed";
         allow$Toggle.addEventListener("click",(e)=>{
             if(allow$Toggle.classList.contains("messageCastToggleActive")) {
                 allow$Toggle.innerHTML = "Currently Allowed";
-                updateMacroSettings(true,useWhitelist);
             } else {
                 allow$Toggle.innerHTML = "Currently Not Allowed";
-                updateMacroSettings(false,useWhitelist);
             }
+            toggle$();
+            updateMacroSettings(runOption,useWhitelist);
         });
 
     }
