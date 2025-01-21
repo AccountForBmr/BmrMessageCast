@@ -119,6 +119,9 @@ For example, to add a and dhmis this is how the macro would look like: </div>
             updateMacroSettings(runOption,useWhitelist);
         });
 
+        let whitelistTutorial = document.getElementById("whitelistTutorial");
+        whitelistTutorial.style.color = `var(--${GAME_MANAGER.instance.character.nature})`;
+
     }
 
     /*function displayBrowserNotification(title,options,onclick) {
@@ -147,12 +150,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
     }
 
     function cast(params) {
-        mes = params.message;
-        mesUser = params.sender.username.toLowerCase();
-        if((runOption||mes.match(/\${.*}/)==null)&&(mes.startsWith("/")||mes.startsWith("${"))){
-            if(useWhitelist&&checkWhiteList(mesUser)==false) {
-                return;
-            }
+        if(checkIfcastPossible(params)) {
             ACTION_BAR.TriggerMacro("",`${mes}`);
         }
     }
@@ -161,10 +159,22 @@ For example, to add a and dhmis this is how the macro would look like: </div>
         return MENU.Messages.elm.classList.contains("sent") ? 1 : MENU.Messages.elm.classList.contains("new") ? 2 : 0;
     }
 
+    function checkIfcastPossible(params) {
+        mes = params.message;
+        mesUser = params.sender.username.toLowerCase();
+        if((runOption||mes.match(/\${.*}/)==null)&&(mes.startsWith("/")||mes.startsWith("${"))){
+            if(useWhitelist&&checkWhiteList(mesUser)==false) {
+                return false;
+            }
+            return true;
+        }
+        return false
+    }
+
     async function deleteNotification(params) {
         console.log("I'm in deleteNotification check");
-        if(params.message.includes(deleteKeyword)&&!MENU.Messages.active&&runOption) {
-            if(useWhitelist&&checkWhiteList(params.sender.username.toLowerCase())==false) {
+        if(params.message.includes(deleteKeyword)&&!MENU.Messages.active) {
+            if(!checkIfcastPossible(params)) {
                 return false;
             }
             //removing the message icon
@@ -182,8 +192,8 @@ For example, to add a and dhmis this is how the macro would look like: </div>
             console.log("Message deleted");
             return true;
         }
-        if(params.message.includes(deleteKeyword)&&MENU.Messages.active&&runOption) {
-            if(useWhitelist&&checkWhiteList(params.sender.username.toLowerCase())==false) {
+        if(params.message.includes(deleteKeyword)&&MENU.Messages.active) {
+            if(!checkIfcastPossible(params)) {
                 return false;
             }
             return true;
@@ -194,8 +204,8 @@ For example, to add a and dhmis this is how the macro would look like: </div>
 
     async function deleteNotificationFromAppend(params) {
         console.log("I'm in deleteNotification check");
-        if(params.message.includes(deleteKeyword)&&checkIfCastNeeded(params)&&runOption) {
-            if(useWhitelist&&checkWhiteList(params.sender.username.toLowerCase())==false) {
+        if(params.message.includes(deleteKeyword)&&checkIfCastNeeded(params)) {
+            if(!checkIfcastPossible(params)) {
                 return false;
             }
             //removing the message icon
