@@ -7,7 +7,7 @@ var runOption = false;
 var useWhitelist = false;
 var mesWhitelist = [];
 var NotificationsEnabled = true;
-var deleteKeyword = 'DELETETHIS="";';
+var deleteKeyword = '${DELETETHIS="";}';
 
 var messageCast = function() {
 
@@ -177,6 +177,9 @@ For example, to add a and dhmis this is how the macro would look like: </div>
             let deleted = await GAME_MANAGER.instance.WaitFor("Message",{delete:true,ids:[params.id],thread:0});
             //redrawMessageMenu(username);
             console.log("Message deleted");
+            return true;
+        }
+        if(params.message.includes(deleteKeyword)&&MENU.Messages.active) {
             return true;
         }
         console.log("I'm returning false");
