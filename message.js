@@ -48,10 +48,48 @@ var messageCast = function() {
         let settingsMenu = document.createElement("div");
         settingsMenu.id = "messageCastSettingsMenu";
         settingsMenuHTML = `
-        
+        <div id="messageCastCloseButton" class="button close"></div>
+        <div id="messageCastSettingsStart">
+            <div id="allow$Container" class="messageCastContainer">
+                <div id="allow$Label" class="messageCastLabel">
+                    Allow messages containing '$'? (Warning, it can be dangerous. This does allow people to run external code into your game)
+                </div>
+                <div id="allow$ToggleContainer" class="messageCastToggleContainer">
+                    <div id="allow$Toggle" class="messageCastToggle"></div>
+                </div>
+            </div>
+        </div>
         `;
         settingsMenu.insertAdjacentHTML("beforeend",settingsMenuHTML);
         document.getElementById("menus").appendChild(settingsMenu);
+
+        //making all toggles swap between red and green
+        let toggles=document.getElementsByClassName("messageCastToggle");
+        for(let i=0;i<toggles.length;i++) {
+            toggles[i].addEventListener("click",(e)=>{
+                let curToggleClass = e.target.classList;
+                if(curToggleClass.contains("messageCastToggleActive")) {
+                    curToggleClass.remove("messageCastToggleActive");
+                    curToggleClass.add("messageCastToggleInactive");
+                } else {
+                    curToggleClass.add("messageCastToggleActive");
+                    curToggleClass.remove("messageCastToggleInactive");
+                }
+            });
+        }
+
+        //$ toggle
+        let allow$Toggle = document.getElementById("allow$Toggle");
+        allow$Toggle.addEventListener("click",(e)=>{
+            if(allow$Toggle.classList.contains("messageCastToggleActive")) {
+                allow$Toggle.innerHTML = "Currently Allowed";
+                updateMacroSettings(true,useWhitelist);
+            } else {
+                allow$Toggle.innerHTML = "Currently Not Allowed";
+                updateMacroSettings(false,useWhitelist);
+            }
+        });
+
     }
 
     /*function displayBrowserNotification(title,options,onclick) {
@@ -229,6 +267,11 @@ var messageCast = function() {
         ACTION_BAR.SaveMacro(ACTION_BAR.MacroIdToIndex(macroToUpdate[0]),macroToUpdate[1],macroToUpdate[2],updatedMacro);
         MENU.Macros.Redraw();
 
+        ACTION_BAR.TriggerMacro("","/run MessageCast Settings");
+
+        runOption = setting$;
+        useWhitelist = settingWhitelist;
+
     }
 
     //for appendMessage
@@ -245,7 +288,7 @@ var messageCast = function() {
         let curFunc = _menuButton.onclick.toString(); 
         let newFunc = curFunc.substring(curFunc.indexOf("{")+1,curFunc.length-1);
         newFunc = newFunc.replace(/_menuButton/gm,'document.getElementById("menu").getElementsByClassName("button")[0]');
-        let restOfTheFunc = 'MENU.Spells.Open({}) },\n{ label: "MessageCast Settings", onclick: () => MESSAGECAST.openSettings()}'
+        let restOfTheFunc = 'MENU.Spells.Open({}) },\n{ label: "MessageCast", onclick: () => MESSAGECAST.openSettings()}'
         newFunc = newFunc.replace(/MENU\.Spells\.Open\({}\) }/gm,restOfTheFunc);
         newFunc = newFunc.replace(/this\.ExitAlert\(\)/gm,"GUI.instance.ExitAlert()");
         
@@ -263,7 +306,7 @@ var messageCast = function() {
     load();
 
     let scriptCss=document.createElement('link');
-    scriptCss.href='https://cdn.jsdelivr.net/gh/AccountForBmr/BmrMessageCast@v0.1.84/message.css';
+    scriptCss.href='https://cdn.jsdelivr.net/gh/AccountForBmr/BmrMessageCast@v0.1.9/message.css';
     scriptCss.rel="stylesheet";
     document.body.appendChild(scriptCss);
     scriptCss.onload = () => {
