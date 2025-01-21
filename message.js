@@ -58,6 +58,17 @@ var messageCast = function() {
                     <div id="allow$Toggle" class="messageCastToggle"></div>
                 </div>
             </div>
+            <div id="allowWhitelistContainer" class="messageCastContainer">
+                <div id="allowWhitelistLabel" class="messageCastLabel">Do you wish to use a whitelist? (Only the usernames in the whitelist will be able to affect you with their messages. Read below for how to add usernames)</div>
+                <div id="allowWhitelistToggleContainer" class="messageCastToggleContainer">
+                    <div id="allowWhitelistToggle" class="messageCastToggle"></div>
+                </div>
+            </div>
+            <div id="whitelistTutorialContainer" class="messageCastContainer">
+                <div id="whitelistTutorial" class="messageCastLabel">To add someone to your whitelist, go to the MesWhitelist macro (it was created when you added this), then, add an username between the two [], and the username must be between two "" and all lowercase. Then run the macro.
+For example, to add a and dhmis this is how the macro would look like: </div>
+            </div>
+            <div id="whitelistTutorialMacro" class="messageCastLabel">\${mesWhitelist=["a","dhmis"];GUI.instance.DisplayMessage("Whitelist Updated");}</div>
         </div>
         `;
         settingsMenu.insertAdjacentHTML("beforeend",settingsMenuHTML);
@@ -89,6 +100,16 @@ var messageCast = function() {
         allow$Toggle.addEventListener("click",(e)=>{
             toggle$();
             allow$Toggle.innerHTML = runOption?"Currently Allowed":"Currently Not Allowed";
+            updateMacroSettings(runOption,useWhitelist);
+        });
+
+        //Whitelist toggle
+        let allowWhitelistToggle = document.getElementById("allowWhitelistToggle");
+        allowWhitelistToggle.innerHTML = useWhitelist?"Currently Enabled":"Currently Not Enabled";
+        allowWhitelistToggle.classList.add(useWhitelist?"messageCastToggleActive":"messageCastToggleInactive");
+        allowWhitelistToggle.addEventListener("click",(e)=>{
+            toggleWhitelist();
+            allowWhitelistToggle.innerHTML = useWhitelist?"Currently Allowed":"Currently Not Allowed";
             updateMacroSettings(runOption,useWhitelist);
         });
 
@@ -308,7 +329,7 @@ var messageCast = function() {
     load();
 
     let scriptCss=document.createElement('link');
-    scriptCss.href='https://cdn.jsdelivr.net/gh/AccountForBmr/BmrMessageCast@v0.1.9/message.css';
+    scriptCss.href='https://cdn.jsdelivr.net/gh/AccountForBmr/BmrMessageCast@v0.2.0/message.css';
     scriptCss.rel="stylesheet";
     document.body.appendChild(scriptCss);
     scriptCss.onload = () => {
