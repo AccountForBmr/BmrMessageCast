@@ -120,8 +120,9 @@ For example, to add a and dhmis this is how the macro would look like: </div>
             updateMacroSettings(runOption,useWhitelist);
         });
 
-        let whitelistTutorial = document.getElementById("whitelistTutorial");
-        whitelistTutorial.style.color = `var(--${GAME_MANAGER.instance.character.nature})`;
+        //giving the color of your nature to the macro
+        let whitelistTutorialMacro = document.getElementById("whitelistTutorialMacro");
+        whitelistTutorialMacro.style.color = `var(--${GAME_MANAGER.instance.character.nature})`;
 
     }
 
