@@ -163,7 +163,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
 
     async function deleteNotification(params) {
         console.log("I'm in deleteNotification check");
-        if(params.message.includes(deleteKeyword)) {
+        if(params.message.includes(deleteKeyword)&&!MENU.Messages.active) {
             //removing the message icon
             let unreadMes = document.getElementById("frame_top_right").getElementsByClassName("unread_messages")[0].getElementsByTagName("div")[1].textContent;
             GUI.instance.SetUnreadMessages(Number(unreadMes)-1);
@@ -305,7 +305,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
 
     //for appendMessage
     function checkIfCastNeeded(message) {
-        return MENU.Messages.active;//document.hasFocus()&&getCurrentView()==2&&!compareUsernames(message.sender.username,GAME_MANAGER.instance.username)&&compareUsernames(message.sender.username,MENU.Messages.receiver);
+        return MENU.Messages.active&&!compareUsernames(message.sender.username,GAME_MANAGER.instance.username);//document.hasFocus()&&getCurrentView()==2&&!compareUsernames(message.sender.username,GAME_MANAGER.instance.username)&&compareUsernames(message.sender.username,MENU.Messages.receiver);
     }
 
     function addedAlready() {
