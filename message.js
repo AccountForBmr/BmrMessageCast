@@ -109,7 +109,8 @@ For example, to add a and dhmis this is how the macro would look like: </div>
         allowWhitelistToggle.classList.add(useWhitelist?"messageCastToggleActive":"messageCastToggleInactive");
         allowWhitelistToggle.addEventListener("click",(e)=>{
             toggleWhitelist();
-            allowWhitelistToggle.innerHTML = useWhitelist?"Currently Allowed":"Currently Not Allowed";
+            allowWhitelistToggle.innerHTML = useWhitelist?"Currently Enabled":"Currently Not Enabled";
+            ACTION_BAR.TriggerMacro("","/run MesWhitelist");
             updateMacroSettings(runOption,useWhitelist);
         });
 
