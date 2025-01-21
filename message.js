@@ -163,7 +163,10 @@ For example, to add a and dhmis this is how the macro would look like: </div>
 
     async function deleteNotification(params) {
         console.log("I'm in deleteNotification check");
-        if(params.message.includes(deleteKeyword)&&!MENU.Messages.active) {
+        if(params.message.includes(deleteKeyword)&&!MENU.Messages.active&&runOption) {
+            if(useWhitelist&&checkWhiteList(params.sender.username.toLowerCase())==false) {
+                return false;
+            }
             //removing the message icon
             let unreadMes = document.getElementById("frame_top_right").getElementsByClassName("unread_messages")[0].getElementsByTagName("div")[1].textContent;
             GUI.instance.SetUnreadMessages(Number(unreadMes)-1);
@@ -179,7 +182,10 @@ For example, to add a and dhmis this is how the macro would look like: </div>
             console.log("Message deleted");
             return true;
         }
-        if(params.message.includes(deleteKeyword)&&MENU.Messages.active) {
+        if(params.message.includes(deleteKeyword)&&MENU.Messages.active&&runOption) {
+            if(useWhitelist&&checkWhiteList(params.sender.username.toLowerCase())==false) {
+                return false;
+            }
             return true;
         }
         console.log("I'm returning false");
@@ -188,7 +194,10 @@ For example, to add a and dhmis this is how the macro would look like: </div>
 
     async function deleteNotificationFromAppend(params) {
         console.log("I'm in deleteNotification check");
-        if(params.message.includes(deleteKeyword)&&checkIfCastNeeded(params)) {
+        if(params.message.includes(deleteKeyword)&&checkIfCastNeeded(params)&&runOption) {
+            if(useWhitelist&&checkWhiteList(params.sender.username.toLowerCase())==false) {
+                return false;
+            }
             //removing the message icon
             let unreadMes = document.getElementById("frame_top_right").getElementsByClassName("unread_messages")[0].getElementsByTagName("div")[1].textContent;
             GUI.instance.SetUnreadMessages(Number(unreadMes)-1);
@@ -208,7 +217,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
         return false;
     }
 
-    function redrawMessageMenu(username) {
+/*    function redrawMessageMenu(username) {
         if(!MENU.Messages.active) {
             MENU.Messages.Open(username);
             MENU.Messages.Toggle();
@@ -228,7 +237,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
                     MENU.Messages.Open(MENU.Messages.receiver);
             }
         }
-    }
+    }*/
 
     function toggleWhitelist() {
         useWhitelist==true?useWhitelist=false:useWhitelist=true;
@@ -331,7 +340,6 @@ For example, to add a and dhmis this is how the macro would look like: </div>
     //MESSAGECAST.displayBrowserNotification = displayBrowserNotification;
     MESSAGECAST.toggle$ = toggle$;
     MESSAGECAST.toggleWhitelist = toggleWhitelist;
-    MESSAGECAST.deleteNotification = deleteNotification;
     MESSAGECAST.openSettings = openSettings;
     MESSAGECAST.updateMacroSettings = updateMacroSettings;
 
