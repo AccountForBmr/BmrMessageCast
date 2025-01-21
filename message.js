@@ -84,7 +84,7 @@ var messageCast = function() {
 
         //$ toggle
         let allow$Toggle = document.getElementById("allow$Toggle");
-        allow$Toggle.innerHTML = runOption?"Currently Allowed"?"Currently Not Allowed";
+        allow$Toggle.innerHTML = runOption?"Currently Allowed":"Currently Not Allowed";
         allow$Toggle.addEventListener("click",(e)=>{
             if(allow$Toggle.classList.contains("messageCastToggleActive")) {
                 allow$Toggle.innerHTML = "Currently Allowed";
