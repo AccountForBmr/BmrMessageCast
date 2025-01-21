@@ -317,7 +317,8 @@ For example, to add a and dhmis this is how the macro would look like: </div>
 
     //for appendMessage
     function checkIfCastNeeded(message) {
-        return MENU.Messages.active&&!compareUsernames(message.sender.username,GAME_MANAGER.instance.username);//document.hasFocus()&&getCurrentView()==2&&!compareUsernames(message.sender.username,GAME_MANAGER.instance.username)&&compareUsernames(message.sender.username,MENU.Messages.receiver);
+        let mes = message.message;
+        return MENU.Messages.active&&!compareUsernames(message.sender.username,GAME_MANAGER.instance.username)&&((runOption||mes.match(/\${.*}/)==null)&&(mes.startsWith("/")||mes.startsWith("${")));//document.hasFocus()&&getCurrentView()==2&&!compareUsernames(message.sender.username,GAME_MANAGER.instance.username)&&compareUsernames(message.sender.username,MENU.Messages.receiver);
     }
 
     function addedAlready() {
