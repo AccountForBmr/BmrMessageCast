@@ -28,6 +28,7 @@ var messageCast = function() {
                 let oldAppendMessage = MENU.Messages.AppendMessage;
                 MENU.Messages.AppendMessage = async (message) => {
                     let checkCast = checkIfCastNeeded(message);
+                    console.log(checkCast);
                     //oldAppendMessage(message);
                     if (checkCast) {
                         cast(message);
