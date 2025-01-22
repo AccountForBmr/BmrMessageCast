@@ -42,8 +42,11 @@ var messageCast = function() {
                 //Adding settings to Menu
                 document.getElementById("menu").getElementsByClassName("button")[0].onclick = rewrittenDropdownFunction();
                 //Adding dropdown helper menu in open chat with someone
-                // TODO
-                //remove the menu when message closed, maybe? TODO
+                let oldMenuMessagesOpen = MENU.Messages.Open;
+                MENU.Messages.Open = (username) => {
+                    oldMenuMessagesOpen(username);
+                    addMenuHelper();
+                }
             }
             ACTION_BAR.TriggerMacro("","/run MesWhitelist");
             ACTION_BAR.TriggerMacro("","/run MessageCast Settings");
@@ -347,6 +350,20 @@ For example, to add a and dhmis this is how the macro would look like: </div>
         newFunc = newFunc.replace(/this\.ExitAlert\(\)/gm,"GUI.instance.ExitAlert()");
         
         return new Function("e",newFunc);
+    }
+
+    function addMenuHelper() {
+        let messageMenu = MENU.Messages.elm;
+        let helperHTML = `
+        <div id="messageCastDropdownContainerStart">
+            <div id="messageCastDropdownStart">Message Cast ▼</div>
+            <div id="messageCastDropdownContentStart" class="messageCastDropdownContentContainer">
+                <div class="messageCastDropdown" id="messageCastDropdown1">Simple ▶
+                </div>
+            </div>
+        </div>
+        `;
+        messageMenu.insertAdjacentHTML("beforeend",helperHTML);
     }
 
     MESSAGECAST.cast = cast;
