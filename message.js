@@ -373,12 +373,12 @@ For example, to add a and dhmis this is how the macro would look like: </div>
         messageCastDropdownStart.onclick = (e) => {
             messageCastDropdownContentStart.style.display = "";
         }
-        document.addEventListener("click",(e) => {
+        /*document.addEventListener("click",(e) => {
             let targetId = e.target.id;
             if(MENU.Messages.active&&!targetId.includes("messageCast")) {
                 messageCastDropdownContentStart.style.display = "none";
             }
-        });
+        });*/
     }
 
     MESSAGECAST.cast = cast;
