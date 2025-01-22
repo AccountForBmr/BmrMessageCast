@@ -364,6 +364,19 @@ For example, to add a and dhmis this is how the macro would look like: </div>
         </div>
         `;
         messageMenu.insertAdjacentHTML("beforeend",helperHTML);
+
+        //open dropdown on click
+        let messageCastDropdownStart = document.getElementById("messageCastDropdownStart");
+        let messageCastDropdownContentStart = document.getElementById("messageCastDropdownContentStart");
+        messageCastDropdownStart.onclick = (e) => {
+            messageCastDropdownContentStart.style.display = "";
+        }
+        document.addEventListener("click",(e) => {
+            let targetId = e.target.id;
+            if(MENU.Messages.active&&!targetId.includes("messageCast")) {
+                messageCastDropdownContentStart.style.display = "none";
+            }
+        });
     }
 
     MESSAGECAST.cast = cast;
