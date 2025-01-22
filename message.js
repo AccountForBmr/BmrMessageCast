@@ -368,6 +368,8 @@ For example, to add a and dhmis this is how the macro would look like: </div>
         //open dropdown on click
         let messageCastDropdownStart = document.getElementById("messageCastDropdownStart");
         let messageCastDropdownContentStart = document.getElementById("messageCastDropdownContentStart");
+        messageCastDropdownContentStart.style.display = "none";
+
         messageCastDropdownStart.onclick = (e) => {
             messageCastDropdownContentStart.style.display = "";
         }
@@ -389,7 +391,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
     load();
 
     let scriptCss=document.createElement('link');
-    scriptCss.href='https://cdn.jsdelivr.net/gh/AccountForBmr/BmrMessageCast@v0.3.0/message.css';
+    scriptCss.href='https://cdn.jsdelivr.net/gh/AccountForBmr/BmrMessageCast@v0.3.11/message.css';
     scriptCss.rel="stylesheet";
     document.body.appendChild(scriptCss);
     scriptCss.onload = () => {

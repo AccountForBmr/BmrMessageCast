@@ -139,7 +139,6 @@ HELPER HERE
     max-height: 1000%;
     overflow-y: scroll;
     pointer-events: none;
-    display: none;
 }
 
 .messageCastDropdown {
@@ -158,6 +157,6 @@ HELPER HERE
     pointer-events: auto;
 }
 
-.messageCastDropdown:hover, #messageCastDropdownStart {
+.messageCastDropdown:hover, #messageCastDropdownStart:hover {
     filter: brightness(1.3);
 }
