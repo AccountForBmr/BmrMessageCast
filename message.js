@@ -11,6 +11,43 @@ var deleteKeyword = '${DELETETHIS="";}';
 
 var messageCast = function() {
 
+    var _helperList = {
+        "Start": [
+            {
+                label: "Simple ▶",
+                onclick: (e)=>{openDropdown("Simple");}
+            },
+            {
+                label: "Advanced ▶",
+                onclick: (e)=>{openDropdown("Advanced");}
+            },
+            {
+                label: "Hide Message",
+                onclick: (e)=>{addMessage("Delete");}
+            }
+        ],
+        "Simple": [
+            {
+                label: "A",
+                onclick: (e)=>{alert(1);}
+            },
+            {
+                label: "B",
+                onclick: (e)=>{alert(2);}
+            }
+        ],
+        "Advanced": [
+            {
+                label: "B",
+                onclick: (e)=>{alert(2);}
+            }
+        ]
+    };
+
+    var _messageList = {
+        "Delete": `${deleteKeyword}`
+    }
+
     function load() {
         if(insertHelperMacros()) {
             if(!addedAlready()) {
@@ -352,7 +389,45 @@ For example, to add a and dhmis this is how the macro would look like: </div>
         return new Function("e",newFunc);
     }
 
+    //Helper stuff here
     function addMenuHelper() {
+        let messageMenu = MENU.Messages.elm;
+        let helperHTML = `
+        <div id="messageCastDropdownContainerStart">
+            <div id="messageCastDropdownStart">Message Cast ▼</div>
+            </div>
+        </div>
+        `;
+        messageMenu.insertAdjacentHTML("beforeend",helperHTML);
+
+        //open dropdown on click
+        let messageCastDropdownStart = document.getElementById("messageCastDropdownStart");
+
+
+        messageCastDropdownStart.onclick = (e) => {
+            if(getCurrentView()!=2) {
+                GUI.instance.DisplayMessage("You need to be in chat with someone if you want this to work.");
+                return;
+            }
+            DROPDOWN.instance.Open(e,_helperList["Start"]);
+        }
+
+    }
+
+    function openDropdown(e,name) {
+        DROPDOWN.instance.Open(e,_helperList[name]);
+    }
+
+    function addMessage(indexLabel) {
+        let curMes = MENU.Messages.elm.getElementsByClassName("editable format")[0];
+        let addedMes = _messageList[indexLabel];
+        curMes.firstChild.insertAdjacentHTML("beforeend",addedMes);
+    }
+
+/*
+    If I decide to use a custom dropdown, probably not for now
+
+    function addMenuHelperOldCustom() {
         let messageMenu = MENU.Messages.elm;
         let helperHTML = `
         <div id="messageCastDropdownContainerStart">
@@ -373,13 +448,14 @@ For example, to add a and dhmis this is how the macro would look like: </div>
         messageCastDropdownStart.onclick = (e) => {
             messageCastDropdownContentStart.style.display = "";
         }
-        /*document.addEventListener("click",(e) => {
+        document.addEventListener("click",(e) => {
             let targetId = e.target.id;
             if(MENU.Messages.active&&!targetId.includes("messageCast")) {
                 messageCastDropdownContentStart.style.display = "none";
             }
-        });*/
+        });
     }
+*/
 
     MESSAGECAST.cast = cast;
     //MESSAGECAST.displayBrowserNotification = displayBrowserNotification;
@@ -477,3 +553,35 @@ function getCurrentView() {
 
 */
 
+/*
+If I feel like making my own dropdown
+
+drop1 = document.getElementById("messageCastDropdown1");
+drop1.addEventListener("mouseover",(e)=>{
+	console.log("hovering on red");
+	if(!document.getElementById("abc")) {
+		menuRect = document.getElementById("menu_messages").getBoundingClientRect();
+		abc = document.createElement("div");
+		abc.id = "abc";
+		abc.style = `position:fixed;left:${e.clientX-menuRect.left}px;top:${e.clientY-menuRect.top}px;width:20%;height:10%;background-color:red;`;
+		drop1.appendChild(abc);
+		abc.addEventListener("mouseover",(e)=>{
+			console.log("hovering on blue");
+			if(!document.getElementById("abc1")) {
+				menuRect1 = document.getElementById("menu_messages").getBoundingClientRect();
+				abc1 = document.createElement("div");
+				abc1.id = "abc1";
+				abc1.style = `position:fixed;left:${e.clientX-menuRect1.left}px;top:${e.clientY-menuRect1.top}px;width:20%;height:10%;background-color:blue;`;
+				drop1.appendChild(abc1);
+			}
+			e.stopPropagation();
+		},false);
+	} else {
+		menuRect = document.getElementById("menu_messages").getBoundingClientRect();
+		document.getElementById("abc").top = e.clientY-menuRect.top+"px";
+		document.getElementById("abc").left = e.clientX-menuRect.left+"px";
+	}
+	e.stopPropagation();
+},false);
+
+*/
