@@ -82,7 +82,9 @@ var messageCast = function() {
                 let oldMenuMessagesOpen = MENU.Messages.Open;
                 MENU.Messages.Open = (username) => {
                     oldMenuMessagesOpen(username);
-                    addMenuHelper();
+                    if(!document.getElementById("messageCastDropdownContainerStart")) {
+                        addMenuHelper();
+                    }
                 }
             }
             ACTION_BAR.TriggerMacro("","/run MesWhitelist");
