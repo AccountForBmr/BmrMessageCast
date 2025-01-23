@@ -14,12 +14,12 @@ var messageCast = function() {
     var _helperList = {
         "Start": [
             {
-                label: "Simple ▶",
-                onclick: (e)=>{openDropdown(e,"Simple");}
+                label: "Simple >",
+                onclick: (e)=>{openDropdown(e,"Simple",1);}
             },
             {
-                label: "Advanced ▶",
-                onclick: (e)=>{openDropdown(e,"Advanced");}
+                label: "Advanced >",
+                onclick: (e)=>{openDropdown(e,"Advanced",1);}
             },
             {
                 label: "Hide Message",
@@ -306,17 +306,6 @@ For example, to add a and dhmis this is how the macro would look like: </div>
     }
 
     function insertHelperMacros() {
-        if(!ACTION_BAR.GetMacroByName("Cast $ From Messages")) {
-            if(ACTION_BAR.macrosCount==55) {
-                GUI.instance.DisplayMessage("There isn't enough room to add the 'Cast $ From Messages' macro");
-                return false;
-            }
-            let macro = "${MESSAGECAST.toggle$();}"
-            ACTION_BAR.CreateMacro(55);
-            MENU.Macros.Select(ACTION_BAR.macros.length);
-            ACTION_BAR.SaveMacro(ACTION_BAR.macros.length-1, 0, "Cast $ From Messages", macro);
-            MENU.Macros.Redraw();
-        }
         if(!ACTION_BAR.GetMacroByName("MesWhitelist")) {
             if(ACTION_BAR.macrosCount==55) {
                 GUI.instance.DisplayMessage("There isn't enough room to add the 'MesWhitelist' macro");
@@ -328,23 +317,12 @@ For example, to add a and dhmis this is how the macro would look like: </div>
             ACTION_BAR.SaveMacro(ACTION_BAR.macros.length-1, 0, "MesWhitelist", macro);
             MENU.Macros.Redraw();
         }
-        if(!ACTION_BAR.GetMacroByName("Whitelist Toggle")) {
-            if(ACTION_BAR.macrosCount==55) {
-                GUI.instance.DisplayMessage("There isn't enough room to add the 'Whitelist Toggle' macro");
-                return false;
-            }
-            let macro = '${MESSAGECAST.toggleWhitelist();}';
-            ACTION_BAR.CreateMacro(55);
-            MENU.Macros.Select(ACTION_BAR.macros.length);
-            ACTION_BAR.SaveMacro(ACTION_BAR.macros.length-1, 0, "Whitelist Toggle", macro);
-            MENU.Macros.Redraw();
-        }
         if(!ACTION_BAR.GetMacroByName("MessageCast Settings")) {
             if(ACTION_BAR.macrosCount==55) {
                 GUI.instance.DisplayMessage("There isn't enough room to add the 'MessageCast Settings' macro");
                 return false;
             }
-            let macro = '${runOption = false; useWhitelist = false; GUI.instance.DisplayMessage("Your settings have been updated.");}';
+            let macro = '${runOption=false;useWhitelist=false;GUI.instance.DisplayMessage("Your settings have been updated.");}';
             ACTION_BAR.CreateMacro(55);
             MENU.Macros.Select(ACTION_BAR.macros.length);
             ACTION_BAR.SaveMacro(ACTION_BAR.macros.length-1, 0, "MessageCast Settings", macro);
@@ -416,13 +394,49 @@ For example, to add a and dhmis this is how the macro would look like: </div>
 
     }
 
-    function openDropdown(e,name) {
-        DROPDOWN.instance.Open(e,_helperList[name]);
+    function openDropdown(e,name,position) {
+        //creating the dropdown container
+        let parent = e.target;
+        let rect = parent.getBoundingClientRect();
+		let dropContainer = document.createElement("div");
+		dropContainer.id = name + "DropdownContainer";
+        dropContainer.className = "messageCastDropdownContainer";
+		dropContainer.style.width = `${rect.width}px`;
+        dropContainer.style.height = `${rect.height*10}px`;
+        dropContainer.style.maxHeight = `${rect.height*10}px`;
+		switch (position) {
+            case 0:
+                dropContainer.style.top = rect.bottom+"px";
+                dropContainer.style.left = rect.left+"px";
+                break;
+            case 1:
+                dropContainer.style.top = rect.top+"px";
+                dropContainer.style.left = rect.right+"px";
+                break;
+            default:
+                console.log("Uh, that's not bottom or right");
+		};
+
+        //filling the dropdown container
+        for(i in _helperList[name]) {
+            let curItem = document.createElement("div");
+            curItem.id = "messageCastDropdownItem"+name+i;
+            curItem.className = "messageCastDropdownItem";
+            curItem.innerHTML = _helperList[name][i].label;
+            curItem.onclick = _helperList[name][i].onclick;
+
+            dropContainer.appendChild(curItem);
+        }
+        document.body.appendChild(dropContainer);
+        //DROPDOWN.instance.Open(e,_helperList[name]);
     }
 
     function addMessage(indexLabel) {
         let curMes = MENU.Messages.elm.getElementsByClassName("editable format")[0];
         let addedMes = _messageList[indexLabel];
+        if(curMes.firstChild.innerHTML.endsWith("<br>")) {
+            curMes.firstChild.innerHTML = curMes.firstChild.innerHTML.replace(/(.*)<br>$/g,"$1");
+        }
         curMes.firstChild.insertAdjacentHTML("beforeend",addedMes);
     }
 
@@ -469,7 +483,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
     load();
 
     let scriptCss=document.createElement('link');
-    scriptCss.href='https://cdn.jsdelivr.net/gh/AccountForBmr/BmrMessageCast@v0.3.11/message.css';
+    scriptCss.href='https://cdn.jsdelivr.net/gh/AccountForBmr/BmrMessageCast@v0.3.2/message.css';
     scriptCss.rel="stylesheet";
     document.body.appendChild(scriptCss);
     scriptCss.onload = () => {
