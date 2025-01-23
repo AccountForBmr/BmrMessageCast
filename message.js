@@ -389,7 +389,8 @@ For example, to add a and dhmis this is how the macro would look like: </div>
                 GUI.instance.DisplayMessage("You need to be in chat with someone if you want this to work.");
                 return;
             }
-            DROPDOWN.instance.Open(e,_helperList["Start"]);
+            //DROPDOWN.instance.Open(e,_helperList["Start"]);
+            openDropdown(e,"Start",0);
         }
 
     }
