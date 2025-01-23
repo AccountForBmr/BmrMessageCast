@@ -15,11 +15,11 @@ var messageCast = function() {
         "Start": [
             {
                 label: "Simple ▶",
-                onclick: (e)=>{openDropdown("Simple");}
+                onclick: (e)=>{openDropdown(e,"Simple");}
             },
             {
                 label: "Advanced ▶",
-                onclick: (e)=>{openDropdown("Advanced");}
+                onclick: (e)=>{openDropdown(e,"Advanced");}
             },
             {
                 label: "Hide Message",
