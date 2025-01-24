@@ -38,8 +38,12 @@ var messageCast = function() {
         ],
         "Advanced": [
             {
-                label: "B",
-                onclick: (e)=>{alert(2);}
+                label: "C",
+                onclick: (e)=>{alert(3);}
+            },
+            {
+                label: "D",
+                onclick: (e)=>{alert(4);}
             }
         ],
         "Test": [
@@ -418,7 +422,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
         }
         console.log(newHighestLayer);
         console.log(deleteLayersFrom);
-        for(curLayer = deleteLayersFrom+1; curLayer<=newHighestLayer; curLayer++) {
+        for(curLayer = deleteLayersFrom; curLayer<=newHighestLayer; curLayer++) {
             console.log(`currently:${curLayer}`);
             if(document.getElementsByClassName(`messageCastLayer${curLayer}`).length!=0) {
                 document.getElementsByClassName(`messageCastLayer${curLayer}`)[0].remove();
