@@ -406,10 +406,6 @@ For example, to add a and dhmis this is how the macro would look like: </div>
     function openDropdown(e,name,position) {
         //creating the dropdown container
         let dropId = name + "DropdownContainer";
-        /*if(document.getElementById(dropId)) {
-            console.log("already here");
-            return;
-        }*/
 
         let parent = e.target;
         let rect = parent.getBoundingClientRect();
@@ -429,6 +425,10 @@ For example, to add a and dhmis this is how the macro would look like: </div>
             }
         }
         _dropdownLayer = layer;
+        if(document.getElementById(dropId)) {
+            console.log("already here");
+            return;
+        }
 
 		let dropContainer = document.createElement("div");
 		dropContainer.id = dropId;
