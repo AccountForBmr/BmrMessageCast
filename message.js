@@ -379,7 +379,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
     function addMenuHelper() {
         let messageMenu = MENU.Messages.elm;
         let helperHTML = `
-        <div id="messageCastDropdownContainerStart">
+        <div id="messageCastDropdownContainerStart" class="messageCastLayer0">
             <div id="messageCastDropdownStart" class="messageCastLayer0">Message Cast ▼</div>
             </div>
         </div>
@@ -412,7 +412,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
         let parent = e.target;
         let rect = parent.getBoundingClientRect();
 
-        let layer = Number(parent.className.match(/messageCastLayer(\d+)/)[1])+1;
+        let layer = Number(parent.parentElement.className.match(/messageCastLayer(\d+)/)[1])+1;
 
 		let dropContainer = document.createElement("div");
 		dropContainer.id = dropId;
