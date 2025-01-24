@@ -418,7 +418,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
         //let newHighestLayer = Math.max(_dropdownLayer,layer)+1;
         //let deleteLayersFrom = Math.min(_dropdownLayer,layer);
         clearDropdownsFrom(layer);
-        //h
+        //fixed?
         /*if(deleteLayersFrom <= 0) {
             deleteLayersFrom = 1;
         }
