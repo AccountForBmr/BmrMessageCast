@@ -29,7 +29,7 @@ var messageCast = function() {
         "Simple": [
             {
                 label: "A",
-                onclick: (e)=>{alert(1);}
+                onclick: (e)=>{openDropdown(e,"Test",1);}
             },
             {
                 label: "B",
@@ -40,6 +40,12 @@ var messageCast = function() {
             {
                 label: "B",
                 onclick: (e)=>{alert(2);}
+            }
+        ],
+        "Test": [
+            {
+                label: "Test",
+                onclick: (e)=>{openDropdown(e,"Test",1);}
             }
         ]
     };
@@ -374,7 +380,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
         let messageMenu = MENU.Messages.elm;
         let helperHTML = `
         <div id="messageCastDropdownContainerStart">
-            <div id="messageCastDropdownStart">Message Cast ▼</div>
+            <div id="messageCastDropdownStart" class="messageCastLayer0">Message Cast ▼</div>
             </div>
         </div>
         `;
@@ -397,11 +403,20 @@ For example, to add a and dhmis this is how the macro would look like: </div>
 
     function openDropdown(e,name,position) {
         //creating the dropdown container
+        let dropId = name + "DropdownContainer";
+        if(document.getElementById(dropId)) {
+            console.log("already here");
+            return;
+        }
+
         let parent = e.target;
         let rect = parent.getBoundingClientRect();
+
+        let layer = Number(parent.className.match(/messageCastLayer(\d+)/)[1])+1;
+
 		let dropContainer = document.createElement("div");
-		dropContainer.id = name + "DropdownContainer";
-        dropContainer.className = "messageCastDropdownContainer";
+		dropContainer.id = dropId;
+        dropContainer.className = `messageCastDropdownContainer messageCastLayer${layer}`;
 		dropContainer.style.width = `${rect.width}px`;
         dropContainer.style.height = `${rect.height*10}px`;
         dropContainer.style.maxHeight = `${rect.height*10}px`;
@@ -484,7 +499,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
     load();
 
     let scriptCss=document.createElement('link');
-    scriptCss.href='https://cdn.jsdelivr.net/gh/AccountForBmr/BmrMessageCast@v0.3.3/message.css';
+    scriptCss.href='https://cdn.jsdelivr.net/gh/AccountForBmr/BmrMessageCast@v0.3.4/message.css';
     scriptCss.rel="stylesheet";
     document.body.appendChild(scriptCss);
     scriptCss.onload = () => {

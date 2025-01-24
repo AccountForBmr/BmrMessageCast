@@ -132,8 +132,12 @@ HELPER HERE
     color: #9c9c9c;
 }
 
-#messageCastDropdownStart:hover, .messageCastDropdownItem:hover {
-    filter: brightness(1.3);
+#messageCastDropdownStart:hover:not(.activeDropdown), .messageCastDropdownItem:hover:not(.activeDropdown) {
+    filter: brightness(1.5);
+}
+
+.activeDropdown {
+    filter: brightness(1.5);
 }
 
 .messageCastDropdownContainer {
