@@ -442,6 +442,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
 		dropContainer.style.width = `${rect.width}px`;
         dropContainer.style.height = `${rect.height*10}px`;
         dropContainer.style.maxHeight = `${rect.height*10}px`;
+        dropContainer.style.filter = `brightness(${0.75+0.25*layer})`;
 		switch (position) {
             case 0:
                 dropContainer.style.top = rect.bottom+"px";
