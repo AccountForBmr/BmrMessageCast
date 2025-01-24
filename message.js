@@ -417,8 +417,13 @@ For example, to add a and dhmis this is how the macro would look like: </div>
         let layer = Number(parent.parentElement.className.match(/messageCastLayer(\d+)/)[1])+1;
         let newHighestLayer = Math.max(_dropdownLayer,layer);
         let deleteLayersFrom = Math.min(_dropdownLayer,layer);
+        console.log(newHighestLayer);
+        console.log(deleteLayersFrom);
         for(curLayer = deleteLayersFrom; curLayer<=newHighestLayer; curLayer++) {
-            document.getElementsByClassName(`messageCastLayer${curLayer}`)[0].remove();
+            console.log(`currently:${curLayer}`);
+            if(document.getElementsByClassName(`messageCastLayer${curLayer}`)) {
+                document.getElementsByClassName(`messageCastLayer${curLayer}`)[0].remove();
+            }
         }
         _dropdownLayer = layer;
 
