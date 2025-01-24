@@ -435,10 +435,10 @@ For example, to add a and dhmis this is how the macro would look like: </div>
     function addMessage(indexLabel) {
         let curMes = MENU.Messages.elm.getElementsByClassName("editable format")[0];
         let addedMes = _messageList[indexLabel];
-        if(curMes.firstChild.innerHTML.endsWith("<br>")) {
+        /*if(curMes.firstChild.innerHTML.endsWith("<br>")) {
             curMes.firstChild.innerHTML = curMes.firstChild.innerHTML.replace(/(.*)<br>$/g,"$1");
-        }
-        curMes.firstChild.insertAdjacentHTML("beforeend",addedMes);
+        }*/
+        curMes.insertAdjacentText("beforeend",addedMes);
     }
 
 /*
@@ -484,7 +484,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
     load();
 
     let scriptCss=document.createElement('link');
-    scriptCss.href='https://cdn.jsdelivr.net/gh/AccountForBmr/BmrMessageCast@v0.3.2/message.css';
+    scriptCss.href='https://cdn.jsdelivr.net/gh/AccountForBmr/BmrMessageCast@v0.3.3/message.css';
     scriptCss.rel="stylesheet";
     document.body.appendChild(scriptCss);
     scriptCss.onload = () => {
