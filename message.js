@@ -58,8 +58,8 @@ var messageCast = function() {
         "Delete": `${deleteKeyword}`
     }
 
-    var _dropdownLayer = 0;
-
+    var _dropdownLayerMax = 10;
+    
     function load() {
         if(insertHelperMacros()) {
             if(!addedAlready()) {
@@ -415,9 +415,10 @@ For example, to add a and dhmis this is how the macro would look like: </div>
         let rect = parent.getBoundingClientRect();
 
         let layer = Number(parent.parentElement.className.match(/messageCastLayer(\d+)/)[1])+1;
-        let newHighestLayer = Math.max(_dropdownLayer,layer)+1;
-        let deleteLayersFrom = Math.min(_dropdownLayer,layer);
-        if(deleteLayersFrom <= 0) {
+        //let newHighestLayer = Math.max(_dropdownLayer,layer)+1;
+        //let deleteLayersFrom = Math.min(_dropdownLayer,layer);
+        clearDropdownsFrom(layer);
+        /*if(deleteLayersFrom <= 0) {
             deleteLayersFrom = 1;
         }
         console.log(newHighestLayer);
@@ -429,6 +430,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
             }
         }
         _dropdownLayer = layer;
+        */
         if(document.getElementById(dropId)) {
             console.log("already here");
             return;
@@ -465,6 +467,16 @@ For example, to add a and dhmis this is how the macro would look like: </div>
         }
         document.body.appendChild(dropContainer);
         //DROPDOWN.instance.Open(e,_helperList[name]);
+    }
+
+    function clearDropdownsFrom(layer) {
+        console.log(`Deleting from layer:${layer}`);
+        for(curLayer = layer; curLayer<=_dropdownLayerMax; curLayer++) {
+            console.log(`currently:${curLayer}`);
+            if(document.getElementsByClassName(`messageCastLayer${curLayer}`).length!=0) {
+                document.getElementsByClassName(`messageCastLayer${curLayer}`)[0].remove();
+            }
+        }
     }
 
     function addMessage(indexLabel) {
