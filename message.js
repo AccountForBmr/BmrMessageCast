@@ -417,7 +417,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
         });
 
         //loading the bigger dropdowns
-        //emotes
+        //emotes test
         for(let i in _emotes) {
             let curEmo = {};  
 			curEmo.label = _emotes[i];  
