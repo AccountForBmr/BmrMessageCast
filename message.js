@@ -28,12 +28,12 @@ var messageCast = function() {
         ],
         "Simple": [
             {
-                label: "A",
-                onclick: (e)=>{openDropdown(e,"Test",1);}
+                label: "Say",
+                onclick: (e)=>{addMessage("Say");}
             },
             {
-                label: "B",
-                onclick: (e)=>{alert(2);}
+                label: "Emotes >",
+                onclick: (e)=>{openDropdown(e,"Emotes",1);}
             }
         ],
         "Advanced": [
@@ -46,6 +46,7 @@ var messageCast = function() {
                 onclick: (e)=>{alert(4);}
             }
         ],
+        "Emotes": [],
         "Test": [
             {
                 label: "Test",
@@ -55,10 +56,12 @@ var messageCast = function() {
     };
 
     var _messageList = {
-        "Delete": `${deleteKeyword}`
+        "Delete": `${deleteKeyword}`,
+        "Say": "/s ",
     }
 
     var _dropdownLayerMax = 10;
+    var _emotes = ["/awe ","/bark ","/bite ","/bleat ","/blowkiss ","/blush ","/bounce ","/catty ","/closeeyes ","/dance ","/drool ","/flap ","/gasp ","/gaze ","/giggle ","/glare ","/grovel ","/hiss ","/kneel ","/lick ","/meow ","/moan ","/moo ","/neigh ","/oink ","/pout ","/purr ","/shake ","/shimmy ","/shy ","/sleep ","/smile ","/smirk ","/snap ","/stand "];
     
     function load() {
         if(insertHelperMacros()) {
@@ -405,6 +408,24 @@ For example, to add a and dhmis this is how the macro would look like: </div>
             openDropdown(e,"Start",0);
         }
 
+        //to remove the dropdowns
+        document.addEventListener("click",(e) => {
+            let targetId = e.target.id;
+            if(MENU.Messages.active&&!targetId.includes("messageCast")) {
+                clearDropdownsFrom(1);
+            }
+        });
+
+        //loading the bigger dropdowns
+        //emotes
+        for(let i in _emotes) {
+            let curEmo = {};  
+			curEmo.label = _emotes[i];  
+			curEmo.onclick = (e)=>{addMessage(_emotes[i])};
+			_messageList[_emotes[i]] = _emotes[i];   
+			_helperList["Emotes"].push(curEmo); 
+        }
+
     }
 
     function openDropdown(e,name,position) {
@@ -418,7 +439,6 @@ For example, to add a and dhmis this is how the macro would look like: </div>
         //let newHighestLayer = Math.max(_dropdownLayer,layer)+1;
         //let deleteLayersFrom = Math.min(_dropdownLayer,layer);
         clearDropdownsFrom(layer);
-        //fixed? uff
         /*if(deleteLayersFrom <= 0) {
             deleteLayersFrom = 1;
         }
@@ -458,7 +478,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
 		};
 
         //filling the dropdown container
-        for(i in _helperList[name]) {
+        for(let i in _helperList[name]) {
             let curItem = document.createElement("div");
             curItem.id = "messageCastDropdownItem"+name+i;
             curItem.className = "messageCastDropdownItem";
@@ -473,7 +493,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
 
     function clearDropdownsFrom(layer) {
         console.log(`Deleting from layer:${layer}`);
-        for(curLayer = layer; curLayer<=_dropdownLayerMax; curLayer++) {
+        for(let curLayer = layer; curLayer<=_dropdownLayerMax; curLayer++) {
             console.log(`currently:${curLayer}`);
             if(document.getElementsByClassName(`messageCastLayer${curLayer}`).length!=0) {
                 document.getElementsByClassName(`messageCastLayer${curLayer}`)[0].remove();
@@ -488,6 +508,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
             curMes.firstChild.innerHTML = curMes.firstChild.innerHTML.replace(/(.*)<br>$/g,"$1");
         }*/
         curMes.insertAdjacentText("beforeend",addedMes);
+        clearDropdownsFrom(1);
     }
 
 /*
