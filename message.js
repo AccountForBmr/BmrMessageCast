@@ -34,6 +34,10 @@ var messageCast = function() {
             {
                 label: "Emotes >",
                 onclick: (e)=>{openDropdown(e,"Emotes",1);}
+            },
+            {
+                label: "Cast >",
+                onclick: (e)=>{openDropdown(e,"Cast",1);}
             }
         ],
         "Advanced": [
@@ -47,6 +51,9 @@ var messageCast = function() {
             }
         ],
         "Emotes": [],
+        "Cast": [],
+        "Transforms": [],
+        "Conjures": [],
         "Test": [
             {
                 label: "Test",
@@ -58,10 +65,18 @@ var messageCast = function() {
     var _messageList = {
         "Delete": `${deleteKeyword}`,
         "Say": "/s ",
+        "Change Height": `/cast [player] Change Height, 4'10" `,
+        "Change Name": `/cast [player] Change Name, NewNameHere `,
+        "Enchant Item": '${GAME_MANAGER.instance.Send("Crafting",{appearance:undefined,itemId:GAME_MANAGER.instance.equipment.items[0],optionId:111,spellId:22})}',
     }
 
     var _dropdownLayerMax = 10;
     var _emotes = ["/awe ","/bark ","/bite ","/bleat ","/blowkiss ","/blush ","/bounce ","/catty ","/closeeyes ","/dance ","/drool ","/flap ","/gasp ","/gaze ","/giggle ","/glare ","/grovel ","/hiss ","/kneel ","/lick ","/meow ","/moan ","/moo ","/neigh ","/oink ","/pout ","/purr ","/shake ","/shimmy ","/shy ","/sleep ","/smile ","/smirk ","/snap ","/stand "];
+    var _allSpells = ["Attack","Breast Enlargement","Breast Reduction","Change Appearance: Elven","Change Appearance: Feminine","Change Appearance: Masculine","Change Height","Change Name","Conjure Item","Enchant Item","Enlarge","Impair Speech: Bimbo","Impair Speech: Canine","Impair Speech: Feline","Impair Speech: French Maid","Impair Speech: Milk Maiden","Impair Speech: Nekomimi","Inflate Breasts","Lactation","Magic Bolt","Mythic Form: Angel","Mythic Form: Demon","Mythic Form: Kitsune","Polymorph: Bunny","Polymorph: Canine","Polymorph: Cow","Polymorph: Feline","Polymorph: Fox","Polymorph: Sheep","Restore Self","Shrink","Smooth Skin","Soft Skin","Soul Imprint","Stoke Libido","Transform Item","Special Actions"];
+    var _parametersSpells = ["Change Height","Change Name","Enchant Item"];
+    var _dropdownSpells = ["Conjure Item","Transform Item","Special Actions"];
+    var _allTransformItems = ["Aviator Glasses","Ball Gag","Belt Collar","Bikini Bottom","Bikini Top","Body Bow","Bow Dress","Boxer Briefs","Bra","Briefs","Butt Plug","Cage Bra","Cage Panties","Catsuit","Collar","Color: Blue","Color: Cyan","Color: Dark","Color: Green","Color: Light","Color: Orange","Color: Pink","Color: Purple","Color: Red","Color: Yellow","Converse Shoes","Dotted Bra","Dotted Bralette","Dotted Panties","Dress Pants","Dress Shirt","Feathered Jacket","Feathered Masquerade Mask","Frilly Shirt","G-String","Glasses","Heels","High Neck Leather Collar","Holiday Babydoll","Jeans","Keyhole Sweater","Leather Belt","Leather Collar","Leather Cuffs","Leather Jacket","Leather Skirt","Leather Trench Coat","Leggings","Long Skirt","Long Tuxedo Shorts","Long-Sleeved Crop Top","Mary Janes","Masquerade Mask","Overbust Corset","Oxfords","Panties","Pareo","Plaid Skirt","Plaid Tie","Plain Bralette","Plain Panties","Pretty Ballerinas","Push-Up Bra","Ring","Round Glasses","Runners","School Uniform","Shirt","Short Dress","Short-Sleeved Dress Shirt","Skimpy String Bra","Skirt","Slippers","Small Butt Plug","Sorceress Dress","Steel Collar","Stockings","Striped Bra","Striped Bralette","Striped Long-Sleeved Crop Top","Striped Panties","Striped Shirt","Studded Collar","Summer Hat","Sweater","Swimming Trunks","T-Shirt","Tanga Panties","Thigh High Socks","Thong","Tie","Tights","Top Hat","Triangle Bra","Tube Top","Tuxedo Shorts","Vest","Victorian Jacket","Vinyl Leotard","Vinyl Opera Gloves","Vinyl Pencil Skirt","Vinyl Thigh High Boots","Vinyl Tube Top","Virgin Killer Sweater","Winter Hat","Witch Hat","Women's Dress Shirt","Women's Jeans","Women's T-Shirt"];
+    var _allConjureItems = ["Anal Beads","Aviator Glasses","Ball Gag","Barmaid Dress","Belt Collar","Big Butt Plug","Bikini Bottom","Bikini Top","Body Bow","Bow Dress","Boxer Briefs","Bra","Briefs","Bunny Tail Plug","Butt Plug","Cage Bra","Cage Panties","Cat Tail Plug","Catsuit","Chastity Belt","Chastity Cage","Cheerleader Uniform","Cock Dildo","Collar","Converse Shoes","Dildo","Dotted Bra","Dotted Bralette","Dotted Panties","Dress Pants","Dress Shirt","Feather Duster","Feathered Jacket","Feathered Masquerade Mask","Fox Tail Plug","French Maid Dress","French Maid Headband","Frilly Shirt","G-String","Gala Dress","Glasses","Goggles","Heels","High Neck Leather Collar","Holiday Babydoll","Howie Lab Coat","Huge Butt Plug","Iron Collar","Iron Cuffs","Jeans","Keyhole Sweater","Kitsune Tails Plug","Lab Coat","Latex French Maid Dress","Leather Belt","Leather Collar","Leather Cuffs","Leather Jacket","Leather Skirt","Leather Trench Coat","Leggings","Long Skirt","Long Tuxedo Shorts","Long-Sleeved Crop Top","Mary Janes","Masquerade Mask","Massive Butt Plug","Overbust Corset","Oxfords","Panties","Pareo","Plaid Skirt","Plaid Tie","Plain Bralette","Plain Panties","Pretty Ballerinas","Protective Rubber Boots","Protective Rubber Gloves","Push-Up Bra","Ring","Round Glasses","Runners","School Uniform","Shirt","Short Dress","Short-Sleeved Dress Shirt","Silk Gloves","Silk Opera Gloves","Skimpy String Bra","Skirt","Slippers","Small Butt Plug","Sorceress Dress","Statuette Dildo","Steel Collar","Stockings","Striped Bra","Striped Bralette","Striped Long-Sleeved Crop Top","Striped Panties","Striped Shirt","Studded Collar","Suit Jacket","Suitpants","Summer Hat","Sweater","Swimming Trunks","T-Shirt","Tanga Panties","Thigh High Socks","Thong","Tie","Tights","Top Hat","Triangle Bra","Tube Top","Tuxedo Shorts","Vest","Victorian Jacket","Vinyl Leotard","Vinyl Opera Gloves","Vinyl Pencil Skirt","Vinyl Thigh High Boots","Vinyl Tube Top","Virgin Killer Sweater","Wedding Bouquette","Wedding Dress","Wedding Gloves","Wedding Ring","Wedding Veil","Winter Hat","Witch Hat","Women's Dress Shirt","Women's Jeans","Women's T-Shirt"];
     
     function load() {
         if(insertHelperMacros()) {
@@ -417,13 +432,51 @@ For example, to add a and dhmis this is how the macro would look like: </div>
         });
 
         //loading the bigger dropdowns
-        //emotes test
+        //emotes
         for(let i in _emotes) {
             let curEmo = {};  
 			curEmo.label = _emotes[i];  
 			curEmo.onclick = (e)=>{addMessage(_emotes[i])};
 			_messageList[_emotes[i]] = _emotes[i];   
 			_helperList["Emotes"].push(curEmo); 
+        }
+        //casts
+        for(let i in _allSpells) {
+            let curSpell = {};
+            curSpell.label = _allSpells[i];
+            if(_parametersSpells.includes(_allSpells[i])) {
+                //spells that require additional inputs (name, height, and 'enchant item', that's actually just cleanse)
+                curSpell.onclick = (e)=>{addMessage(_allSpells[i]);};
+            } else if (_dropdownSpells.includes(_allSpells[i])) {
+                //spells that require a lot more choices (conjure, transform item/opponent)
+                switch(_allSpells[i]) {
+                    case "Conjure Item":
+                        for(let j in _allConjureItems) {
+                            let curConj = {};
+                            curConj.label = _allConjureItems[j];
+                            curConj.onclick = (e)=>{addMessage(_allConjureItems[j]);};
+                            _messageList[_allConjureItems[j]] = `/cast [@player] Conjure Item, 0, ${_allConjureItems[j]}, Accessory, Color `;
+                            _helperList["Conjures"].push(curConj);
+                        }
+                        curSpell.onclick = (e)=>{openDropdown(e,"Conjures",1);}
+                        break;
+                    case "Transform Item":
+                        for(let j in _allTransformItems) {
+                            let curTran = {};
+                            curTran.label = _allTransformItems[j];
+                            curTran.onclick = (e)=>{addMessage(_allTransformItems[j]);};
+                            _messageList[_allTransformItems[j]] = `/cast [@player] Transform Item, 0, ${_allTransformItems[j]} `;
+                            _helperList["Transforms"].push(curTran);
+                        }
+                        curSpell.onclick = (e)=>{openDropdown(e,"Transforms",1);}
+                        break;
+                }
+            } else {
+                curSpell.onclick = (e)=>{addMessage(_allSpells[i]);}
+                _messageList[_allSpells[i]] = `/cast [@player] ${_allSpells[i]} `;
+            }
+
+            _helperList["Cast"].push(curSpell);
         }
 
     }
@@ -554,7 +607,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
     load();
 
     let scriptCss=document.createElement('link');
-    scriptCss.href='https://cdn.jsdelivr.net/gh/AccountForBmr/BmrMessageCast@v0.3.4/message.css';
+    scriptCss.href='https://cdn.jsdelivr.net/gh/AccountForBmr/BmrMessageCast@v0.3.6/message.css';
     scriptCss.rel="stylesheet";
     document.body.appendChild(scriptCss);
     scriptCss.onload = () => {
