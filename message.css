@@ -148,6 +148,7 @@ HELPER HERE
     user-select: none;
     z-index: 16;
     pointer-events: none;
+    text-align: center;
 }
 
 .messageCastDropdownItem {

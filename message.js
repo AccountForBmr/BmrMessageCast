@@ -525,8 +525,9 @@ For example, to add a and dhmis this is how the macro would look like: </div>
                 dropContainer.style.left = rect.left+"px";
                 break;
             case 1:
-                if(rect.height*10+rect.top>container.getBoundingClientRect().bottom&&layer>=2) {
-                    dropContainer.style.top = container.getBoundingClientRect().bottom-rect.height*10+"px";
+                let boundY = _helperList[name].length>=10?10:_helperList[name].length;
+                if(rect.height*boundY+rect.top>container.getBoundingClientRect().bottom&&layer>=2) {
+                    dropContainer.style.top = container.getBoundingClientRect().bottom-rect.height*boundY+"px";
                 } else {
                     dropContainer.style.top = rect.top+"px";
                 }
@@ -639,7 +640,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
     load();
 
     let scriptCss=document.createElement('link');
-    scriptCss.href='https://cdn.jsdelivr.net/gh/AccountForBmr/BmrMessageCast@v0.3.7/message.css';
+    scriptCss.href='https://cdn.jsdelivr.net/gh/AccountForBmr/BmrMessageCast@v0.4.0/message.css';
     scriptCss.rel="stylesheet";
     document.body.appendChild(scriptCss);
     scriptCss.onload = () => {
