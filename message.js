@@ -72,9 +72,9 @@ var messageCast = function() {
 
     var _dropdownLayerMax = 10;
     var _emotes = ["/awe ","/bark ","/bite ","/bleat ","/blowkiss ","/blush ","/bounce ","/catty ","/closeeyes ","/dance ","/drool ","/flap ","/gasp ","/gaze ","/giggle ","/glare ","/grovel ","/hiss ","/kneel ","/lick ","/meow ","/moan ","/moo ","/neigh ","/oink ","/pout ","/purr ","/shake ","/shimmy ","/shy ","/sleep ","/smile ","/smirk ","/snap ","/stand "];
-    var _allSpells = ["Attack","Breast Enlargement","Breast Reduction","Change Appearance: Elven","Change Appearance: Feminine","Change Appearance: Masculine","Change Height","Change Name","Conjure Item","Enchant Item","Enlarge","Impair Speech: Bimbo","Impair Speech: Canine","Impair Speech: Feline","Impair Speech: French Maid","Impair Speech: Milk Maiden","Impair Speech: Nekomimi","Inflate Breasts","Lactation","Magic Bolt","Mythic Form: Angel","Mythic Form: Demon","Mythic Form: Kitsune","Polymorph: Bunny","Polymorph: Canine","Polymorph: Cow","Polymorph: Feline","Polymorph: Fox","Polymorph: Sheep","Restore Self","Shrink","Smooth Skin","Soft Skin","Soul Imprint","Stoke Libido","Transform Item","Special Actions"];
+    var _allSpells = ["Attack","Breast Enlargement","Breast Reduction","Change Appearance: Elven","Change Appearance: Feminine","Change Appearance: Masculine","Change Height","Change Name","Conjure Item >","Enchant Item","Enlarge","Impair Speech: Bimbo","Impair Speech: Canine","Impair Speech: Feline","Impair Speech: French Maid","Impair Speech: Milk Maiden","Impair Speech: Nekomimi","Inflate Breasts","Lactation","Magic Bolt","Mythic Form: Angel","Mythic Form: Demon","Mythic Form: Kitsune","Polymorph: Bunny","Polymorph: Canine","Polymorph: Cow","Polymorph: Feline","Polymorph: Fox","Polymorph: Sheep","Restore Self","Shrink","Smooth Skin","Soft Skin","Soul Imprint","Stoke Libido","Transform Item >","Special Actions"];
     var _parametersSpells = ["Change Height","Change Name","Enchant Item"];
-    var _dropdownSpells = ["Conjure Item","Transform Item","Special Actions"];
+    var _dropdownSpells = ["Conjure Item >","Transform Item >","Special Actions"];
     var _allTransformItems = ["Aviator Glasses","Ball Gag","Belt Collar","Bikini Bottom","Bikini Top","Body Bow","Bow Dress","Boxer Briefs","Bra","Briefs","Butt Plug","Cage Bra","Cage Panties","Catsuit","Collar","Color: Blue","Color: Cyan","Color: Dark","Color: Green","Color: Light","Color: Orange","Color: Pink","Color: Purple","Color: Red","Color: Yellow","Converse Shoes","Dotted Bra","Dotted Bralette","Dotted Panties","Dress Pants","Dress Shirt","Feathered Jacket","Feathered Masquerade Mask","Frilly Shirt","G-String","Glasses","Heels","High Neck Leather Collar","Holiday Babydoll","Jeans","Keyhole Sweater","Leather Belt","Leather Collar","Leather Cuffs","Leather Jacket","Leather Skirt","Leather Trench Coat","Leggings","Long Skirt","Long Tuxedo Shorts","Long-Sleeved Crop Top","Mary Janes","Masquerade Mask","Overbust Corset","Oxfords","Panties","Pareo","Plaid Skirt","Plaid Tie","Plain Bralette","Plain Panties","Pretty Ballerinas","Push-Up Bra","Ring","Round Glasses","Runners","School Uniform","Shirt","Short Dress","Short-Sleeved Dress Shirt","Skimpy String Bra","Skirt","Slippers","Small Butt Plug","Sorceress Dress","Steel Collar","Stockings","Striped Bra","Striped Bralette","Striped Long-Sleeved Crop Top","Striped Panties","Striped Shirt","Studded Collar","Summer Hat","Sweater","Swimming Trunks","T-Shirt","Tanga Panties","Thigh High Socks","Thong","Tie","Tights","Top Hat","Triangle Bra","Tube Top","Tuxedo Shorts","Vest","Victorian Jacket","Vinyl Leotard","Vinyl Opera Gloves","Vinyl Pencil Skirt","Vinyl Thigh High Boots","Vinyl Tube Top","Virgin Killer Sweater","Winter Hat","Witch Hat","Women's Dress Shirt","Women's Jeans","Women's T-Shirt"];
     var _allConjureItems = ["Anal Beads","Aviator Glasses","Ball Gag","Barmaid Dress","Belt Collar","Big Butt Plug","Bikini Bottom","Bikini Top","Body Bow","Bow Dress","Boxer Briefs","Bra","Briefs","Bunny Tail Plug","Butt Plug","Cage Bra","Cage Panties","Cat Tail Plug","Catsuit","Chastity Belt","Chastity Cage","Cheerleader Uniform","Cock Dildo","Collar","Converse Shoes","Dildo","Dotted Bra","Dotted Bralette","Dotted Panties","Dress Pants","Dress Shirt","Feather Duster","Feathered Jacket","Feathered Masquerade Mask","Fox Tail Plug","French Maid Dress","French Maid Headband","Frilly Shirt","G-String","Gala Dress","Glasses","Goggles","Heels","High Neck Leather Collar","Holiday Babydoll","Howie Lab Coat","Huge Butt Plug","Iron Collar","Iron Cuffs","Jeans","Keyhole Sweater","Kitsune Tails Plug","Lab Coat","Latex French Maid Dress","Leather Belt","Leather Collar","Leather Cuffs","Leather Jacket","Leather Skirt","Leather Trench Coat","Leggings","Long Skirt","Long Tuxedo Shorts","Long-Sleeved Crop Top","Mary Janes","Masquerade Mask","Massive Butt Plug","Overbust Corset","Oxfords","Panties","Pareo","Plaid Skirt","Plaid Tie","Plain Bralette","Plain Panties","Pretty Ballerinas","Protective Rubber Boots","Protective Rubber Gloves","Push-Up Bra","Ring","Round Glasses","Runners","School Uniform","Shirt","Short Dress","Short-Sleeved Dress Shirt","Silk Gloves","Silk Opera Gloves","Skimpy String Bra","Skirt","Slippers","Small Butt Plug","Sorceress Dress","Statuette Dildo","Steel Collar","Stockings","Striped Bra","Striped Bralette","Striped Long-Sleeved Crop Top","Striped Panties","Striped Shirt","Studded Collar","Suit Jacket","Suitpants","Summer Hat","Sweater","Swimming Trunks","T-Shirt","Tanga Panties","Thigh High Socks","Thong","Tie","Tights","Top Hat","Triangle Bra","Tube Top","Tuxedo Shorts","Vest","Victorian Jacket","Vinyl Leotard","Vinyl Opera Gloves","Vinyl Pencil Skirt","Vinyl Thigh High Boots","Vinyl Tube Top","Virgin Killer Sweater","Wedding Bouquette","Wedding Dress","Wedding Gloves","Wedding Ring","Wedding Veil","Winter Hat","Witch Hat","Women's Dress Shirt","Women's Jeans","Women's T-Shirt"];
     
@@ -450,7 +450,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
             } else if (_dropdownSpells.includes(_allSpells[i])) {
                 //spells that require a lot more choices (conjure, transform item/opponent)
                 switch(_allSpells[i]) {
-                    case "Conjure Item":
+                    case "Conjure Item >":
                         for(let j in _allConjureItems) {
                             let curConj = {};
                             curConj.label = _allConjureItems[j];
@@ -458,9 +458,9 @@ For example, to add a and dhmis this is how the macro would look like: </div>
                             _messageList[_allConjureItems[j]] = `/cast [@player] Conjure Item, 0, ${_allConjureItems[j]}, Accessory, Color `;
                             _helperList["Conjures"].push(curConj);
                         }
-                        curSpell.onclick = (e)=>{openDropdown(e,"Conjures",1);}
+                        curSpell.onclick = (e)=>{openDropdown(e,"Conjures",1);};
                         break;
-                    case "Transform Item":
+                    case "Transform Item >":
                         for(let j in _allTransformItems) {
                             let curTran = {};
                             curTran.label = _allTransformItems[j];
@@ -468,8 +468,10 @@ For example, to add a and dhmis this is how the macro would look like: </div>
                             _messageList[_allTransformItems[j]] = `/cast [@player] Transform Item, 0, ${_allTransformItems[j]} `;
                             _helperList["Transforms"].push(curTran);
                         }
-                        curSpell.onclick = (e)=>{openDropdown(e,"Transforms",1);}
+                        curSpell.onclick = (e)=>{openDropdown(e,"Transforms",1);};
                         break;
+                    default:
+                        curSpell.onclick = (e)=>{createAndOpenSpecialDropdown(e);};
                 }
             } else {
                 curSpell.onclick = (e)=>{addMessage(_allSpells[i]);}
@@ -523,13 +525,13 @@ For example, to add a and dhmis this is how the macro would look like: </div>
                 dropContainer.style.left = rect.left+"px";
                 break;
             case 1:
-                if(rect.height*10+rect.top>container.getBoundingClientRect().bottom) {
-                    dropContainer.style.bottom = 0;
+                if(rect.height*10+rect.top>container.getBoundingClientRect().bottom&&layer>=2) {
+                    dropContainer.style.top = container.getBoundingClientRect().bottom-rect.height*10+"px";
                 } else {
                     dropContainer.style.top = rect.top+"px";
                 }
-                if(rect.width+rect.right>container.getBoundingClientRect().right) {
-                    dropContainer.style.right = 0;
+                if(rect.width+rect.right>container.getBoundingClientRect().right&&layer>=2) {
+                    dropContainer.style.left = container.getBoundingClientRect().right-rect.width+"px";//document.getElementsByClassName(`messageCastLayer${layer-2}`)[0].style.left;
                 } else {
                     dropContainer.style.left = rect.right+"px";
                 }
@@ -548,7 +550,8 @@ For example, to add a and dhmis this is how the macro would look like: </div>
 
             dropContainer.appendChild(curItem);
         }
-        document.body.appendChild(dropContainer);
+        document.getElementById("scaler").appendChild(dropContainer);
+        //document.body.appendChild(dropContainer);
         //DROPDOWN.instance.Open(e,_helperList[name]);
     }
 
@@ -560,6 +563,27 @@ For example, to add a and dhmis this is how the macro would look like: </div>
                 document.getElementsByClassName(`messageCastLayer${curLayer}`)[0].remove();
             }
         }
+    }
+
+    function createAndOpenSpecialDropdown(e) {
+        if(!LOCATION.instance.opponent) {
+            GUI.instance.DisplayMessage("You need a mindless opponent for this.");
+            return;
+        }
+        if(!LOCATION.instance.GetSpecialActions(LOCATION.instance.opponent.token)) {
+            GUI.instance.DisplayMessage("Your opponent is not ready for this yet.");
+            return;
+        }
+        let possibleAction = LOCATION.instance.GetSpecialActions(LOCATION.instance.opponent.token).options;
+        _helperList["TransformOp"] = [];
+        for(let i in possibleAction) {
+            let curAct = {};
+            curAct.label = possibleAction[i].action_name;
+            curAct.onclick = (e)=>{addMessage(possibleAction[i].action_name);};
+            _messageList[possibleAction[i].action_name] = `/cast [@opponent] ${possibleAction[i].action_name}(Spell) `;
+            _helperList["TransformOp"].push(curAct);
+        }
+        openDropdown(e,"TransformOp",1);
     }
 
     function addMessage(indexLabel) {
