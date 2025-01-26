@@ -523,8 +523,16 @@ For example, to add a and dhmis this is how the macro would look like: </div>
                 dropContainer.style.left = rect.left+"px";
                 break;
             case 1:
-                dropContainer.style.top = rect.top+"px";
-                dropContainer.style.left = rect.right+"px";
+                if(rect.height*10+rect.top>container.getBoundingClientRect().bottom) {
+                    dropContainer.style.bottom = 0;
+                } else {
+                    dropContainer.style.top = rect.top+"px";
+                }
+                if(rect.width+rect.right>container.getBoundingClientRect().right) {
+                    dropContainer.style.right = 0;
+                } else {
+                    dropContainer.style.left = rect.right+"px";
+                }
                 break;
             default:
                 console.log("Uh, that's not bottom or right");
