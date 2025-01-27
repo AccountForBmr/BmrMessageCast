@@ -107,18 +107,18 @@ var messageCast = function() {
     var _messageList = {
         "Delete": `${deleteKeyword}`,
         "Say": "/s ",
-        "Emote": "/e",
-        "OOC": "/o",
-        "Wear": "/wear 0",
-        "Remove": "/remove 0",
-        "Change Height": `/cast [player] Change Height, 4'10" `,
-        "Change Name": `/cast [player] Change Name, NewNameHere `,
+        "Emote": "/e ",
+        "OOC": "/o ",
+        "Wear": "/wear 0 ",
+        "Remove": "/remove 0 ",
+        "Change Height": `/cast [@player] Change Height, 4'10" `,
+        "Change Name": `/cast [@player] Change Name, NewNameHere `,
         "Enchant Item": '${GAME_MANAGER.instance.Send("Crafting",{appearance:undefined,itemId:GAME_MANAGER.instance.equipment.items[0],optionId:111,spellId:22})}',
         "Wine Bottle": "/use Wine Bottle, Spin ",
         "Milk Bottle": "/use Milk Bottle, Spin ",
         "Crown": "/use Crown, Coin Toss ",
         "Consumable": "/use consumableName ",
-        "UseToy": "/use toyName, toyAction"
+        "UseToy": "/use toyName, toyAction "
     }
 
     var _dropdownLayerMax = 10;
@@ -644,7 +644,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
         }*/
         curMes.insertAdjacentText("beforeend",addedMes);
         //to avoid the random \n at the start
-        curMes.innerText.trimStart();
+        curMes.innerText = curMes.innerText.trimStart();
         clearDropdownsFrom(1);
     }
 
