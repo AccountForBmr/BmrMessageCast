@@ -32,13 +32,33 @@ var messageCast = function() {
                 onclick: (e)=>{addMessage("Say");}
             },
             {
+                label: "Cast >",
+                onclick: (e)=>{openDropdown(e,"Cast",1);}
+            },
+            {
                 label: "Emotes >",
                 onclick: (e)=>{openDropdown(e,"Emotes",1);}
             },
             {
-                label: "Cast >",
-                onclick: (e)=>{openDropdown(e,"Cast",1);}
-            }
+                label: "Use >",
+                onclick: (e)=>{openDropdown(e,"Use",1);}
+            }, 
+            {
+                label: "*Emote*",
+                onclick: (e)=>{addMessage("Emote");}
+            },      
+            {
+                label: "(OOC)",
+                onclick: (e)=>{addMessage("OOC");}
+            }, 
+            {
+                label: "Wear",
+                onclick: (e)=>{addMessage("Wear");}
+            },
+            {
+                label: "Remove",
+                onclick: (e)=>{addMessage("Remove");}
+            }    
         ],
         "Advanced": [
             {
@@ -54,6 +74,28 @@ var messageCast = function() {
         "Cast": [],
         "Transforms": [],
         "Conjures": [],
+        "Use": [
+            {
+                label: "Wine Bottle",
+                onclick: (e)=>{addMessage("Wine Bottle");}
+            },
+            {
+                label: "Milk Bottle",
+                onclick: (e)=>{addMessage("Milk Bottle");}                
+            },
+            {
+                label: "Crown",
+                onclick: (e)=>{addMessage("Crown");}                
+            },
+            {
+                label: "Consumable",
+                onclick: (e)=>{addMessage("Consumable");}
+            },
+            {
+                label: "Sex Toy",
+                onclick: (e)=>{addMessage("UseToy");}
+            }
+        ],
         "Test": [
             {
                 label: "Test",
@@ -65,9 +107,18 @@ var messageCast = function() {
     var _messageList = {
         "Delete": `${deleteKeyword}`,
         "Say": "/s ",
+        "Emote": "/e",
+        "OOC": "/o",
+        "Wear": "/wear 0",
+        "Remove": "/remove 0",
         "Change Height": `/cast [player] Change Height, 4'10" `,
         "Change Name": `/cast [player] Change Name, NewNameHere `,
         "Enchant Item": '${GAME_MANAGER.instance.Send("Crafting",{appearance:undefined,itemId:GAME_MANAGER.instance.equipment.items[0],optionId:111,spellId:22})}',
+        "Wine Bottle": "/use Wine Bottle, Spin ",
+        "Milk Bottle": "/use Milk Bottle, Spin ",
+        "Crown": "/use Crown, Coin Toss ",
+        "Consumable": "/use consumableName ",
+        "UseToy": "/use toyName, toyAction"
     }
 
     var _dropdownLayerMax = 10;
@@ -557,9 +608,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
     }
 
     function clearDropdownsFrom(layer) {
-        console.log(`Deleting from layer:${layer}`);
         for(let curLayer = layer; curLayer<=_dropdownLayerMax; curLayer++) {
-            console.log(`currently:${curLayer}`);
             if(document.getElementsByClassName(`messageCastLayer${curLayer}`).length!=0) {
                 document.getElementsByClassName(`messageCastLayer${curLayer}`)[0].remove();
             }
@@ -594,6 +643,8 @@ For example, to add a and dhmis this is how the macro would look like: </div>
             curMes.firstChild.innerHTML = curMes.firstChild.innerHTML.replace(/(.*)<br>$/g,"$1");
         }*/
         curMes.insertAdjacentText("beforeend",addedMes);
+        //to avoid the random \n at the start
+        curMes.innerText.trimStart();
         clearDropdownsFrom(1);
     }
 
