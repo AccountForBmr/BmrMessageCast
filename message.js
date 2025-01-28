@@ -161,7 +161,7 @@ var messageCast = function() {
         "GoToGym": '${GAME_MANAGER.instance.Send("Location",{nextLocation:"Gym",avoidEncounters:false,event:false,waitForEncounter:false})}',
         "GoToWard": '${GAME_MANAGER.instance.Send("Location",{nextLocation:"Ward",avoidEncounters:false,event:false,waitForEncounter:false})}',
         "GoToStop": '${GAME_MANAGER.instance.Send("Location",{nextLocation:true,avoidEncounters:false,event:false,waitForEncounter:false})}',
-        "ShowInventory": `\${theMes=GAME_MANAGER.instance.GetInventoryImage().tab.toString();GAME_MANAGER.instance.WaitFor("Message",{receiver:${GAME_MANAGER.instance.username},message:theMes,load:true});}`,
+        "ShowInventory": `\${theMes=MESSAGECAST.getMyInventoryInAMessage();GAME_MANAGER.instance.WaitFor("Message",{receiver:${GAME_MANAGER.instance.username},message:theMes,load:true});}`,
     }
 
     var _dropdownLayerMax = 10;
@@ -723,6 +723,18 @@ For example, to add a and dhmis this is how the macro would look like: </div>
         });
     }
 */
+    //Function used to help the messages here
+    function getMyInventoryInAMessage() {
+        let allInv = GAME_MANAGER.instance.GetInventoryImage();
+        let filteredInv = allInv.tab.concat(allInv.heirlooms);
+        filteredInv = [...new Set(filteredInv)].filter(noNull=>noNull);
+        let theMes = "";
+        for(let i in filteredInv) {
+            let curItem = GAME_MANAGER.instance.GetItem(filteredInv[i]);
+            theMes += `${curItem.id}:${itemToLinkSyntax(curItem)},`;
+        }
+        return theMes!=""?theMes:"My inventory is empty";
+    }
 
     MESSAGECAST.cast = cast;
     //MESSAGECAST.displayBrowserNotification = displayBrowserNotification;
@@ -730,6 +742,8 @@ For example, to add a and dhmis this is how the macro would look like: </div>
     MESSAGECAST.toggleWhitelist = toggleWhitelist;
     MESSAGECAST.openSettings = openSettings;
     MESSAGECAST.updateMacroSettings = updateMacroSettings;
+    
+    MESSAGECAST.getMyInventoryInAMessage = getMyInventoryInAMessage;
 
     load();
 
