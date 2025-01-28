@@ -66,8 +66,8 @@ var messageCast = function() {
                 onclick: (e)=>{openDropdown(e,"Locations",1);}
             },
             {
-                label: "D",
-                onclick: (e)=>{alert(4);}
+                label: "Show Inventory",
+                onclick: (e)=>{addMessage("ShowInventory");}
             }
         ],
         "Emotes": [],
@@ -124,6 +124,10 @@ var messageCast = function() {
             {
                 label: "Ward",
                 onclick: (e)=>{addMessage("GoToWard");}
+            },
+            {
+                label: "Stop Waiting",
+                onclick: (e)=>{addMessage("GoToStop");}
             }
         ],
         "Test": [
@@ -156,6 +160,8 @@ var messageCast = function() {
         "GoToLibrary": '${GAME_MANAGER.instance.Send("Location",{nextLocation:"Library",avoidEncounters:false,event:false,waitForEncounter:false})}',
         "GoToGym": '${GAME_MANAGER.instance.Send("Location",{nextLocation:"Gym",avoidEncounters:false,event:false,waitForEncounter:false})}',
         "GoToWard": '${GAME_MANAGER.instance.Send("Location",{nextLocation:"Ward",avoidEncounters:false,event:false,waitForEncounter:false})}',
+        "GoToStop": '${GAME_MANAGER.instance.Send("Location",{nextLocation:true,avoidEncounters:false,event:false,waitForEncounter:false})}',
+        "ShowInventory": `\${theMes=GAME_MANAGER.instance.GetInventoryImage().tab.toString();GAME_MANAGER.instance.WaitFor("Message",{receiver:${GAME_MANAGER.instance.username},message:theMes,load:true});}`,
     }
 
     var _dropdownLayerMax = 10;
