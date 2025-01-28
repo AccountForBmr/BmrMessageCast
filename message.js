@@ -63,7 +63,7 @@ var messageCast = function() {
         "Advanced": [
             {
                 label: "Change Location",
-                onclick: (e)=>{openDropdown("Locations");}
+                onclick: (e)=>{openDropdown(e,"Locations",1);}
             },
             {
                 label: "D",
