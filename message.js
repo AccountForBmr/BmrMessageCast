@@ -62,8 +62,8 @@ var messageCast = function() {
         ],
         "Advanced": [
             {
-                label: "C",
-                onclick: (e)=>{alert(3);}
+                label: "Change Location",
+                onclick: (e)=>{openDropdown("Locations");}
             },
             {
                 label: "D",
@@ -96,6 +96,36 @@ var messageCast = function() {
                 onclick: (e)=>{addMessage("UseToy");}
             }
         ],
+        "Locations": [
+            {
+                label: "Dormitory",
+                onclick: (e)=>{addMessage("GoToDormitory");}
+            },
+            {
+                label: "Arboretum",
+                onclick: (e)=>{addMessage("GoToArboretum");}
+            },
+            {
+                label: "Auditorium",
+                onclick: (e)=>{addMessage("GoToAuditorium");}
+            },
+            {
+                label: "Workshop",
+                onclick: (e)=>{addMessage("GoToWorkshop");}
+            },
+            {
+                label: "Library",
+                onclick: (e)=>{addMessage("GoToLibrary");}
+            },
+            {
+                label: "Gym",
+                onclick: (e)=>{addMessage("GoToGym");}
+            },
+            {
+                label: "Ward",
+                onclick: (e)=>{addMessage("GoToWard");}
+            }
+        ],
         "Test": [
             {
                 label: "Test",
@@ -118,7 +148,14 @@ var messageCast = function() {
         "Milk Bottle": "/use Milk Bottle, Spin ",
         "Crown": "/use Crown, Coin Toss ",
         "Consumable": "/use consumableName ",
-        "UseToy": "/use toyName, toyAction "
+        "UseToy": "/use toyName, toyAction ",
+        "GoToDormitory": '${GAME_MANAGER.instance.Send("Location",{nextLocation:"Dormitory",avoidEncounters:false,event:false,waitForEncounter:false})}',
+        "GoToArboretum": '${GAME_MANAGER.instance.Send("Location",{nextLocation:"Arboretum",avoidEncounters:false,event:false,waitForEncounter:false})}',
+        "GoToAuditorium": '${GAME_MANAGER.instance.Send("Location",{nextLocation:"Auditorium",avoidEncounters:false,event:false,waitForEncounter:false})}',
+        "GoToWorkshop": '${GAME_MANAGER.instance.Send("Location",{nextLocation:"Workshop",avoidEncounters:false,event:false,waitForEncounter:false})}',
+        "GoToLibrary": '${GAME_MANAGER.instance.Send("Location",{nextLocation:"Library",avoidEncounters:false,event:false,waitForEncounter:false})}',
+        "GoToGym": '${GAME_MANAGER.instance.Send("Location",{nextLocation:"Gym",avoidEncounters:false,event:false,waitForEncounter:false})}',
+        "GoToWard": '${GAME_MANAGER.instance.Send("Location",{nextLocation:"Ward",avoidEncounters:false,event:false,waitForEncounter:false})}',
     }
 
     var _dropdownLayerMax = 10;
