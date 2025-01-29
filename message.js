@@ -824,10 +824,12 @@ For example, to add a and dhmis this is how the macro would look like: </div>
             }
         }
         for(let i in speechRules) {
+            console.log(speechRules[i]);
             if(speechRules[i].isSpecial) {
                 switch (speechRules[i].regex) {
                     case "ALL":
-                        newMes = newMes.replace(/(.)/gm,speechRules[i].options[Math.floor(Math.random()*speechRules[i].options.length)]);
+                        newMes = newMes.replace(/(.+)/gm,speechRules[i].options[Math.floor(Math.random()*speechRules[i].options.length)]);
+                        return newMes;
                         break;
                     case "START":
                         newMes = newMes.replace(/^(.)/gm,speechRules[i].options[Math.floor(Math.random()*speechRules[i].options.length)]+"$1");
@@ -898,7 +900,11 @@ For example, to add a and dhmis this is how the macro would look like: </div>
     function getMySpeechRulesInAMessage() {
         let theMes = "";
         for(let i in speechRules) {
-            theMes += `${i}) regex: ${speechRules[i].regex}, function: ${speechRules[i].function}\n`;
+            if(!speechRules[i].isSpecial) {
+                theMes += `${i}) regex: ${speechRules[i].regex}, function: ${speechRules[i].function}\n`;
+            } else {
+                theMes += `${i}) regex: ${speechRules[i].regex}, options: ${speechRules[i].options}\n`;
+            }
         }
         return theMes!=""?theMes:"I have no rules >:3";
     }
