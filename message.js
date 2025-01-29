@@ -145,6 +145,10 @@ var messageCast = function() {
                 onclick: (e)=>{addMessage("AddSpeechRule");}
             },
             {
+                label: "Add Special Rule",
+                onclick: (e)=>{addMessage("AddSpecialRule");}
+            },
+            {
                 label: "Remove Rule",
                 onclick: (e)=>{addMessage("RemoveSpecificSpeechRule");}
             },
@@ -189,10 +193,11 @@ var messageCast = function() {
         "GoToWard": '${GAME_MANAGER.instance.Send("Location",{nextLocation:"Ward",avoidEncounters:false,event:false,waitForEncounter:false})}',
         "GoToStop": '${GAME_MANAGER.instance.Send("Location",{nextLocation:true,avoidEncounters:false,event:false,waitForEncounter:false})}',
         "ShowInventory": `\${theMes=MESSAGECAST.getMyInventoryInAMessage(0);GAME_MANAGER.instance.WaitFor("Message",{receiver:"${GAME_MANAGER.instance.username}",message:theMes,load:true});}`,
-        "SpeechToggle": "${MESSAGECAST.activeCustomSpeech=true;}",
-        "AddSpeechRule": "${MESSAGECAST.addSpeechRule(/replaceThis/gm, (mes)=>{return mes;});}",
-        "RemoveSpecificSpeechRule": "${MESSAGECAST.removeSpeechRule(0);}",
-        "RemoveAllSpeechRules": '${MESSAGECAST.removeSpeechRule("ALL");}',
+        "SpeechToggle": "${MESSAGECAST.loadCustomSpeech();MESSAGECAST.activeCustomSpeech=true;}",
+        "AddSpeechRule": '${MESSAGECAST.loadCustomSpeech();MESSAGECAST.addSpeechRule(/replaceThis/gm, (mes)=>{return "replacedWith";});}',
+        "AddSpecialRule": '${MESSAGECAST.loadCustomSpeech();MESSAGECAST.addSpeechRuleSpecial("ALL/START/END",["mes1","mes2"]);}',
+        "RemoveSpecificSpeechRule": "${MESSAGECAST.loadCustomSpeech();MESSAGECAST.removeSpeechRule(0);}",
+        "RemoveAllSpeechRules": '${MESSAGECAST.loadCustomSpeech();MESSAGECAST.removeSpeechRule("ALL");}',
         "ShowSpeechRules": `\${theMes=MESSAGECAST.getMySpeechRulesInAMessage();GAME_MANAGER.instance.WaitFor("Message",{receiver:"${GAME_MANAGER.instance.username}",message:theMes,load:true});}`
     }
 
@@ -786,6 +791,13 @@ For example, to add a and dhmis this is how the macro would look like: </div>
         speechRules.push({regex:replaceRegex,function:replaceFunction});
     }
 
+    function addSpeechRuleSpecial(where,options) {
+        if(options.length == 0) {
+            options.push("");
+        }
+        speechRules.push({regex:where,options:options,isSpecial:true});
+    }
+
     function removeSpeechRule(index) {
         if(index == "ALL") {
             speechRules = [];
@@ -804,9 +816,28 @@ For example, to add a and dhmis this is how the macro would look like: </div>
             } else {
                 let tmpNewMes = tokens[i];
                 for(let j in speechRules) {
-                    tmpNewMes = tmpNewMes.replace(speechRules[j].regex,speechRules[j].function);
+                    if(!speechRules.isSpecial) {
+                        tmpNewMes = tmpNewMes.replace(speechRules[j].regex,speechRules[j].function);
+                    }
                 }
                 newMes += tmpNewMes;
+            }
+        }
+        for(let i in speechRules) {
+            if(speechRules[i].isSpecial) {
+                switch (speechRules[i].regex) {
+                    case "ALL":
+                        newMes = newMes.replace(/(.)/gm,speechRules[i].options[Math.floor(Math.random()*speechRules[i].options.length)]);
+                        break;
+                    case "START":
+                        newMes = newMes.replace(/^(.)/gm,speechRules[i].options[Math.floor(Math.random()*speechRules[i].options.length)]+"$1");
+                        break;
+                    case "END":
+                        newMes = newMes.replace(/(.)$/gm,"$1"+speechRules[i].options[Math.floor(Math.random()*speechRules[i].options.length)]);
+                        break;
+                    default:
+                        newMes = newMes;
+                }
             }
         }
         return newMes;
@@ -945,6 +976,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
     MESSAGECAST.activeCustomSpeech = false;
     MESSAGECAST.loadCustomSpeech = loadCustomSpeech;
     MESSAGECAST.addSpeechRule = addSpeechRule;
+    MESSAGECAST.addSpeechRuleSpecial = addSpeechRuleSpecial;
     MESSAGECAST.removeSpeechRule = removeSpeechRule;
     MESSAGECAST.getMySpeechRulesInAMessage = getMySpeechRulesInAMessage;
 
