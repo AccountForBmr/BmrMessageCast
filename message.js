@@ -8,6 +8,7 @@ var useWhitelist = false;
 var mesWhitelist = [];
 var NotificationsEnabled = true;
 var deleteKeyword = '${DELETETHIS="";}';
+var speechRules = [];
 
 var messageCast = function() {
 
@@ -68,6 +69,10 @@ var messageCast = function() {
             {
                 label: "Show Inventory",
                 onclick: (e)=>{addMessage("ShowInventory");}
+            },
+            {
+                label: "Custom Speech",
+                onclick: (e)=>{openDropdown(e,"CustomSpeech",1);}
             }
         ],
         "Emotes": [],
@@ -130,6 +135,28 @@ var messageCast = function() {
                 onclick: (e)=>{addMessage("GoToStop");}
             }
         ],
+        "CustomSpeech": [
+            {
+                label: "Speech Toggle",
+                onclick: (e)=>{addMessage("SpeechToggle");}
+            },
+            {
+                label: "Add Rule",
+                onclick: (e)=>{addMessage("AddSpeechRule");}
+            },
+            {
+                label: "Remove Rule",
+                onclick: (e)=>{addMessage("RemoveSpecificSpeechRule");}
+            },
+            {
+                label: "Remove All Rules",
+                onclick: (e)=>{addMessage("RemoveAllSpeechRules");}
+            },
+            {
+                label: "Ask for the current rules",
+                onclick: (e)=>{addMessage("ShowSpeechRules");}
+            }
+        ],
         "Test": [
             {
                 label: "Test",
@@ -162,6 +189,11 @@ var messageCast = function() {
         "GoToWard": '${GAME_MANAGER.instance.Send("Location",{nextLocation:"Ward",avoidEncounters:false,event:false,waitForEncounter:false})}',
         "GoToStop": '${GAME_MANAGER.instance.Send("Location",{nextLocation:true,avoidEncounters:false,event:false,waitForEncounter:false})}',
         "ShowInventory": `\${theMes=MESSAGECAST.getMyInventoryInAMessage(0);GAME_MANAGER.instance.WaitFor("Message",{receiver:"${GAME_MANAGER.instance.username}",message:theMes,load:true});}`,
+        "SpeechToggle": "${MESSAGECAST.activeCustomSpeech=true;}",
+        "AddSpeechRule": "${MESSAGECAST.addSpeechRule(/replaceThis/gm, (mes)=>{return mes;});}",
+        "RemoveSpecificSpeechRule": "${MESSAGECAST.removeSpeechRule(0);}",
+        "RemoveAllSpeechRules": '${MESSAGECAST.removeSpeechRule("ALL");}',
+        "ShowSpeechRules": `\${theMes=MESSAGECAST.getMySpeechRulesInAMessage();GAME_MANAGER.instance.WaitFor("Message",{receiver:"${GAME_MANAGER.instance.username}",message:theMes,load:true});}`
     }
 
     var _dropdownLayerMax = 10;
@@ -724,6 +756,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
     }
 */
     //Functions used to help the messages here
+    //For the inventory, 0 to not see ids, 1 to see
     function getMyInventoryInAMessage(showIds = 0) {
         let allInv = GAME_MANAGER.instance.GetInventoryImage();
         let filteredInv = allInv.tab.concat(allInv.heirlooms);
@@ -736,6 +769,171 @@ For example, to add a and dhmis this is how the macro would look like: </div>
         return theMes!=""?theMes:"My inventory is empty";
     }
 
+    //stuff for the custom speech
+    function loadCustomSpeech() {
+        if(!GAME_MANAGER.instance.Send.toString().includes("MESSAGECAST")) {
+            let previousSend = GAME_MANAGER.instance.Send;
+            GAME_MANAGER.instance.Send = (action, obj) => {
+                if(action == "LocalChat" && obj.channel == 0 && MESSAGECAST.activeCustomSpeech) {
+                    obj.message = applySpeech(obj.message)
+                }
+                previousSend(action,obj);
+            };
+        }
+    }
+
+    function addSpeechRule(replaceRegex,replaceFunction) {
+        speechRules.push({regex:replaceRegex,function:replaceFunction});
+    }
+
+    function removeSpeechRule(index) {
+        if(index == "ALL") {
+            speechRules = [];
+            return;
+        }
+        speechRules.splice(Number(index),1);
+    }
+
+    function applySpeech(message) {
+        let tokens = [];
+        let newMes = "";
+        tokens = tokenize(message,tokens);
+        for(let i in tokens) {
+            if(tokens[i].startsWith("*")||tokens[i].startsWith("(")) {
+                newMes += tokens[i];
+            } else {
+                let tmpNewMes = tokens[i];
+                for(let j in speechRules) {
+                    tmpNewMes = tmpNewMes.replace(speechRules[j].regex,speechRules[j].function);
+                }
+                newMes += tmpNewMes;
+            }
+        }
+        return newMes;
+    }
+
+    function tokenize(message, tokens) {
+        let star1 = nthIndex(message, "*", 1);
+        let star2 = nthIndex(message, "*", 2);
+        let par1 = nthIndex(message,"(",1);
+        let par2 = par1+nthIndex(message.substring(par1), ")",1);
+        console.log(`1*: ${star1},\n2*: ${star2},\n1(: ${par1},\n2): ${par2}`);
+        if(star1 != -1 && star2 != -1 && (star1 < par1||par1 == -1)) {
+            //Tokenize **
+            console.log("In *, must copy");
+            console.log(message.substring(star1,star2+1));
+            if(star1!=0) {
+                tokens.push(message.substring(0,star1));
+            }
+            tokens.push(message.substring(star1,star2+1));
+            message = message.substring(star2+1);
+            console.log("Remaining:");
+            console.log(message);
+
+        } else if (par1 != -1 && par2 > par1 && (par1 < star1||star1 == -1)) {
+            //Tokenize ()
+            console.log("In (), must copy");
+            console.log(message.substring(par1,par2+1));
+            if(par1!=0) {
+                tokens.push(message.substring(0,par1));
+            }
+            tokens.push(message.substring(par1,par2+1));
+            message = message.substring(par2+1);
+            console.log("Remaining:");
+            console.log(message);
+        } else {
+            //The last one
+            console.log("Last");
+            console.log(message);
+            if(message) {
+                tokens.push(message);
+            }
+            return tokens;
+        }
+        return tokenize(message,tokens);
+    }
+
+    function nthIndex(str, pat, n){
+        let L = str.length;
+        let i = -1;
+        while(n--&&i++<L) {
+            i = str.indexOf(pat, i);
+            if (i < 0) 
+                break;
+        }
+        return i;
+    }
+    
+    function getMySpeechRulesInAMessage() {
+        let theMes = "";
+        for(let i in speechRules) {
+            theMes += `${i}) regex: ${speechRules[i].regex}, function: ${speechRules[i].function}\n`;
+        }
+        return theMes!=""?theMes:"I have no rules >:3";
+    }
+    /* Won't work cause you don't press enter to send
+    function loadCustomSpeech () {
+        let inp = LOCAL_CHAT.player.input;
+        let prevF = inp.onkeydown;
+        if(inp.onkeydown.toString().includes("applySpeech")) {
+            return;
+        }
+        inp.onkeydown = (e) => {
+            if(e.key == "Enter") {
+                if(inp.innerText[0]!="/"&&inp.innerText[0]!="$") {
+                    inp.innerHTML=applySpeech(inp.innerHTML);
+                }
+            }
+            prevF(e);
+        };
+    }
+
+    function applySpeech(mes) {
+        let res="<div>";
+        mes = mes.substring(5);
+        mes.indexOf("<span")==0?res=copySpan(mes,res):res=applyRules(mes,res);
+        res+="</div>"; 
+        return res;
+    };
+
+    function copySpan(mes,res) {
+        console.log("copy");
+        res += mes.split("</span>")[0]+"</span>";
+        mes = mes.substring(mes.indexOf("</span>")+7);
+        if(endMessage(mes)){
+            return res;
+        } else {
+            return mes.startsWith("<span")?copySpan(mes,res):applyRules(mes,res);
+        }
+    };
+
+    function applyRules(mes,res) {
+        console.log("rule");
+        let sAt = splitAt(mes);
+        let tmp = mes.split(sAt)[0];
+        for(let i in $speechRules){
+            tmp=tmp.replace($speechRules[i].regex,$speechRules[i].function);
+        };
+        mes = endMes2(mes);
+        res += tmp;
+        return endMessage(mes)?res:copySpan(mes,res);
+    };
+
+    function endMessage(mes){
+        return mes.startsWith("<br>")||mes.startsWith("</div>");
+    };
+
+    function splitAt(mes){
+        return mes.includes("<span")?"<span":"</div>";
+    };
+
+    function endMes2(mes){
+        return mes.includes("<spa")?mes.substring(mes.indexOf("<span")):"</div>"
+    }*/
+
+
+
+
     MESSAGECAST.cast = cast;
     //MESSAGECAST.displayBrowserNotification = displayBrowserNotification;
     MESSAGECAST.toggle$ = toggle$;
@@ -744,6 +942,11 @@ For example, to add a and dhmis this is how the macro would look like: </div>
     MESSAGECAST.updateMacroSettings = updateMacroSettings;
     
     MESSAGECAST.getMyInventoryInAMessage = getMyInventoryInAMessage;
+    MESSAGECAST.activeCustomSpeech = false;
+    MESSAGECAST.loadCustomSpeech = loadCustomSpeech;
+    MESSAGECAST.addSpeechRule = addSpeechRule;
+    MESSAGECAST.removeSpeechRule = removeSpeechRule;
+    MESSAGECAST.getMySpeechRulesInAMessage = getMySpeechRulesInAMessage;
 
     load();
 
