@@ -75,7 +75,7 @@ var messageCast = function() {
                 onclick: (e)=>{openDropdown(e,"CustomSpeech",1);}
             },
             {
-                label: "Change Character Image",
+                label: "Change Character Image >",
                 onclick: (e)=>{openDropdown(e,"CustomCharacter",1);}
             }
         ],
@@ -181,10 +181,6 @@ var messageCast = function() {
             {
                 label: "Right Reset",
                 onclick: (e)=>{addMessage("ResetCharacterRight");}
-            },
-            {
-                label: "Change Additional Info",
-                onclick: (e)=>{addMessage("ChangeCharacterAdditionalInfo");}
             }
         ],
         "Test": [
@@ -225,11 +221,10 @@ var messageCast = function() {
         "RemoveSpecificSpeechRule": "${MESSAGECAST.loadCustomSpeech();MESSAGECAST.removeSpeechRule(0);}",
         "RemoveAllSpeechRules": '${MESSAGECAST.loadCustomSpeech();MESSAGECAST.removeSpeechRule("ALL");}',
         "ShowSpeechRules": `\${theMes=MESSAGECAST.getMySpeechRulesInAMessage();GAME_MANAGER.instance.WaitFor("Message",{receiver:"${GAME_MANAGER.instance.username}",message:theMes,load:true});}`,
-        "ChangeCharacterLeft": `\${MESSAGECAST.changeCharacterImage(0,"imgUrl");}`,
-        "ChangeCharacterRight": `\${MESSAGECAST.changeCharacterImage(1,"imgUrl");}`,
+        "ChangeCharacterLeft": `\${MESSAGECAST.changeCharacterImage(0,"imgUrl",{scale:"1,1",backgroundSize:"auto"});}`,
+        "ChangeCharacterRight": `\${MESSAGECAST.changeCharacterImage(1,"imgUrl",{scale:"1,1",backgroundSize:"auto"});}`,
         "ResetCharacterLeft": `\${MESSAGECAST.resetCharacterImage(0);}`,
-        "ResetCharacterRight": `\${MESSAGECAST.resetCharacterImage(1);}`,
-        "ChangeCharacterAdditionalInfo": "TODO"
+        "ResetCharacterRight": `\${MESSAGECAST.resetCharacterImage(1);}`
     }
 
     var _dropdownLayerMax = 10;
@@ -945,15 +940,23 @@ For example, to add a and dhmis this is how the macro would look like: </div>
 
     //stuff to change character image
 
-    function changeCharacterImage(position, imageUrl="") {
+    function changeCharacterImage(position, imageUrl="", additionalOptions = {}) {
         loadCharacterImageHandler();
         let ch=document.getElementById("characters").children[position];
         if(imageUrl != "") {
             MESSAGECAST.characterImagesUrl[position] = imageUrl;
         }
+        if(additionalOptions.scale) {
+            MESSAGECAST.characterImagesScale[position] = additionalOptions.scale;
+        }
+        if(additionalOptions.backgroundSize) {
+            MESSAGECAST.characterImagesBgSize[position] = additionalOptions.backgroundSize;
+        }
         if(MESSAGECAST.characterImagesUrl[position]!="") {
             ch.firstChild.style.backgroundImage=`url(${MESSAGECAST.characterImagesUrl[position]})`;
         }
+        ch.firstChild.style.backgroundSize = MESSAGECAST.characterImagesBgSize[position];
+        ch.firstChild.style.transform = `scale(${MESSAGECAST.characterImagesScale[position]})`;
     }
 
     function loadCharacterImageHandler() {
@@ -970,7 +973,10 @@ For example, to add a and dhmis this is how the macro would look like: </div>
 
     function resetCharacterImage(position) {
         MESSAGECAST.characterImagesUrl[position] = "";
-        SCENE.instance.UpdateLocation(LOCATION.instance);
+        MESSAGECAST.characterImagesBgSize[position] = "auto";
+        MESSAGECAST.characterImagesScale[position] = "1,1";
+        SCENE.instance.HideCharacter(position,position,false);
+        SCENE.instance.ShowCharacter(position==0?LOCATION.instance.player:LOCATION.instance.opponent,position,0);
     }
 
     /* Won't work cause you don't press enter to send
