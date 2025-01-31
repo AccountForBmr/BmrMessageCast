@@ -1061,6 +1061,8 @@ For example, to add a and dhmis this is how the macro would look like: </div>
     MESSAGECAST.characterImagesUrl = ["",""];
     MESSAGECAST.changeCharacterImage = changeCharacterImage;
     MESSAGECAST.resetCharacterImage = resetCharacterImage;
+    MESSAGECAST.characterImagesBgSize = ["auto","auto"];
+    MESSAGECAST.characterImagesScale = ["1,1","1,1"];
 
     load();
 
