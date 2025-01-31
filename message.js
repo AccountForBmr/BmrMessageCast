@@ -221,8 +221,8 @@ var messageCast = function() {
         "RemoveSpecificSpeechRule": "${MESSAGECAST.loadCustomSpeech();MESSAGECAST.removeSpeechRule(0);}",
         "RemoveAllSpeechRules": '${MESSAGECAST.loadCustomSpeech();MESSAGECAST.removeSpeechRule("ALL");}',
         "ShowSpeechRules": `\${theMes=MESSAGECAST.getMySpeechRulesInAMessage();GAME_MANAGER.instance.WaitFor("Message",{receiver:"${GAME_MANAGER.instance.username}",message:theMes,load:true});}`,
-        "ChangeCharacterLeft": `\${MESSAGECAST.changeCharacterImage(0,"imgUrl",{scale:"1,1",backgroundSize:"auto"});}`,
-        "ChangeCharacterRight": `\${MESSAGECAST.changeCharacterImage(1,"imgUrl",{scale:"1,1",backgroundSize:"auto"});}`,
+        "ChangeCharacterLeft": `\${MESSAGECAST.changeCharacterImage(0,"imgUrl",{scale:"1,1",backgroundSize:"auto 100%"});}`,
+        "ChangeCharacterRight": `\${MESSAGECAST.changeCharacterImage(1,"imgUrl",{scale:"1,1",backgroundSize:"auto 100%"});}`,
         "ResetCharacterLeft": `\${MESSAGECAST.resetCharacterImage(0);}`,
         "ResetCharacterRight": `\${MESSAGECAST.resetCharacterImage(1);}`
     }
@@ -973,7 +973,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
 
     function resetCharacterImage(position) {
         MESSAGECAST.characterImagesUrl[position] = "";
-        MESSAGECAST.characterImagesBgSize[position] = "auto";
+        MESSAGECAST.characterImagesBgSize[position] = "auto 100%";
         MESSAGECAST.characterImagesScale[position] = "1,1";
         SCENE.instance.HideCharacter(position,position,false);
         SCENE.instance.ShowCharacter(position==0?LOCATION.instance.player:LOCATION.instance.opponent,position,0);
@@ -1061,7 +1061,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
     MESSAGECAST.characterImagesUrl = ["",""];
     MESSAGECAST.changeCharacterImage = changeCharacterImage;
     MESSAGECAST.resetCharacterImage = resetCharacterImage;
-    MESSAGECAST.characterImagesBgSize = ["auto","auto"];
+    MESSAGECAST.characterImagesBgSize = ["auto 100%","auto 100%"];
     MESSAGECAST.characterImagesScale = ["1,1","1,1"];
 
     load();
