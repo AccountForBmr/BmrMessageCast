@@ -63,7 +63,7 @@ var messageCast = function() {
         ],
         "Advanced": [
             {
-                label: "Change Location",
+                label: "Change Location >",
                 onclick: (e)=>{openDropdown(e,"Locations",1);}
             },
             {
@@ -71,8 +71,12 @@ var messageCast = function() {
                 onclick: (e)=>{addMessage("ShowInventory");}
             },
             {
-                label: "Custom Speech",
+                label: "Custom Speech >",
                 onclick: (e)=>{openDropdown(e,"CustomSpeech",1);}
+            },
+            {
+                label: "Change Character Image",
+                onclick: (e)=>{openDropdown(e,"CustomCharacter",1);}
             }
         ],
         "Emotes": [],
@@ -161,6 +165,28 @@ var messageCast = function() {
                 onclick: (e)=>{addMessage("ShowSpeechRules");}
             }
         ],
+        "CustomCharacter": [
+            {
+                label: "Left Character",
+                onclick: (e)=>{addMessage("ChangeCharacterLeft");}
+            },
+            {
+                label: "Right Character",
+                onclick: (e)=>{addMessage("ChangeCharacterRight");}
+            },
+            {
+                label: "Left Reset",
+                onclick: (e)=>{addMessage("ResetCharacterLeft");}
+            },
+            {
+                label: "Right Reset",
+                onclick: (e)=>{addMessage("ResetCharacterRight");}
+            },
+            {
+                label: "Change Additional Info",
+                onclick: (e)=>{addMessage("ChangeCharacterAdditionalInfo");}
+            }
+        ],
         "Test": [
             {
                 label: "Test",
@@ -198,7 +224,12 @@ var messageCast = function() {
         "AddSpecialRule": '${MESSAGECAST.loadCustomSpeech();MESSAGECAST.addSpeechRuleSpecial("ALL/START/END",["mes1","mes2"]);}',
         "RemoveSpecificSpeechRule": "${MESSAGECAST.loadCustomSpeech();MESSAGECAST.removeSpeechRule(0);}",
         "RemoveAllSpeechRules": '${MESSAGECAST.loadCustomSpeech();MESSAGECAST.removeSpeechRule("ALL");}',
-        "ShowSpeechRules": `\${theMes=MESSAGECAST.getMySpeechRulesInAMessage();GAME_MANAGER.instance.WaitFor("Message",{receiver:"${GAME_MANAGER.instance.username}",message:theMes,load:true});}`
+        "ShowSpeechRules": `\${theMes=MESSAGECAST.getMySpeechRulesInAMessage();GAME_MANAGER.instance.WaitFor("Message",{receiver:"${GAME_MANAGER.instance.username}",message:theMes,load:true});}`,
+        "ChangeCharacterLeft": `\${MESSAGECAST.changeCharacterImage(0,"imgUrl");}`,
+        "ChangeCharacterRight": `\${MESSAGECAST.changeCharacterImage(1,"imgUrl");}`,
+        "ResetCharacterLeft": `\${MESSAGECAST.resetCharacterImage(0);}`,
+        "ResetCharacterRight": `\${MESSAGECAST.resetCharacterImage(1);}`,
+        "ChangeCharacterAdditionalInfo": "TODO"
     }
 
     var _dropdownLayerMax = 10;
@@ -719,12 +750,15 @@ For example, to add a and dhmis this is how the macro would look like: </div>
     function addMessage(indexLabel) {
         let curMes = MENU.Messages.elm.getElementsByClassName("editable format")[0];
         let addedMes = _messageList[indexLabel];
-        /*if(curMes.firstChild.innerHTML.endsWith("<br>")) {
-            curMes.firstChild.innerHTML = curMes.firstChild.innerHTML.replace(/(.*)<br>$/g,"$1");
-        }*/
-        curMes.insertAdjacentText("beforeend",addedMes);
+       
+        /*curMes.insertAdjacentText("beforeend",addedMes);
         //to avoid the random \n at the start
-        curMes.innerText = curMes.innerText.trimStart();
+        curMes.innerText = curMes.innerText.trimStart();*/
+
+        //Using trim messes with the cursor, this version should work better 
+        curMes.innerHTML = curMes.innerHTML.replace(/^(<div>.*)<br>/,"$1");
+        curMes.lastChild.insertAdjacentText("beforeend",addedMes);
+
         clearDropdownsFrom(1);
     }
 
@@ -908,6 +942,37 @@ For example, to add a and dhmis this is how the macro would look like: </div>
         }
         return theMes!=""?theMes:"I have no rules >:3";
     }
+
+    //stuff to change character image
+
+    function changeCharacterImage(position, imageUrl="") {
+        loadCharacterImageHandler();
+        let ch=document.getElementById("characters").children[position];
+        if(imageUrl != "") {
+            MESSAGECAST.characterImagesUrl[position] = imageUrl;
+        }
+        if(MESSAGECAST.characterImagesUrl[position]!="") {
+            ch.firstChild.style.backgroundImage=`url(${MESSAGECAST.characterImagesUrl[position]})`;
+        }
+    }
+
+    function loadCharacterImageHandler() {
+        if(!SCENE.instance.UpdateLocation.toString().includes("MESSAGECAST")) {
+            let oldUpdateLocation = SCENE.instance.UpdateLocation;
+            SCENE.instance.UpdateLocation = async (location) => {
+                console.log(location);
+                await oldUpdateLocation(location);
+                MESSAGECAST.changeCharacterImage(0);
+                MESSAGECAST.changeCharacterImage(1);
+            }
+        }
+    }
+
+    function resetCharacterImage(position) {
+        MESSAGECAST.characterImagesUrl[position] = "";
+        SCENE.instance.UpdateLocation(LOCATION.instance);
+    }
+
     /* Won't work cause you don't press enter to send
     function loadCustomSpeech () {
         let inp = LOCAL_CHAT.player.input;
@@ -979,12 +1044,17 @@ For example, to add a and dhmis this is how the macro would look like: </div>
     MESSAGECAST.updateMacroSettings = updateMacroSettings;
     
     MESSAGECAST.getMyInventoryInAMessage = getMyInventoryInAMessage;
+
     MESSAGECAST.activeCustomSpeech = false;
     MESSAGECAST.loadCustomSpeech = loadCustomSpeech;
     MESSAGECAST.addSpeechRule = addSpeechRule;
     MESSAGECAST.addSpeechRuleSpecial = addSpeechRuleSpecial;
     MESSAGECAST.removeSpeechRule = removeSpeechRule;
     MESSAGECAST.getMySpeechRulesInAMessage = getMySpeechRulesInAMessage;
+
+    MESSAGECAST.characterImagesUrl = ["",""];
+    MESSAGECAST.changeCharacterImage = changeCharacterImage;
+    MESSAGECAST.resetCharacterImage = resetCharacterImage;
 
     load();
 
