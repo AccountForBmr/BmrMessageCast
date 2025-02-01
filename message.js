@@ -242,8 +242,8 @@ var messageCast = function() {
         /*"AddSpecialRule": '${MESSAGECAST.loadCustomSpeech();MESSAGECAST.addSpeechRuleSpecial("ALL/START/END", (mes)=>{return "replacedWith"});}',*/
         "AddSpecialRuleTemplate": '${MESSAGECAST.loadCustomSpeech();MESSAGECAST.addSpeechRuleSpecial(/replaceThis/gm, (mes)=>{return "replacedWith"});}',
         "AddSpecialRuleAll": '${MESSAGECAST.loadCustomSpeech();MESSAGECAST.addSpeechRuleSpecial("ALL", (mes)=>{return "replacedWith"});}',
-        "AddSpecialRuleStart": '${MESSAGECAST.loadCustomSpeech();MESSAGECAST.addSpeechRuleSpecial("START", (mes)=>{return "replacedWith"+"$1"});}',
-        "AddSpecialRuleEnd": '${MESSAGECAST.loadCustomSpeech();MESSAGECAST.addSpeechRuleSpecial("END", (mes)=>{return "$1"+"replacedWith"});}',
+        "AddSpecialRuleStart": '${MESSAGECAST.loadCustomSpeech();MESSAGECAST.addSpeechRuleSpecial("START", (mes)=>{return "replacedWith"+mes});}',
+        "AddSpecialRuleEnd": '${MESSAGECAST.loadCustomSpeech();MESSAGECAST.addSpeechRuleSpecial("END", (mes)=>{return mes+"replacedWith"});}',
         "RemoveSpecificSpeechRule": "${MESSAGECAST.loadCustomSpeech();MESSAGECAST.removeSpeechRule(0);}",
         "RemoveAllSpeechRules": '${MESSAGECAST.loadCustomSpeech();MESSAGECAST.removeSpeechRule("ALL");}',
         "ShowSpeechRules": `\${theMes=MESSAGECAST.getMySpeechRulesInAMessage();GAME_MANAGER.instance.WaitFor("Message",{receiver:"${GAME_MANAGER.instance.username}",message:theMes,load:true});}`,
@@ -862,7 +862,6 @@ For example, to add a and dhmis this is how the macro would look like: </div>
     function applySpeech(message) {
         let tokens = [];
         let newMes = "";
-        let specialRules = [];
         tokens = tokenize(message,tokens);
         for(let i in tokens) {
             if(tokens[i].startsWith("*")||tokens[i].startsWith("(")) {
@@ -872,30 +871,35 @@ For example, to add a and dhmis this is how the macro would look like: </div>
                 for(let j in speechRules) {
                     if(!speechRules[j].isSpecial) {
                         tmpNewMes = tmpNewMes.replace(speechRules[j].regex,speechRules[j].function);
-                    } else {
-                        specialRules.push(speechRules[j]);
                     }
                 }
                 newMes += tmpNewMes;
             }
         }
-        for(let i in specialRules) {
-            console.log(specialRules[i]);
-            switch (specialRules[i].regex) {
-                case "ALL":
-                    newMes = newMes.replace(/(.+)/gm,specialRules[i].function);
-                    return newMes;
-                    break;
-                case "START":
-                    newMes = newMes.replace(/^(.)/gm,specialRules[i].function);//+"$1");
-                    break;
-                case "END":
-                    newMes = newMes.replace(/(.)$/gm,specialRules[i].function);
-                    break;
-                default:
-                    console.log(newMes);
-                    console.log(specialRules[i]);
-                    newMes = newMes.replace(specialRules[i].regex,specialRules[i].function);
+        for(let i in speechRules) {
+            if(speechRules[i].isSpecial) {
+                switch (speechRules[i].regex) {
+                    case "ALL":
+                        console.log("In all");
+                        console.log(speechRules[i]);
+                        newMes = newMes.replace(/(.+)/gm,speechRules[i].function);
+                        return newMes;
+                        break;
+                    case "START":
+                        console.log("In start");
+                        console.log(speechRules[i]);
+                        newMes = newMes.replace(/^(.)/gm,speechRules[i].function);
+                        break;
+                    case "END":
+                        console.log("In end");
+                        console.log(speechRules[i]);
+                        newMes = newMes.replace(/(.)$/gm,speechRules[i].function);
+                        break;
+                    default:
+                        console.log("In default");
+                        console.log(speechRules[i]);
+                        newMes = newMes.replace(speechRules[i].regex,speechRules[i].function);
+                }
             }
         }
         return newMes;
@@ -906,34 +910,34 @@ For example, to add a and dhmis this is how the macro would look like: </div>
         let star2 = nthIndex(message, "*", 2);
         let par1 = nthIndex(message,"(",1);
         let par2 = par1+nthIndex(message.substring(par1), ")",1);
-        console.log(`1*: ${star1},\n2*: ${star2},\n1(: ${par1},\n2): ${par2}`);
+        //console.log(`1*: ${star1},\n2*: ${star2},\n1(: ${par1},\n2): ${par2}`);
         if(star1 != -1 && star2 != -1 && (star1 < par1||par1 == -1)) {
             //Tokenize **
-            console.log("In *, must copy");
-            console.log(message.substring(star1,star2+1));
+            //console.log("In *, must copy");
+            //console.log(message.substring(star1,star2+1));
             if(star1!=0) {
                 tokens.push(message.substring(0,star1));
             }
             tokens.push(message.substring(star1,star2+1));
             message = message.substring(star2+1);
-            console.log("Remaining:");
-            console.log(message);
+            //console.log("Remaining:");
+            //console.log(message);
 
         } else if (par1 != -1 && par2 > par1 && (par1 < star1||star1 == -1)) {
             //Tokenize ()
-            console.log("In (), must copy");
-            console.log(message.substring(par1,par2+1));
+            //console.log("In (), must copy");
+            //console.log(message.substring(par1,par2+1));
             if(par1!=0) {
                 tokens.push(message.substring(0,par1));
             }
             tokens.push(message.substring(par1,par2+1));
             message = message.substring(par2+1);
-            console.log("Remaining:");
-            console.log(message);
+            //console.log("Remaining:");
+            //console.log(message);
         } else {
             //The last one
-            console.log("Last");
-            console.log(message);
+            //console.log("Last");
+            //console.log(message);
             if(message) {
                 tokens.push(message);
             }
@@ -959,7 +963,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
             if(!speechRules[i].isSpecial) {
                 theMes += `${i}) regex: ${speechRules[i].regex}, function: ${speechRules[i].function}\n`;
             } else {
-                theMes += `${i}) regex: ${speechRules[i].regex}, options: ${speechRules[i].options}\n`;
+                theMes += `${i}) regex: ${speechRules[i].regex}, function: ${speechRules[i].function}\n`;
             }
         }
         return theMes!=""?theMes:"I have no rules >:3";
