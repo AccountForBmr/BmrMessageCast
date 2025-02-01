@@ -77,6 +77,10 @@ var messageCast = function() {
             {
                 label: "Change Character Image >",
                 onclick: (e)=>{openDropdown(e,"CustomCharacter",1);}
+            },
+            {
+                label: "Send a Private Message",
+                onclick: (e)=>{addMessage("SendPrivateMessage");}
             }
         ],
         "Emotes": [],
@@ -149,8 +153,8 @@ var messageCast = function() {
                 onclick: (e)=>{addMessage("AddSpeechRule");}
             },
             {
-                label: "Add Special Rule",
-                onclick: (e)=>{addMessage("AddSpecialRule");}
+                label: "Add Special Rule >",
+                onclick: (e)=>{openDropdown(e,"AddSpecialRules",1);}
             },
             {
                 label: "Remove Rule",
@@ -163,6 +167,24 @@ var messageCast = function() {
             {
                 label: "Ask for the current rules",
                 onclick: (e)=>{addMessage("ShowSpeechRules");}
+            }
+        ],
+        "AddSpecialRules": [
+            {
+                label: "Replace All",
+                onclick: (e)=>{addMessage("AddSpecialRuleAll");}
+            },
+            {
+                label: "Add to Start of Message",
+                onclick: (e)=>{addMessage("AddSpecialRuleStart");}
+            },
+            {
+                label: "Add to End of Message",
+                onclick: (e)=>{addMessage("AddSpecialRuleEnd");}
+            },
+            {
+                label: "Generic Special Rule",
+                onclick: (e)=>{addMessage("AddSpecialRuleTemplate");}
             }
         ],
         "CustomCharacter": [
@@ -217,14 +239,19 @@ var messageCast = function() {
         "ShowInventory": `\${theMes=MESSAGECAST.getMyInventoryInAMessage(0);GAME_MANAGER.instance.WaitFor("Message",{receiver:"${GAME_MANAGER.instance.username}",message:theMes,load:true});}`,
         "SpeechToggle": "${MESSAGECAST.loadCustomSpeech();MESSAGECAST.activeCustomSpeech=true;}",
         "AddSpeechRule": '${MESSAGECAST.loadCustomSpeech();MESSAGECAST.addSpeechRule(/replaceThis/gm, (mes)=>{return "replacedWith";});}',
-        "AddSpecialRule": '${MESSAGECAST.loadCustomSpeech();MESSAGECAST.addSpeechRuleSpecial("ALL/START/END",["mes1","mes2"]);}',
+        /*"AddSpecialRule": '${MESSAGECAST.loadCustomSpeech();MESSAGECAST.addSpeechRuleSpecial("ALL/START/END", (mes)=>{return "replacedWith"});}',*/
+        "AddSpecialRuleTemplate": '${MESSAGECAST.loadCustomSpeech();MESSAGECAST.addSpeechRuleSpecial(/replaceThis/gm, (mes)=>{return "replacedWith"});}',
+        "AddSpecialRuleAll": '${MESSAGECAST.loadCustomSpeech();MESSAGECAST.addSpeechRuleSpecial("ALL", (mes)=>{return "replacedWith"});}',
+        "AddSpecialRuleStart": '${MESSAGECAST.loadCustomSpeech();MESSAGECAST.addSpeechRuleSpecial("START", (mes)=>{return "replacedWith"+"$1"});}',
+        "AddSpecialRuleEnd": '${MESSAGECAST.loadCustomSpeech();MESSAGECAST.addSpeechRuleSpecial("END", (mes)=>{return "$1"+"replacedWith"});}',
         "RemoveSpecificSpeechRule": "${MESSAGECAST.loadCustomSpeech();MESSAGECAST.removeSpeechRule(0);}",
         "RemoveAllSpeechRules": '${MESSAGECAST.loadCustomSpeech();MESSAGECAST.removeSpeechRule("ALL");}',
         "ShowSpeechRules": `\${theMes=MESSAGECAST.getMySpeechRulesInAMessage();GAME_MANAGER.instance.WaitFor("Message",{receiver:"${GAME_MANAGER.instance.username}",message:theMes,load:true});}`,
         "ChangeCharacterLeft": `\${MESSAGECAST.changeCharacterImage(0,"imgUrl",{scale:"1,1",backgroundSize:"auto 100%"});}`,
         "ChangeCharacterRight": `\${MESSAGECAST.changeCharacterImage(1,"imgUrl",{scale:"1,1",backgroundSize:"auto 100%"});}`,
         "ResetCharacterLeft": `\${MESSAGECAST.resetCharacterImage(0);}`,
-        "ResetCharacterRight": `\${MESSAGECAST.resetCharacterImage(1);}`
+        "ResetCharacterRight": `\${MESSAGECAST.resetCharacterImage(1);}`,
+        "SendPrivateMessage": '${GAME_MANAGER.instance.WaitFor("Message",{receiver:"usernameReceiver",message:"yourMessage",load:true});}',
     }
 
     var _dropdownLayerMax = 10;
@@ -820,11 +847,8 @@ For example, to add a and dhmis this is how the macro would look like: </div>
         speechRules.push({regex:replaceRegex,function:replaceFunction});
     }
 
-    function addSpeechRuleSpecial(where,options) {
-        if(options.length == 0) {
-            options.push("");
-        }
-        speechRules.push({regex:where,options:options,isSpecial:true});
+    function addSpeechRuleSpecial(where,replaceFunction) {
+        speechRules.push({regex:where,function:replaceFunction,isSpecial:true});
     }
 
     function removeSpeechRule(index) {
@@ -838,6 +862,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
     function applySpeech(message) {
         let tokens = [];
         let newMes = "";
+        let specialRules = [];
         tokens = tokenize(message,tokens);
         for(let i in tokens) {
             if(tokens[i].startsWith("*")||tokens[i].startsWith("(")) {
@@ -845,30 +870,32 @@ For example, to add a and dhmis this is how the macro would look like: </div>
             } else {
                 let tmpNewMes = tokens[i];
                 for(let j in speechRules) {
-                    if(!speechRules.isSpecial) {
+                    if(!speechRules[j].isSpecial) {
                         tmpNewMes = tmpNewMes.replace(speechRules[j].regex,speechRules[j].function);
+                    } else {
+                        specialRules.push(speechRules[j]);
                     }
                 }
                 newMes += tmpNewMes;
             }
         }
-        for(let i in speechRules) {
-            console.log(speechRules[i]);
-            if(speechRules[i].isSpecial) {
-                switch (speechRules[i].regex) {
-                    case "ALL":
-                        newMes = newMes.replace(/(.+)/gm,speechRules[i].options[Math.floor(Math.random()*speechRules[i].options.length)]);
-                        return newMes;
-                        break;
-                    case "START":
-                        newMes = newMes.replace(/^(.)/gm,speechRules[i].options[Math.floor(Math.random()*speechRules[i].options.length)]+"$1");
-                        break;
-                    case "END":
-                        newMes = newMes.replace(/(.)$/gm,"$1"+speechRules[i].options[Math.floor(Math.random()*speechRules[i].options.length)]);
-                        break;
-                    default:
-                        newMes = newMes;
-                }
+        for(let i in specialRules) {
+            console.log(specialRules[i]);
+            switch (specialRules[i].regex) {
+                case "ALL":
+                    newMes = newMes.replace(/(.+)/gm,specialRules[i].function);
+                    return newMes;
+                    break;
+                case "START":
+                    newMes = newMes.replace(/^(.)/gm,specialRules[i].function);//+"$1");
+                    break;
+                case "END":
+                    newMes = newMes.replace(/(.)$/gm,specialRules[i].function);
+                    break;
+                default:
+                    console.log(newMes);
+                    console.log(specialRules[i]);
+                    newMes = newMes.replace(specialRules[i].regex,specialRules[i].function);
             }
         }
         return newMes;
