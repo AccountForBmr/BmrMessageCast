@@ -81,12 +81,17 @@ var messageCast = function() {
             {
                 label: "Send a Private Message",
                 onclick: (e)=>{addMessage("SendPrivateMessage");}
+            },
+            {
+                label: "Your macros >",
+                onclick: (e)=>{openDropdown(e,"Macros",1);}
             }
         ],
         "Emotes": [],
         "Cast": [],
         "Transforms": [],
         "Conjures": [],
+        "Macros": [],
         "Use": [
             {
                 label: "Wine Bottle",
@@ -664,6 +669,16 @@ For example, to add a and dhmis this is how the macro would look like: </div>
 
             _helperList["Cast"].push(curSpell);
         }
+        //your own macros
+        for(let i=0; i< ACTION_BAR.macrosCount;i++) {
+            let curMacro = {};
+            let loadedMacro = ACTION_BAR.GetMacro(i);
+            curMacro.label = loadedMacro[2];
+            curMacro.onclick = (e)=>{addMessage(`${curMacro.label+i}`);};
+            _messageList[`${curMacro.label+i}`] = loadedMacro[3];
+            _helperList["Macros"].push(curMacro);
+        }
+
 
     }
 
