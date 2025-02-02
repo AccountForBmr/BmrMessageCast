@@ -1111,6 +1111,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
         _petrifiedParts +=1;
         if(_petrifiedParts == 8) {
             GAME_MANAGER.instance.Send("LocalChat",{message:"{name} has been transformed into a stone statue.",channel:2});
+            document.getElementById("characters").children[0].style.filter = "grayscale(1)";
         }
     }
 
