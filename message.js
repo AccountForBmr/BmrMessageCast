@@ -326,6 +326,7 @@ var messageCast = function() {
             additionalEffect: []
         }
     ];
+    var _petrifiedParts = 0;
     
     function load() {
         if(insertHelperMacros()) {
@@ -1097,13 +1098,20 @@ For example, to add a and dhmis this is how the macro would look like: </div>
         let ind = parsePetrifyIndex(index);
         let myselfSlots = MENU.Myself.elm.getElementsByClassName("item_slot accessory");
         let messageToSend = 0;
+        if(myselfSlots[ind].style.filter == "grayscale(1)") {
+            return;
+        }
         //change for noboobs/boobs/boobs with milk -noTail/tail -cock/pussy
 
-        GAME_MANAGER.instance.Send("LocalChat",{message:_petrifyParts[ind].message[0],channel:2});
+        GAME_MANAGER.instance.Send("LocalChat",{message:_petrifyParts[ind].message[messageToSend],channel:2});
         //add additional stuff here
 
         //turn myself slot to stone here
         myselfSlots[ind].style.filter = "grayscale(1)";
+        _petrifiedParts +=1;
+        if(_petrifiedParts == 8) {
+            GAME_MANAGER.instance.Send("LocalChat",{message:"{name} has been transformed into a stone statue.",channel:2});
+        }
     }
 
     function parsePetrifyIndex(index) {
