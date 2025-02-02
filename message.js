@@ -85,6 +85,10 @@ var messageCast = function() {
             {
                 label: "Your macros >",
                 onclick: (e)=>{openDropdown(e,"Macros",1);}
+            },
+            {
+                label: "Petrify >",
+                onclick: (e)=>{openDropdown(e,"Petrify",1);}
             }
         ],
         "Emotes": [],
@@ -210,6 +214,24 @@ var messageCast = function() {
                 onclick: (e)=>{addMessage("ResetCharacterRight");}
             }
         ],
+        "Petrify": [
+            {
+                label: "Petrify Specific Part",
+                onclick: (e)=>{addMessage("PetrifyPart");}
+            },
+            {
+                label: "Petrify Reset Part",
+                onclick: (e)=>{addMessage("PetrifyResetPart");}
+            },
+            {
+                label: "Petrify All",
+                onclick: (e)=>{addMessage("PetrifyAll");}
+            },
+            {
+                label: "Reset All",
+                onclick: (e)=>{addMessage("PetrifyResetAll");}
+            }
+        ],
         "Test": [
             {
                 label: "Test",
@@ -257,6 +279,10 @@ var messageCast = function() {
         "ResetCharacterLeft": `\${MESSAGECAST.resetCharacterImage(0);}`,
         "ResetCharacterRight": `\${MESSAGECAST.resetCharacterImage(1);}`,
         "SendPrivateMessage": '${GAME_MANAGER.instance.WaitFor("Message",{receiver:"usernameReceiver",message:"yourMessage",load:true});}',
+        "PetrifyPart": '${MESSAGECAST.petrifyPart("Underpants");}',
+        "PetrifyResetPart": '',
+        "PetrifyAll": '',
+        "PetrifyResetAll": ''
     }
 
     var _dropdownLayerMax = 10;
@@ -266,6 +292,40 @@ var messageCast = function() {
     var _dropdownSpells = ["Conjure Item >","Transform Item >","Special Actions"];
     var _allTransformItems = ["Aviator Glasses","Ball Gag","Belt Collar","Bikini Bottom","Bikini Top","Body Bow","Bow Dress","Boxer Briefs","Bra","Briefs","Butt Plug","Cage Bra","Cage Panties","Catsuit","Collar","Color: Blue","Color: Cyan","Color: Dark","Color: Green","Color: Light","Color: Orange","Color: Pink","Color: Purple","Color: Red","Color: Yellow","Converse Shoes","Dotted Bra","Dotted Bralette","Dotted Panties","Dress Pants","Dress Shirt","Feathered Jacket","Feathered Masquerade Mask","Frilly Shirt","G-String","Glasses","Heels","High Neck Leather Collar","Holiday Babydoll","Jeans","Keyhole Sweater","Leather Belt","Leather Collar","Leather Cuffs","Leather Jacket","Leather Skirt","Leather Trench Coat","Leggings","Long Skirt","Long Tuxedo Shorts","Long-Sleeved Crop Top","Mary Janes","Masquerade Mask","Overbust Corset","Oxfords","Panties","Pareo","Plaid Skirt","Plaid Tie","Plain Bralette","Plain Panties","Pretty Ballerinas","Push-Up Bra","Ring","Round Glasses","Runners","School Uniform","Shirt","Short Dress","Short-Sleeved Dress Shirt","Skimpy String Bra","Skirt","Slippers","Small Butt Plug","Sorceress Dress","Steel Collar","Stockings","Striped Bra","Striped Bralette","Striped Long-Sleeved Crop Top","Striped Panties","Striped Shirt","Studded Collar","Summer Hat","Sweater","Swimming Trunks","T-Shirt","Tanga Panties","Thigh High Socks","Thong","Tie","Tights","Top Hat","Triangle Bra","Tube Top","Tuxedo Shorts","Vest","Victorian Jacket","Vinyl Leotard","Vinyl Opera Gloves","Vinyl Pencil Skirt","Vinyl Thigh High Boots","Vinyl Tube Top","Virgin Killer Sweater","Winter Hat","Witch Hat","Women's Dress Shirt","Women's Jeans","Women's T-Shirt"];
     var _allConjureItems = ["Anal Beads","Aviator Glasses","Ball Gag","Barmaid Dress","Belt Collar","Big Butt Plug","Bikini Bottom","Bikini Top","Body Bow","Bow Dress","Boxer Briefs","Bra","Briefs","Bunny Tail Plug","Butt Plug","Cage Bra","Cage Panties","Cat Tail Plug","Catsuit","Chastity Belt","Chastity Cage","Cheerleader Uniform","Cock Dildo","Collar","Converse Shoes","Dildo","Dotted Bra","Dotted Bralette","Dotted Panties","Dress Pants","Dress Shirt","Feather Duster","Feathered Jacket","Feathered Masquerade Mask","Fox Tail Plug","French Maid Dress","French Maid Headband","Frilly Shirt","G-String","Gala Dress","Glasses","Goggles","Heels","High Neck Leather Collar","Holiday Babydoll","Howie Lab Coat","Huge Butt Plug","Iron Collar","Iron Cuffs","Jeans","Keyhole Sweater","Kitsune Tails Plug","Lab Coat","Latex French Maid Dress","Leather Belt","Leather Collar","Leather Cuffs","Leather Jacket","Leather Skirt","Leather Trench Coat","Leggings","Long Skirt","Long Tuxedo Shorts","Long-Sleeved Crop Top","Mary Janes","Masquerade Mask","Massive Butt Plug","Overbust Corset","Oxfords","Panties","Pareo","Plaid Skirt","Plaid Tie","Plain Bralette","Plain Panties","Pretty Ballerinas","Protective Rubber Boots","Protective Rubber Gloves","Push-Up Bra","Ring","Round Glasses","Runners","School Uniform","Shirt","Short Dress","Short-Sleeved Dress Shirt","Silk Gloves","Silk Opera Gloves","Skimpy String Bra","Skirt","Slippers","Small Butt Plug","Sorceress Dress","Statuette Dildo","Steel Collar","Stockings","Striped Bra","Striped Bralette","Striped Long-Sleeved Crop Top","Striped Panties","Striped Shirt","Studded Collar","Suit Jacket","Suitpants","Summer Hat","Sweater","Swimming Trunks","T-Shirt","Tanga Panties","Thigh High Socks","Thong","Tie","Tights","Top Hat","Triangle Bra","Tube Top","Tuxedo Shorts","Vest","Victorian Jacket","Vinyl Leotard","Vinyl Opera Gloves","Vinyl Pencil Skirt","Vinyl Thigh High Boots","Vinyl Tube Top","Virgin Killer Sweater","Wedding Bouquette","Wedding Dress","Wedding Gloves","Wedding Ring","Wedding Veil","Winter Hat","Witch Hat","Women's Dress Shirt","Women's Jeans","Women's T-Shirt"];
+    var _petrifyParts = [
+        {
+            message: ["{names}'s nipples have never been more hard.","{name}'s boobs feel way heavier as they are now made of stone.","{name}'s boobs can't stop releasing more milk as they literally become a milk fountain."],
+            additionalEffect: []
+        },
+        {
+            message: ["{name} now has chiseled abs. Quite literally."],
+            additionalEffect: []
+        },
+        {
+            message: ["{names}'s cock is now rock hard.","{name}'s pussy is now rock hard."],
+            additionalEffect: []
+        },
+        {
+            message: ["{names}'s arms are now locked in place."],
+            additionalEffect: []
+        },
+        {
+            message: ["{names}'s expression will not change anymore.","{name}'s expression has been locked into one of pure bliss."],
+            additionalEffect: []
+        },
+        {
+            message: ["{names}'s body feels more stiff."],
+            additionalEffect: []
+        },
+        {
+            message: ["{names}'s butt can't jiggle anymore as it's now made of stone.","{names}'s butt can't jiggle anymore as it's now made of stone. Also, {name}'s tail has unfortunately lost its fluffness."],
+            additionalEffect: []
+        },
+        {
+            message: ["{names}'s feet and legs are now stuck in place. Hope they weren't in an uncomfortable position."],
+            additionalEffect: []
+        }
+    ];
     
     function load() {
         if(insertHelperMacros()) {
@@ -616,6 +676,12 @@ For example, to add a and dhmis this is how the macro would look like: </div>
         document.addEventListener("click",(e) => {
             let targetId = e.target.id;
             if(MENU.Messages.active&&!targetId.includes("messageCast")) {
+                clearDropdownsFrom(1);
+            }
+        });
+        //remove the dropdown if resizing
+        window.addEventListener("resize",() => {
+            if(MENU.Messages.active) {
                 clearDropdownsFrom(1);
             }
         });
@@ -1025,67 +1091,81 @@ For example, to add a and dhmis this is how the macro would look like: </div>
         SCENE.instance.ShowCharacter(position==0?LOCATION.instance.player:LOCATION.instance.opponent,position,0);
     }
 
-    /* Won't work cause you don't press enter to send
-    function loadCustomSpeech () {
-        let inp = LOCAL_CHAT.player.input;
-        let prevF = inp.onkeydown;
-        if(inp.onkeydown.toString().includes("applySpeech")) {
-            return;
-        }
-        inp.onkeydown = (e) => {
-            if(e.key == "Enter") {
-                if(inp.innerText[0]!="/"&&inp.innerText[0]!="$") {
-                    inp.innerHTML=applySpeech(inp.innerHTML);
-                }
-            }
-            prevF(e);
-        };
+    //stuff to petrify
+
+    function petrifyPart(index) {
+        let ind = parsePetrifyIndex(index);
+        let myselfSlots = MENU.Myself.elm.getElementsByClassName("item_slot accessory");
+        let messageToSend = 0;
+        //change for noboobs/boobs/boobs with milk -noTail/tail -cock/pussy
+
+        GAME_MANAGER.instance.Send("LocalChat",{message:_petrifyParts[ind].message[0],channel:2});
+        //add additional stuff here
     }
 
-    function applySpeech(mes) {
-        let res="<div>";
-        mes = mes.substring(5);
-        mes.indexOf("<span")==0?res=copySpan(mes,res):res=applyRules(mes,res);
-        res+="</div>"; 
-        return res;
-    };
-
-    function copySpan(mes,res) {
-        console.log("copy");
-        res += mes.split("</span>")[0]+"</span>";
-        mes = mes.substring(mes.indexOf("</span>")+7);
-        if(endMessage(mes)){
-            return res;
+    function parsePetrifyIndex(index) {
+        let result = -1;
+        if(isNaN(Number(index))) {
+            switch(index.toLowerCase()) {
+                case "head":
+                    result = 4;
+                    break;
+                case "shirt":
+                    result = 5;
+                    break;
+                case "pants":
+                    result = 6;
+                    break;
+                case "shoes":
+                    result = 7;
+                    break;
+                case "undershirt":
+                    result = 1;
+                    break;
+                case "underpants":
+                    result = 2;
+                    break;
+                case "gloves":
+                    result = 3;
+                    break;
+                case "bra":
+                    result = 0;
+                    break;
+                default:
+                    result = -1;
+            }
         } else {
-            return mes.startsWith("<span")?copySpan(mes,res):applyRules(mes,res);
+            switch(Number(index)) {
+                case 0:
+                    result = 4;
+                    break;
+                case 1:
+                    result = 5;
+                    break;
+                case 2:
+                    result = 6;
+                    break;
+                case 3:
+                    result = 7;
+                    break;
+                case 4:
+                    result = 1;
+                    break;
+                case 5:
+                    result = 2;
+                    break;
+                case 6:
+                    result = 3;
+                    break;
+                case 7:
+                    result = 0;
+                    break;
+                default:
+                    result = -1;
+            }
         }
-    };
-
-    function applyRules(mes,res) {
-        console.log("rule");
-        let sAt = splitAt(mes);
-        let tmp = mes.split(sAt)[0];
-        for(let i in $speechRules){
-            tmp=tmp.replace($speechRules[i].regex,$speechRules[i].function);
-        };
-        mes = endMes2(mes);
-        res += tmp;
-        return endMessage(mes)?res:copySpan(mes,res);
-    };
-
-    function endMessage(mes){
-        return mes.startsWith("<br>")||mes.startsWith("</div>");
-    };
-
-    function splitAt(mes){
-        return mes.includes("<span")?"<span":"</div>";
-    };
-
-    function endMes2(mes){
-        return mes.includes("<spa")?mes.substring(mes.indexOf("<span")):"</div>"
-    }*/
-
-
+        return result;
+    }
 
 
     MESSAGECAST.cast = cast;
@@ -1109,6 +1189,8 @@ For example, to add a and dhmis this is how the macro would look like: </div>
     MESSAGECAST.resetCharacterImage = resetCharacterImage;
     MESSAGECAST.characterImagesBgSize = ["auto 100%","auto 100%"];
     MESSAGECAST.characterImagesScale = ["1,1","1,1"];
+
+    MESSAGECAST.petrifyPart = petrifyPart;
 
     load();
 
