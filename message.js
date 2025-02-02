@@ -294,7 +294,7 @@ var messageCast = function() {
     var _allConjureItems = ["Anal Beads","Aviator Glasses","Ball Gag","Barmaid Dress","Belt Collar","Big Butt Plug","Bikini Bottom","Bikini Top","Body Bow","Bow Dress","Boxer Briefs","Bra","Briefs","Bunny Tail Plug","Butt Plug","Cage Bra","Cage Panties","Cat Tail Plug","Catsuit","Chastity Belt","Chastity Cage","Cheerleader Uniform","Cock Dildo","Collar","Converse Shoes","Dildo","Dotted Bra","Dotted Bralette","Dotted Panties","Dress Pants","Dress Shirt","Feather Duster","Feathered Jacket","Feathered Masquerade Mask","Fox Tail Plug","French Maid Dress","French Maid Headband","Frilly Shirt","G-String","Gala Dress","Glasses","Goggles","Heels","High Neck Leather Collar","Holiday Babydoll","Howie Lab Coat","Huge Butt Plug","Iron Collar","Iron Cuffs","Jeans","Keyhole Sweater","Kitsune Tails Plug","Lab Coat","Latex French Maid Dress","Leather Belt","Leather Collar","Leather Cuffs","Leather Jacket","Leather Skirt","Leather Trench Coat","Leggings","Long Skirt","Long Tuxedo Shorts","Long-Sleeved Crop Top","Mary Janes","Masquerade Mask","Massive Butt Plug","Overbust Corset","Oxfords","Panties","Pareo","Plaid Skirt","Plaid Tie","Plain Bralette","Plain Panties","Pretty Ballerinas","Protective Rubber Boots","Protective Rubber Gloves","Push-Up Bra","Ring","Round Glasses","Runners","School Uniform","Shirt","Short Dress","Short-Sleeved Dress Shirt","Silk Gloves","Silk Opera Gloves","Skimpy String Bra","Skirt","Slippers","Small Butt Plug","Sorceress Dress","Statuette Dildo","Steel Collar","Stockings","Striped Bra","Striped Bralette","Striped Long-Sleeved Crop Top","Striped Panties","Striped Shirt","Studded Collar","Suit Jacket","Suitpants","Summer Hat","Sweater","Swimming Trunks","T-Shirt","Tanga Panties","Thigh High Socks","Thong","Tie","Tights","Top Hat","Triangle Bra","Tube Top","Tuxedo Shorts","Vest","Victorian Jacket","Vinyl Leotard","Vinyl Opera Gloves","Vinyl Pencil Skirt","Vinyl Thigh High Boots","Vinyl Tube Top","Virgin Killer Sweater","Wedding Bouquette","Wedding Dress","Wedding Gloves","Wedding Ring","Wedding Veil","Winter Hat","Witch Hat","Women's Dress Shirt","Women's Jeans","Women's T-Shirt"];
     var _petrifyParts = [
         {
-            message: ["{names}'s nipples have never been more hard.","{name}'s boobs feel way heavier as they are now made of stone.","{name}'s boobs can't stop releasing more milk as they literally become a milk fountain."],
+            message: ["{name}'s nipples have never been more hard.","{name}'s boobs feel way heavier as they are now made of stone.","{name}'s boobs can't stop releasing more milk as they literally become a milk fountain."],
             additionalEffect: []
         },
         {
@@ -302,27 +302,27 @@ var messageCast = function() {
             additionalEffect: []
         },
         {
-            message: ["{names}'s cock is now rock hard.","{name}'s pussy is now rock hard."],
+            message: ["{name}'s cock is now rock hard.","{name}'s pussy is now rock hard."],
             additionalEffect: []
         },
         {
-            message: ["{names}'s arms are now locked in place."],
+            message: ["{name}'s arms are now locked in place."],
             additionalEffect: []
         },
         {
-            message: ["{names}'s expression will not change anymore.","{name}'s expression has been locked into one of pure bliss."],
+            message: ["{name}'s expression will not change anymore.","{name}'s expression has been locked into one of pure bliss."],
             additionalEffect: []
         },
         {
-            message: ["{names}'s body feels more stiff."],
+            message: ["{name}'s body feels more stiff."],
             additionalEffect: []
         },
         {
-            message: ["{names}'s butt can't jiggle anymore as it's now made of stone.","{names}'s butt can't jiggle anymore as it's now made of stone. Also, {name}'s tail has unfortunately lost its fluffness."],
+            message: ["{name}'s butt can't jiggle anymore as it's now made of stone.","{name}'s butt can't jiggle anymore as it's now made of stone. Also, {name}'s tail has unfortunately lost its fluffness."],
             additionalEffect: []
         },
         {
-            message: ["{names}'s feet and legs are now stuck in place. Hope they weren't in an uncomfortable position."],
+            message: ["{name}'s feet and legs are now stuck in place. Hope they weren't in an uncomfortable position."],
             additionalEffect: []
         }
     ];
@@ -1101,6 +1101,9 @@ For example, to add a and dhmis this is how the macro would look like: </div>
 
         GAME_MANAGER.instance.Send("LocalChat",{message:_petrifyParts[ind].message[0],channel:2});
         //add additional stuff here
+
+        //turn myself slot to stone here
+        myselfSlots[ind].style.filter = "grayscale(1)";
     }
 
     function parsePetrifyIndex(index) {
