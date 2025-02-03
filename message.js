@@ -280,9 +280,9 @@ var messageCast = function() {
         "ResetCharacterRight": `\${MESSAGECAST.resetCharacterImage(1);}`,
         "SendPrivateMessage": '${GAME_MANAGER.instance.WaitFor("Message",{receiver:"usernameReceiver",message:"yourMessage",load:true});}',
         "PetrifyPart": '${MESSAGECAST.petrifyPart("Underpants");}',
-        "PetrifyResetPart": '',
-        "PetrifyAll": '',
-        "PetrifyResetAll": ''
+        "PetrifyResetPart": '${MESSAGECAST.unpetrifyPart("Underpants");}',
+        "PetrifyAll": '${MESSAGECAST.petrifyAll();}',
+        "PetrifyResetAll": '${MESSAGECAST.unpetrifyAll();}'
     }
 
     var _dropdownLayerMax = 10;
@@ -294,7 +294,7 @@ var messageCast = function() {
     var _allConjureItems = ["Anal Beads","Aviator Glasses","Ball Gag","Barmaid Dress","Belt Collar","Big Butt Plug","Bikini Bottom","Bikini Top","Body Bow","Bow Dress","Boxer Briefs","Bra","Briefs","Bunny Tail Plug","Butt Plug","Cage Bra","Cage Panties","Cat Tail Plug","Catsuit","Chastity Belt","Chastity Cage","Cheerleader Uniform","Cock Dildo","Collar","Converse Shoes","Dildo","Dotted Bra","Dotted Bralette","Dotted Panties","Dress Pants","Dress Shirt","Feather Duster","Feathered Jacket","Feathered Masquerade Mask","Fox Tail Plug","French Maid Dress","French Maid Headband","Frilly Shirt","G-String","Gala Dress","Glasses","Goggles","Heels","High Neck Leather Collar","Holiday Babydoll","Howie Lab Coat","Huge Butt Plug","Iron Collar","Iron Cuffs","Jeans","Keyhole Sweater","Kitsune Tails Plug","Lab Coat","Latex French Maid Dress","Leather Belt","Leather Collar","Leather Cuffs","Leather Jacket","Leather Skirt","Leather Trench Coat","Leggings","Long Skirt","Long Tuxedo Shorts","Long-Sleeved Crop Top","Mary Janes","Masquerade Mask","Massive Butt Plug","Overbust Corset","Oxfords","Panties","Pareo","Plaid Skirt","Plaid Tie","Plain Bralette","Plain Panties","Pretty Ballerinas","Protective Rubber Boots","Protective Rubber Gloves","Push-Up Bra","Ring","Round Glasses","Runners","School Uniform","Shirt","Short Dress","Short-Sleeved Dress Shirt","Silk Gloves","Silk Opera Gloves","Skimpy String Bra","Skirt","Slippers","Small Butt Plug","Sorceress Dress","Statuette Dildo","Steel Collar","Stockings","Striped Bra","Striped Bralette","Striped Long-Sleeved Crop Top","Striped Panties","Striped Shirt","Studded Collar","Suit Jacket","Suitpants","Summer Hat","Sweater","Swimming Trunks","T-Shirt","Tanga Panties","Thigh High Socks","Thong","Tie","Tights","Top Hat","Triangle Bra","Tube Top","Tuxedo Shorts","Vest","Victorian Jacket","Vinyl Leotard","Vinyl Opera Gloves","Vinyl Pencil Skirt","Vinyl Thigh High Boots","Vinyl Tube Top","Virgin Killer Sweater","Wedding Bouquette","Wedding Dress","Wedding Gloves","Wedding Ring","Wedding Veil","Winter Hat","Witch Hat","Women's Dress Shirt","Women's Jeans","Women's T-Shirt"];
     var _petrifyParts = [
         {
-            message: ["{name}'s nipples have never been more hard.","{name}'s boobs feel way heavier as they are now made of stone.","{name}'s boobs can't stop releasing more milk as they literally become a milk fountain."],
+            message: ["{name}'s nipples have never been more hard.","{name}'s boobs feel way heavier as they are now made of stone."],
             additionalEffect: []
         },
         {
@@ -303,7 +303,7 @@ var messageCast = function() {
         },
         {
             message: ["{name}'s cock is now rock hard.","{name}'s pussy is now rock hard."],
-            additionalEffect: []
+            additionalEffect: [lockLust]
         },
         {
             message: ["{name}'s arms are now locked in place."],
@@ -311,10 +311,10 @@ var messageCast = function() {
         },
         {
             message: ["{name}'s expression will not change anymore.","{name}'s expression has been locked into one of pure bliss."],
-            additionalEffect: [lockVoice, unlockVoice]
+            additionalEffect: [lockVoice]
         },
         {
-            message: ["{name}'s body feels more stiff."],
+            message: ["{name}'s body feels more stiff as it petrifies slightly."],
             additionalEffect: []
         },
         {
@@ -323,7 +323,41 @@ var messageCast = function() {
         },
         {
             message: ["{name}'s feet and legs are now stuck in place. Hope they weren't in an uncomfortable position."],
-            additionalEffect: [lockMovement, unlockMovement]
+            additionalEffect: [lockMovement]
+        }
+    ];
+    var _unpetrifyParts = [
+        {
+            message: ["{name}'s nipples are no longer stuck in their hardened state.","{name}'s boobs are back to their wobbly self."],
+            additionalEffect: []
+        },
+        {
+            message: ["{name} tummy has reverted back to its normal self."],
+            additionalEffect: []
+        },
+        {
+            message: ["{name}'s cock is no longer rock hard.","{name}'s pussy is no longer rock hard."],
+            additionalEffect: [unlockLust]
+        },
+        {
+            message: ["{name} is now free to move their arms again."],
+            additionalEffect: []
+        },
+        {
+            message: ["{name}'s able to change their facial expression once more."],
+            additionalEffect: [unlockVoice]
+        },
+        {
+            message: ["{name}'s body feels less stiff as it unpetrifies slightly."],
+            additionalEffect: []
+        },
+        {
+            message: ["{name}'s butt is free to jiggle once more as it's now back to its normal bouncy self.","{name}'s butt is free to jiggle once more as it's now back to its normal bouncy self. Also, {name}'s tail is floofy again."],
+            additionalEffect: []
+        },
+        {
+            message: ["{name}'s feet and legs are no longer stuck in place."],
+            additionalEffect: [unlockMovement]
         }
     ];
     var _petrifiedParts = 0;
@@ -1113,10 +1147,37 @@ For example, to add a and dhmis this is how the macro would look like: </div>
             return;
         }
         //change for noboobs/boobs/boobs with milk -noTail/tail -cock/pussy -hornyface/nothorny
+        switch(ind) {
+            //head/horny
+            case 0:
+                if(STATUS.player.lust == 1) {
+                    messageToSend = 1;
+                }
+                break;
+            //butt/tail
+            case 2:
+                if(GAME_MANAGER.instance.character.body[2] != 0) {
+                    messageToSend = 1;
+                }
+                break;
+            //cock/pussy
+            case 5:
+                if(GAME_MANAGER.instance.character.genitalia == 2) {
+                    messageToSend = 1;
+                }
+                break;   
+            //noBoobs/boobs
+            case 7:
+                if(GAME_MANAGER.instance.character.breasts[0] > 0) {
+                    messageToSend = 1;
+                }
+                break;
+            default:
+                messageToSend = 0;                
+        }
 
         GAME_MANAGER.instance.Send("LocalChat",{message:_petrifyParts[ind].message[messageToSend],channel:2});
         //add additional stuff here
-        console.log(_petrifyParts[ind]);
         if(_petrifyParts[ind].additionalEffect.length != 0) {
             _petrifyParts[ind].additionalEffect[0]();
         }
@@ -1125,9 +1186,81 @@ For example, to add a and dhmis this is how the macro would look like: </div>
         myselfSlots[ind].style.filter = "grayscale(1)";
         _petrifiedParts +=1;
         if(_petrifiedParts == 8) {
-            GAME_MANAGER.instance.Send("LocalChat",{message:"{name} has been transformed into a stone statue.",channel:2});
+            GAME_MANAGER.instance.Send("LocalChat",{message:"{name} has been completely transformed into a stone statue.",channel:2});
             document.getElementById("characters").children[0].style.filter = "grayscale(1)";
         }
+    }
+
+    function unpetrifyPart(index) {
+        let ind = parsePetrifyIndex(index);
+        let myselfSlots = MENU.Myself.elm.getElementsByClassName("item_slot accessory");
+        let messageToSend = 0;
+        if(myselfSlots[ind].style.filter != "grayscale(1)") {
+            return;
+        }
+        //change for noboobs/boobs/boobs with milk -noTail/tail -cock/pussy -hornyface/nothorny
+        switch(ind) {
+            //butt/tail
+            case 2:
+                if(GAME_MANAGER.instance.character.body[2] != 0) {
+                    messageToSend = 1;
+                }
+                break;
+            //cock/pussy
+            case 5:
+                if(GAME_MANAGER.instance.character.genitalia == 2) {
+                    messageToSend = 1;
+                }
+                break;   
+            //noBoobs/boobs
+            case 7:
+                if(GAME_MANAGER.instance.character.breasts[0] > 0) {
+                    messageToSend = 1;
+                }
+                break;
+            default:
+                messageToSend = 0;                
+        }
+
+        GAME_MANAGER.instance.Send("LocalChat",{message:_unpetrifyParts[ind].message[messageToSend],channel:2});
+        //remove additional stuff here
+        if(_unpetrifyParts[ind].additionalEffect.length != 0) {
+            _unpetrifyParts[ind].additionalEffect[0]();
+        }
+
+        //remove myself slot stone here
+        myselfSlots[ind].style.filter = "";
+        _petrifiedParts -=1;
+        if(_petrifiedParts == 7) {
+            GAME_MANAGER.instance.Send("LocalChat",{message:"{name} is no longer a complete stone statue.",channel:2});
+            document.getElementById("characters").children[0].style.filter = "";
+        }
+    }
+
+    function petrifyAll() {
+        let myselfSlots = MENU.Myself.elm.getElementsByClassName("item_slot accessory");
+        for(let i=0;i<8;i++) {
+            myselfSlots[i].style.filter = "grayscale(1)";
+            if(_petrifyParts[i].additionalEffect.length!=0) {
+                _petrifyParts[i].additionalEffect[0]();
+            }
+        }
+
+        GAME_MANAGER.instance.Send("LocalChat",{message:"{name} has been completely transformed into a stone statue.",channel:2});
+        document.getElementById("characters").children[0].style.filter = "grayscale(1)";
+    }
+
+    function unpetrifyAll() {
+        let myselfSlots = MENU.Myself.elm.getElementsByClassName("item_slot accessory");
+        for(let i=0;i<8;i++) {
+            myselfSlots[i].style.filter = "";
+            if(_unpetrifyParts[i].additionalEffect.length!=0) {
+                _unpetrifyParts[i].additionalEffect[0]();
+            }
+        }
+
+        GAME_MANAGER.instance.Send("LocalChat",{message:"{name} is no longer a complete stone statue.",channel:2});
+        document.getElementById("characters").children[0].style.filter = "";
     }
 
     function parsePetrifyIndex(index) {
@@ -1194,6 +1327,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
         return result;
     }
 
+    // locking stuff here
     function lockMovement() {
         MESSAGECAST.movementLocked = true;
         let macroAddedCheck = document.getElementById("macroAddedCheck");
@@ -1212,6 +1346,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
             } 
             macroAddedCheck.classList.add("MESSAGECASTLockMovement");
         }
+        GUI.instance.DisplayMessage("Your are not allowed to change location anymore. You may still invite people over, or accept their request to reach you.");
     }
 
     function unlockMovement() {
@@ -1224,7 +1359,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
         MESSAGECAST.loadCustomSpeech();
         MESSAGECAST.activeCustomSpeech=true;
         MESSAGECAST.addSpeechRule(/(((.+)))/gm,(mes)=>{let mesOptions=["*{name} tried speaking, but their mouth is currently unable to move.*","*{name} tried speaking, but they can't talk.*","*...*","*You'd swear that {name} is trying to say something but, alas, no voice comes out of their mouth.*","*{name} remains silent.*"];return mesOptions[Math.floor(Math.random()*mesOptions.length)];})
-        
+        GUI.instance.DisplayMessage("Your are not allowed to speak anymore.");
     }
 
     function unlockVoice() {
@@ -1234,6 +1369,21 @@ For example, to add a and dhmis this is how the macro would look like: </div>
                 return;
             }
         }
+    }
+
+    function lockLust() {
+        if(MESSAGECAST.lustLockedId == -1) {
+            MESSAGECAST.lustLockedId = setInterval(()=>{
+                if(GAME_MANAGER.instance.actions.spells >= 1 && STATUS.player.lust < 1) {
+                    ACTION_BAR.TriggerMacro("","/cast [@player] Stoke Libido");
+                }
+            },3100)
+        }
+    }
+
+    function unlockLust() {
+        clearInterval(MESSAGECAST.lustLockedId);
+        MESSAGECAST.lustLockedId = -1;
     }
 
 
@@ -1260,6 +1410,9 @@ For example, to add a and dhmis this is how the macro would look like: </div>
     MESSAGECAST.characterImagesScale = ["1,1","1,1"];
 
     MESSAGECAST.petrifyPart = petrifyPart;
+    MESSAGECAST.unpetrifyPart = unpetrifyPart;
+    MESSAGECAST.petrifyAll = petrifyAll;
+    MESSAGECAST.unpetrifyAll = unpetrifyAll;
 
     MESSAGECAST.lockMovement = lockMovement;
     MESSAGECAST.unlockMovement = unlockMovement;
@@ -1267,6 +1420,10 @@ For example, to add a and dhmis this is how the macro would look like: </div>
 
     MESSAGECAST.lockVoice = lockVoice;
     MESSAGECAST.unlockVoice = unlockVoice;
+
+    MESSAGECAST.lockLust = lockLust;
+    MESSAGECAST.unlockLust = unlockLust;
+    MESSAGECAST.lustLockedId = -1;
 
     load();
 
