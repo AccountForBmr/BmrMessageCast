@@ -311,7 +311,7 @@ var messageCast = function() {
         },
         {
             message: ["{name}'s expression will not change anymore.","{name}'s expression has been locked into one of pure bliss."],
-            additionalEffect: []
+            additionalEffect: [lockVoice, unlockVoice]
         },
         {
             message: ["{name}'s body feels more stiff."],
@@ -323,7 +323,7 @@ var messageCast = function() {
         },
         {
             message: ["{name}'s feet and legs are now stuck in place. Hope they weren't in an uncomfortable position."],
-            additionalEffect: []
+            additionalEffect: [lockMovement, unlockMovement]
         }
     ];
     var _petrifiedParts = 0;
@@ -366,6 +366,12 @@ var messageCast = function() {
                         addMenuHelper();
                     }
                 }
+
+                let addedCheck = document.createElement("span");
+                addedCheck.id = "macroAddedCheck";
+                addedCheck.classList.add("MESSAGECAST");
+                addedCheck.style.display = "none";
+                document.body.appendChild(addedCheck);
             }
             ACTION_BAR.TriggerMacro("","/run MesWhitelist");
             ACTION_BAR.TriggerMacro("","/run MessageCast Settings");
@@ -634,7 +640,8 @@ For example, to add a and dhmis this is how the macro would look like: </div>
     }
 
     function addedAlready() {
-        return NOTIFICATION.PrivateMessage.toString().includes("MESSAGECAST");
+        let macroAddedCheck = document.getElementById("macroAddedCheck");
+        return macroAddedCheck!=null && macroAddedCheck.classList.contains("MESSAGECAST"); //document.getNOTIFICATION.PrivateMessage.toString().includes("MESSAGECAST");
     }
 
     function rewrittenDropdownFunction(e) {
@@ -914,7 +921,8 @@ For example, to add a and dhmis this is how the macro would look like: </div>
 
     //stuff for the custom speech
     function loadCustomSpeech() {
-        if(!GAME_MANAGER.instance.Send.toString().includes("MESSAGECAST")) {
+        let macroAddedCheck = document.getElementById("macroAddedCheck");
+        if(macroAddedCheck!=null && !macroAddedCheck.classList.contains("MESSAGECASTCustomSpeech")) {
             let previousSend = GAME_MANAGER.instance.Send;
             GAME_MANAGER.instance.Send = (action, obj) => {
                 if(action == "LocalChat" && obj.channel == 0 && MESSAGECAST.activeCustomSpeech) {
@@ -922,6 +930,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
                 }
                 previousSend(action,obj);
             };
+            macroAddedCheck.classList.add("MESSAGECASTCustomSpeech");
         }
     }
 
@@ -1073,7 +1082,8 @@ For example, to add a and dhmis this is how the macro would look like: </div>
     }
 
     function loadCharacterImageHandler() {
-        if(!SCENE.instance.UpdateLocation.toString().includes("MESSAGECAST")) {
+        let macroAddedCheck = document.getElementById("macroAddedCheck");
+        if(macroAddedCheck!=null && !macroAddedCheck.classList.contains("MESSAGECASTCustomImages")) {
             let oldUpdateLocation = SCENE.instance.UpdateLocation;
             SCENE.instance.UpdateLocation = async (location) => {
                 console.log(location);
@@ -1081,6 +1091,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
                 MESSAGECAST.changeCharacterImage(0);
                 MESSAGECAST.changeCharacterImage(1);
             }
+            macroAddedCheck.classList.add("MESSAGECASTCustomImages");
         }
     }
 
@@ -1101,10 +1112,14 @@ For example, to add a and dhmis this is how the macro would look like: </div>
         if(myselfSlots[ind].style.filter == "grayscale(1)") {
             return;
         }
-        //change for noboobs/boobs/boobs with milk -noTail/tail -cock/pussy
+        //change for noboobs/boobs/boobs with milk -noTail/tail -cock/pussy -hornyface/nothorny
 
         GAME_MANAGER.instance.Send("LocalChat",{message:_petrifyParts[ind].message[messageToSend],channel:2});
         //add additional stuff here
+        console.log(_petrifyParts[ind]);
+        if(_petrifyParts[ind].additionalEffect.length != 0) {
+            _petrifyParts[ind].additionalEffect[0]();
+        }
 
         //turn myself slot to stone here
         myselfSlots[ind].style.filter = "grayscale(1)";
@@ -1179,6 +1194,48 @@ For example, to add a and dhmis this is how the macro would look like: </div>
         return result;
     }
 
+    function lockMovement() {
+        MESSAGECAST.movementLocked = true;
+        let macroAddedCheck = document.getElementById("macroAddedCheck");
+        if(macroAddedCheck!=null && !macroAddedCheck.classList.contains("MESSAGECASTLockMovement")) {
+            let previousSend = GAME_MANAGER.instance.Send;
+            GAME_MANAGER.instance.Send = (action,obj) => {
+                if(MESSAGECAST.movementLocked && action == "Invite" && obj && ((obj.request == true && !obj.response)||(!obj.request && obj.response == true))) {
+                    GUI.instance.DisplayMessage("You can't move.");
+                    return;
+                }
+                if(MESSAGECAST.movementLocked && action == "Location") {
+                    GUI.instance.DisplayMessage("You can't change location.");
+                    return;
+                }
+            previousSend(action,obj);
+            } 
+            macroAddedCheck.classList.add("MESSAGECASTLockMovement");
+        }
+    }
+
+    function unlockMovement() {
+        MESSAGECAST.movementLocked = false;
+    }
+
+    function lockVoice() {
+        //unlocking it so the speech is removed and readded rather than added multiple times
+        unlockVoice();
+        MESSAGECAST.loadCustomSpeech();
+        MESSAGECAST.activeCustomSpeech=true;
+        MESSAGECAST.addSpeechRule(/(((.+)))/gm,(mes)=>{let mesOptions=["*{name} tried speaking, but their mouth is currently unable to move.*","*{name} tried speaking, but they can't talk.*","*...*","*You'd swear that {name} is trying to say something but, alas, no voice comes out of their mouth.*","*{name} remains silent.*"];return mesOptions[Math.floor(Math.random()*mesOptions.length)];})
+        
+    }
+
+    function unlockVoice() {
+        for(let i=0;i<speechRules.length;i++) {
+            if(speechRules[i].regex.toString()=="/(((.+)))/gm") {
+                removeSpeechRule(i);
+                return;
+            }
+        }
+    }
+
 
     MESSAGECAST.cast = cast;
     //MESSAGECAST.displayBrowserNotification = displayBrowserNotification;
@@ -1203,6 +1260,13 @@ For example, to add a and dhmis this is how the macro would look like: </div>
     MESSAGECAST.characterImagesScale = ["1,1","1,1"];
 
     MESSAGECAST.petrifyPart = petrifyPart;
+
+    MESSAGECAST.lockMovement = lockMovement;
+    MESSAGECAST.unlockMovement = unlockMovement;
+    MESSAGECAST.movementLocked = false;
+
+    MESSAGECAST.lockVoice = lockVoice;
+    MESSAGECAST.unlockVoice = unlockVoice;
 
     load();
 
