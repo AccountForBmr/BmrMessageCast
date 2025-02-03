@@ -989,7 +989,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
         let newMes = "";
         tokens = tokenize(message,tokens);
         for(let i in tokens) {
-            if(tokens[i].startsWith("*")||tokens[i].startsWith("(")) {
+            if((tokens[i].startsWith("*")&&tokens[i].endsWith("*"))||(tokens[i].startsWith("(")&&tokens[i].endsWith(")"))) {
                 newMes += tokens[i];
             } else {
                 let tmpNewMes = tokens[i];
@@ -1035,34 +1035,34 @@ For example, to add a and dhmis this is how the macro would look like: </div>
         let star2 = nthIndex(message, "*", 2);
         let par1 = nthIndex(message,"(",1);
         let par2 = par1+nthIndex(message.substring(par1), ")",1);
-        //console.log(`1*: ${star1},\n2*: ${star2},\n1(: ${par1},\n2): ${par2}`);
+        console.log(`1*: ${star1},\n2*: ${star2},\n1(: ${par1},\n2): ${par2}`);
         if(star1 != -1 && star2 != -1 && (star1 < par1||par1 == -1)) {
             //Tokenize **
-            //console.log("In *, must copy");
-            //console.log(message.substring(star1,star2+1));
+            console.log("In *, must copy");
+            console.log(message.substring(star1,star2+1));
             if(star1!=0) {
                 tokens.push(message.substring(0,star1));
             }
             tokens.push(message.substring(star1,star2+1));
             message = message.substring(star2+1);
-            //console.log("Remaining:");
-            //console.log(message);
+            console.log("Remaining:");
+            console.log(message);
 
         } else if (par1 != -1 && par2 > par1 && (par1 < star1||star1 == -1)) {
             //Tokenize ()
-            //console.log("In (), must copy");
-            //console.log(message.substring(par1,par2+1));
+            console.log("In (), must copy");
+            console.log(message.substring(par1,par2+1));
             if(par1!=0) {
                 tokens.push(message.substring(0,par1));
             }
             tokens.push(message.substring(par1,par2+1));
             message = message.substring(par2+1);
-            //console.log("Remaining:");
-            //console.log(message);
+            console.log("Remaining:");
+            console.log(message);
         } else {
             //The last one
-            //console.log("Last");
-            //console.log(message);
+            console.log("Last");
+            console.log(message);
             if(message) {
                 tokens.push(message);
             }
@@ -1147,7 +1147,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
             return;
         }
         //change for noboobs/boobs/boobs with milk -noTail/tail -cock/pussy -hornyface/nothorny
-        switch(ind) {
+        switch(index) {
             //head/horny
             case 0:
                 if(STATUS.player.lust == 1) {
@@ -1199,7 +1199,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
             return;
         }
         //change for noboobs/boobs/boobs with milk -noTail/tail -cock/pussy -hornyface/nothorny
-        switch(ind) {
+        switch(index) {
             //butt/tail
             case 2:
                 if(GAME_MANAGER.instance.character.body[2] != 0) {
@@ -1245,6 +1245,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
                 _petrifyParts[i].additionalEffect[0]();
             }
         }
+        _petrifiedParts = 8;
 
         GAME_MANAGER.instance.Send("LocalChat",{message:"{name} has been completely transformed into a stone statue.",channel:2});
         document.getElementById("characters").children[0].style.filter = "grayscale(1)";
@@ -1258,6 +1259,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
                 _unpetrifyParts[i].additionalEffect[0]();
             }
         }
+        _petrifiedParts = 0;
 
         GAME_MANAGER.instance.Send("LocalChat",{message:"{name} is no longer a complete stone statue.",channel:2});
         document.getElementById("characters").children[0].style.filter = "";
