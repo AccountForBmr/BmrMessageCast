@@ -501,6 +501,9 @@ var messageCast = function() {
     }
 
     function openSettings() {
+        if(document.getElementById("messageCastSettingsMenu")==null) {
+            return;
+        }
         let settingsMenu = document.createElement("div");
         settingsMenu.id = "messageCastSettingsMenu";
         settingsMenuHTML = `
@@ -860,8 +863,8 @@ For example, to add a and dhmis this is how the macro would look like: </div>
                         for(let j in _allConjureItems) {
                             let curConj = {};
                             curConj.label = _allConjureItems[j];
-                            curConj.onclick = (e)=>{addMessage(_allConjureItems[j]);};
-                            _messageList[_allConjureItems[j]] = `/cast [@player] Conjure Item, 0, ${_allConjureItems[j]}, Accessory, Color `;
+                            curConj.onclick = (e)=>{addMessage("Conjure"+_allConjureItems[j]);};
+                            _messageList["Conjure"+_allConjureItems[j]] = `/cast [@player] Conjure Item, 0, ${_allConjureItems[j]}, Accessory, Color `;
                             _helperList["Conjures"].push(curConj);
                         }
                         curSpell.onclick = (e)=>{openDropdown(e,"Conjures",1);};
@@ -870,8 +873,8 @@ For example, to add a and dhmis this is how the macro would look like: </div>
                         for(let j in _allTransformItems) {
                             let curTran = {};
                             curTran.label = _allTransformItems[j];
-                            curTran.onclick = (e)=>{addMessage(_allTransformItems[j]);};
-                            _messageList[_allTransformItems[j]] = `/cast [@player] Transform Item, 0, ${_allTransformItems[j]} `;
+                            curTran.onclick = (e)=>{addMessage("Transform"+_allTransformItems[j]);};
+                            _messageList["Transform"+_allTransformItems[j]] = `/cast [@player] Transform Item, 0, ${_allTransformItems[j]} `;
                             _helperList["Transforms"].push(curTran);
                         }
                         curSpell.onclick = (e)=>{openDropdown(e,"Transforms",1);};
@@ -1604,7 +1607,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
     load();
 
     let scriptCss=document.createElement('link');
-    scriptCss.href='https://cdn.jsdelivr.net/gh/AccountForBmr/BmrMessageCast@v0.6.5/message.css';
+    scriptCss.href='https://cdn.jsdelivr.net/gh/AccountForBmr/BmrMessageCast@v0.6.6/message.css';
     scriptCss.rel="stylesheet";
     document.body.appendChild(scriptCss);
     scriptCss.onload = () => {
