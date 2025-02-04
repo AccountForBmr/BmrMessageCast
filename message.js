@@ -3,6 +3,7 @@ A script that allows for messages to be interpreted as macros, so have fun with 
 */
 
 var MESSAGECAST = {};
+var macroEnabled = true;
 var runOption = false;
 var useWhitelist = false;
 var mesWhitelist = [];
@@ -89,6 +90,14 @@ var messageCast = function() {
             {
                 label: "Petrify >",
                 onclick: (e)=>{openDropdown(e,"Petrify",1);}
+            },
+            {
+                label: "Locks >",
+                onclick: (e)=>{openDropdown(e,"Locks",1);}
+            },
+            {
+                label: "Unlocks >",
+                onclick: (e)=>{openDropdown(e,"Unlocks",1)}
             }
         ],
         "Emotes": [],
@@ -232,12 +241,58 @@ var messageCast = function() {
                 onclick: (e)=>{addMessage("PetrifyResetAll");}
             }
         ],
-        "Test": [
+        "Locks": [
             {
-                label: "Test",
-                onclick: (e)=>{openDropdown(e,"Test",1);}
-            }
-        ]
+                label: "Lock Movement",
+                onclick: (e)=>{addMessage("LockMovement");}
+            },
+            {
+                label: "Lock Voice",
+                onclick: (e)=>{addMessage("LockVoice");}
+            },
+            {
+                label: "Lock Lust",
+                onclick: (e)=>{addMessage("LockLust");}
+            },
+            {
+                label: "Lock SelfCast",
+                onclick: (e)=>{addMessage("LockSelfCast");}
+            },
+            {
+                label: "Lock Spells Minor",
+                onclick: (e)=>{addMessage("LockSpellsMinor");}
+            },
+            {
+                label: "Lock Spells Major",
+                onclick: (e)=>{addMessage("LockSpellsMajor");}
+            },
+        ],
+        "Unlocks": [
+            {
+                label: "Unlock Movement",
+                onclick: (e)=>{addMessage("UnlockMovement");}
+            },
+            {
+                label: "Unlock Voice",
+                onclick: (e)=>{addMessage("UnlockVoice");}
+            },
+            {
+                label: "Unlock Lust",
+                onclick: (e)=>{addMessage("UnlockLust");}
+            },
+            {
+                label: "Unlock SelfCast",
+                onclick: (e)=>{addMessage("UnlockSelfCast");}
+            },
+            {
+                label: "Unlock Spells Minor",
+                onclick: (e)=>{addMessage("UnlockSpellsMinor");}
+            },
+            {
+                label: "Unlock Spells Major",
+                onclick: (e)=>{addMessage("UnlockSpellsMajor");}
+            },
+        ],
     };
 
     var _messageList = {
@@ -282,7 +337,19 @@ var messageCast = function() {
         "PetrifyPart": '${MESSAGECAST.petrifyPart("Underpants");}',
         "PetrifyResetPart": '${MESSAGECAST.unpetrifyPart("Underpants");}',
         "PetrifyAll": '${MESSAGECAST.petrifyAll();}',
-        "PetrifyResetAll": '${MESSAGECAST.unpetrifyAll();}'
+        "PetrifyResetAll": '${MESSAGECAST.unpetrifyAll();}',
+        "LockMovement": '${MESSAGECAST.lockMovement();}',
+        "UnlockMovement": '${MESSAGECAST.unlockMovement();}',
+        "LockVoice": '${MESSAGECAST.lockVoice();}',
+        "UnlockVoice": '${MESSAGECAST.unlockVoice();}',
+        "LockLust": '${MESSAGECAST.lockLust();}',
+        "UnlockLust": '${MESSAGECAST.unlockLust();}',
+        "LockSelfCast": '${MESSAGECAST.lockSelfCast();}',
+        "UnlockSelfCast": '${MESSAGECAST.unlockSelfCast();}',
+        "LockSpellsMinor": '${MESSAGECAST.lockSpellsMinor();}',
+        "UnlockSpellsMinor": '${MESSAGECAST.unlockSpellsMinor();}',
+        "LockSpellsMajor": '${MESSAGECAST.lockSpellsMajor();}',
+        "UnlockSpellsMajor": '${MESSAGECAST.unlockSpellsMajor();}',
     }
 
     var _dropdownLayerMax = 10;
@@ -307,7 +374,7 @@ var messageCast = function() {
         },
         {
             message: ["{name}'s arms are now locked in place."],
-            additionalEffect: []
+            additionalEffect: [lockSpellsMinor]
         },
         {
             message: ["{name}'s expression will not change anymore.","{name}'s expression has been locked into one of pure bliss."],
@@ -341,7 +408,7 @@ var messageCast = function() {
         },
         {
             message: ["{name} is now free to move their arms again."],
-            additionalEffect: []
+            additionalEffect: [unlockSpellsMinor]
         },
         {
             message: ["{name}'s able to change their facial expression once more."],
@@ -361,34 +428,55 @@ var messageCast = function() {
         }
     ];
     var _petrifiedParts = 0;
+    var _allowedSpellsId = [1, 2, 10, 13, 14, 22, 23, 24, 25, 29];
+    /*
+    1 = Attack,
+    2 = Stoke Libido,  
+    10 = Change Name,
+    13 = Magic Bolt,
+    14 = Change Height,
+    22 = Enchant Item
+    23 = Transform Item,
+    24 = Restore Self, 
+    25 = Soul Imprint,
+    29 = Conjure Item.
+    */
     
     function load() {
         if(insertHelperMacros()) {
             if(!addedAlready()) {
                 let oldNotification = NOTIFICATION.PrivateMessage;
                 NOTIFICATION.PrivateMessage = async function (params) {
-                    if(!MENU.Messages.active) {
-                        MESSAGECAST.cast(params);
-                    }
-                    let deleteNotif = await deleteNotification(params);
-                    if(!deleteNotif) {
+                    if(macroEnabled) {
+                        if(!MENU.Messages.active) {
+                            MESSAGECAST.cast(params);
+                        }
+                        let deleteNotif = await deleteNotification(params);
+                        if(!deleteNotif) {
+                            oldNotification(params);
+                        }
+                    } else {
                         oldNotification(params);
                     }
                 };
                 //Changing append messages too cause if you have the page in focus with the person that sent you a message you don't get notified
                 let oldAppendMessage = MENU.Messages.AppendMessage;
                 MENU.Messages.AppendMessage = async (message) => {
-                    let checkCast = checkIfCastNeeded(message);
-                    console.log(checkCast);
-                    //oldAppendMessage(message);
-                    if (checkCast) {
-                        cast(message);
-                        await deleteNotificationFromAppend(message);
+                    if(macroEnabled) {
+                        let checkCast = checkIfCastNeeded(message);
+                        console.log(checkCast);
+                        //oldAppendMessage(message);
+                        if (checkCast) {
+                            cast(message);
+                            await deleteNotificationFromAppend(message);
+                        }
+                        if (checkCast && message.message.includes(deleteKeyword)) {
+                            return;
+                        }
+                        oldAppendMessage(message);
+                    } else {
+                        oldAppendMessage(message);
                     }
-                    if (checkCast && message.message.includes(deleteKeyword)) {
-                        return;
-                    }
-                    oldAppendMessage(message);
                 };
                 //Adding settings to Menu
                 document.getElementById("menu").getElementsByClassName("button")[0].onclick = rewrittenDropdownFunction();
@@ -418,6 +506,12 @@ var messageCast = function() {
         settingsMenuHTML = `
         <div id="messageCastCloseButton" class="button close"></div>
         <div id="messageCastSettingsStart">
+            <div id="enableMessageCastContainer" class="messageCastContainer">
+                <div id="enableMessageCastLabel" class="messageCastLabel">Enable/Disable macro</div>
+                <div id="enableMessageCastToggleContainer" class="messageCastToggleContainer">
+                    <div id="enableMessageCastToggle" class="messageCastToggle"></div>
+                </div>
+            </div>
             <div id="allow$Container" class="messageCastContainer">
                 <div id="allow$Label" class="messageCastLabel">
                     Allow messages containing '$'? (Warning, it can be dangerous. This does allow people to run external code into your game)
@@ -460,6 +554,15 @@ For example, to add a and dhmis this is how the macro would look like: </div>
                 }
             });
         }
+        
+        //enable macro toggle
+        let enableMessageCastToggle = document.getElementById("enableMessageCastToggle");
+        enableMessageCastToggle.innerHTML = macroEnabled?"Currently Enabled":"Currently Not Enabled";
+        enableMessageCastToggle.classList.add(enableMessageCastToggle?"messageCastToggleActive":"messageCastToggleInactive");
+        enableMessageCastToggle.addEventListener("click",(e)=>{
+            toggleMacro();
+            enableMessageCastToggle.innerHTML = enableMessageCastToggle?"Currently Enabled":"Currently Not Enabled";
+        });
 
         //$ toggle
         let allow$Toggle = document.getElementById("allow$Toggle");
@@ -612,6 +715,12 @@ For example, to add a and dhmis this is how the macro would look like: </div>
             }
         }
     }*/
+
+    function toggleMacro() {
+        macroEnabled==true?macroEnabled=false:macroEnabled=true;
+        let errorOption = macroEnabled==true?"enabled":"not enabled";
+        GUI.instance.DisplayMessage(`The macro is now ${errorOption}`);
+    }
 
     function toggleWhitelist() {
         useWhitelist==true?useWhitelist=false:useWhitelist=true;
@@ -1388,9 +1497,63 @@ For example, to add a and dhmis this is how the macro would look like: </div>
         MESSAGECAST.lustLockedId = -1;
     }
 
+    function spellLockFunction() {
+        let macroAddedCheck = document.getElementById("macroAddedCheck");
+        if(macroAddedCheck!=null && !macroAddedCheck.classList.contains("MESSAGECASTLockSpells")) {
+            let previousCast = GAME_MANAGER.instance.CastSpell;
+            GAME_MANAGER.instance.CastSpell = async (spellId, isSelf, value, materialsRequired, variant) => {
+                if(MESSAGECAST.selfCastLocked && isSelf && spellId != 2) {
+                    GUI.instance.DisplayMessage("You are not allowed to cast spells on yourself.")
+                    return;
+                }
+                if(MESSAGECAST.spellsMajorLocked && spellId > 2) {
+                    GUI.instance.DisplayMessage("You can't cast any spell but Attack and Stoke Libido.");
+                    return;
+                }
+                if(MESSAGECAST.spellsMinorLocked && !_allowedSpellsId.includes(spellId)) {
+                    GUI.instance.DisplayMessage("You can't cast that spell.");
+                    return;
+                }
+            previousCast(spellId, isSelf, value, materialsRequired, variant);
+            } 
+            macroAddedCheck.classList.add("MESSAGECASTLockSpells");
+        }
+    }
+
+    function lockSpellsMinor() {
+        MESSAGECAST.spellsMinorLocked = true;
+        spellLockFunction();
+        GUI.instance.DisplayMessage("Casting most spells is going to be hard from now on.");
+    }
+
+    function unlockSpellsMinor() {
+        MESSAGECAST.spellsMinorLocked = false;
+    }
+
+    function lockSpellsMajor() {
+        MESSAGECAST.spellsMajorLocked = true;
+        spellLockFunction();
+        GUI.instance.DisplayMessage("You can't cast any spell but Attack and Stoke Libido.");
+    }
+
+    function unlockSpellsMajor() {
+        MESSAGECAST.spellsMajorLocked = false;
+    }
+
+    function lockSelfCast() {
+        MESSAGECAST.selfCastLocked = true;
+        spellLockFunction();
+        GUI.instance.DisplayMessage("You can't cast cast spells on yourself anymore.");
+    }
+
+    function unlockSelfCast() {
+        MESSAGECAST.selfCastLocked = false;
+    }
+
 
     MESSAGECAST.cast = cast;
     //MESSAGECAST.displayBrowserNotification = displayBrowserNotification;
+    MESSAGECAST.toggleMacro = toggleMacro;
     MESSAGECAST.toggle$ = toggle$;
     MESSAGECAST.toggleWhitelist = toggleWhitelist;
     MESSAGECAST.openSettings = openSettings;
@@ -1427,10 +1590,21 @@ For example, to add a and dhmis this is how the macro would look like: </div>
     MESSAGECAST.unlockLust = unlockLust;
     MESSAGECAST.lustLockedId = -1;
 
+    MESSAGECAST.spellsMinorLocked = false;
+    MESSAGECAST.spellsMajorLocked = false;
+    MESSAGECAST.selfCastLocked = false;
+    MESSAGECAST.lockSpellsMinor = lockSpellsMinor;
+    MESSAGECAST.lockSpellsMajor = lockSpellsMajor;
+    MESSAGECAST.lockSelfCast = lockSelfCast;
+    MESSAGECAST.unlockSpellsMinor = unlockSpellsMinor;
+    MESSAGECAST.unlockSpellsMajor = unlockSpellsMajor;
+    MESSAGECAST.unlockSelfCast = unlockSelfCast;
+
+
     load();
 
     let scriptCss=document.createElement('link');
-    scriptCss.href='https://cdn.jsdelivr.net/gh/AccountForBmr/BmrMessageCast@v0.4.0/message.css';
+    scriptCss.href='https://cdn.jsdelivr.net/gh/AccountForBmr/BmrMessageCast@v0.6.5/message.css';
     scriptCss.rel="stylesheet";
     document.body.appendChild(scriptCss);
     scriptCss.onload = () => {

@@ -54,7 +54,7 @@
     justify-content: center;
 }
 
-#allow\$Label, #allowWhitelistLabel {
+#allow\$Label, #allowWhitelistLabel, #enableMessageCastLabel {
     width: 70%;
 }
 
@@ -66,7 +66,7 @@
     height: 100%;
 }
 
-#allow\$ToggleContainer, #allowWhitelistToggleContainer {
+#allow\$ToggleContainer, #allowWhitelistToggleContainer, #enableMessageCastToggleContainer {
     width: 30%;
 }
 
