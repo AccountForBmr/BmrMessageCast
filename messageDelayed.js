@@ -489,35 +489,88 @@ var messageCast = function() {
             if(!addedAlready()) {
                 let oldNotification = NOTIFICATION.PrivateMessage;
                 NOTIFICATION.PrivateMessage = async function (params) {
-                    if(macroEnabled) {
-                        if(!MENU.Messages.active) {
-                            MESSAGECAST.cast(params);
-                        }
-                        let deleteNotif = await deleteNotification(params);
-                        if(!deleteNotif) {
+                    if(useAcceptMessage&&macroEnabled&&!MENU.Messages.active&&checkIfcastPossible(params)) {
+                        let abc = new Promise((resolve,reject)=>{
+                                var bbb=document.createElement("Button");
+                                bbb.innerHTML = params.message;
+                                bbb.style = "position:absolute;top:9%;left:10%;width:80%;height:70%;z-index:50;background-color:green";
+                                bbb.onclick = ()=>{bbb.remove();resolve();}
+                                bbb.oncontextmenu = ()=>{bbb.remove();reject();}
+                                container.appendChild(bbb);
+                            });
+						abc.then(async ()=>{
+							if(macroEnabled) {
+                                if(!MENU.Messages.active) {
+                                    MESSAGECAST.cast(params);
+                                }
+                                let deleteNotif = await deleteNotification(params);
+                                if(!deleteNotif) {
+                                    oldNotification(params);
+                                }
+                            } else {
+                                oldNotification(params);
+                            }
+						}).catch(async ()=>{oldNotification(params);});
+                    } else {
+                        if(macroEnabled) {
+                            if(!MENU.Messages.active) {
+                                MESSAGECAST.cast(params);
+                            }
+                            let deleteNotif = await deleteNotification(params);
+                            if(!deleteNotif) {
+                                oldNotification(params);
+                            }
+                        } else {
                             oldNotification(params);
                         }
-                    } else {
-                        oldNotification(params);
                     }
                 };
                 //Changing append messages too cause if you have the page in focus with the person that sent you a message you don't get notified
                 let oldAppendMessage = MENU.Messages.AppendMessage;
                 MENU.Messages.AppendMessage = async (message) => {
-                    if(macroEnabled) {
-                        let checkCast = checkIfCastNeeded(message);
-                        console.log(checkCast);
-                        //oldAppendMessage(message);
-                        if (checkCast) {
-                            cast(message);
-                            await deleteNotificationFromAppend(message);
-                        }
-                        if (checkCast && message.message.includes(deleteKeyword)) {
-                            return;
-                        }
-                        oldAppendMessage(message);
+                    if(useAcceptMessage&&macroEnabled&&checkIfCastNeeded(message)) {
+                        let abc = new Promise((resolve,reject)=>{
+							var bbb=document.createElement("Button");
+                            bbb.id = "messageCastQueueButton";
+                            bbb.innerHTML = message.message;
+                            bbb.style = "position:absolute;top:9%;left:10%;width:80%;height:70%;z-index:50;background-color:green";
+                            bbb.onclick = ()=>{bbb.remove();resolve();}
+                            bbb.oncontextmenu = ()=>{bbb.remove();reject();}
+							container.appendChild(bbb);
+						});
+						abc.then(async ()=>{
+                            if(macroEnabled) {
+                                let checkCast = checkIfCastNeeded(message);
+                                console.log(checkCast);
+                                //oldAppendMessage(message);
+                                if (checkCast) {
+                                    cast(message);
+                                    await deleteNotificationFromAppend(message);
+                                }
+                                if (checkCast && message.message.includes(deleteKeyword)) {
+                                    return;
+                                }
+                                oldAppendMessage(message);
+                            } else {
+                                oldAppendMessage(message);
+                            }
+						}).catch(async ()=>{oldAppendMessage(message);});
                     } else {
-                        oldAppendMessage(message);
+                        if(macroEnabled) {
+                            let checkCast = checkIfCastNeeded(message);
+                            console.log(checkCast);
+                            //oldAppendMessage(message);
+                            if (checkCast) {
+                                cast(message);
+                                await deleteNotificationFromAppend(message);
+                            }
+                            if (checkCast && message.message.includes(deleteKeyword)) {
+                                return;
+                            }
+                            oldAppendMessage(message);
+                        } else {
+                            oldAppendMessage(message);
+                        }
                     }
                 };
                 //Adding settings to Menu
