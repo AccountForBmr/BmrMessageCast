@@ -25,6 +25,14 @@ var messageCast = function() {
                 onclick: (e)=>{openDropdown(e,"Advanced",1);}
             },
             {
+                label: "Advanced2 >",
+                onclick: (e)=>{openDropdown(e,"Advanced2",1);}
+            },
+            {
+                label: "Your macros >",
+                onclick: (e)=>{openDropdown(e,"Macros",1);}
+            },
+            {
                 label: "Hide Message",
                 onclick: (e)=>{addMessage("Delete");}
             }
@@ -73,21 +81,19 @@ var messageCast = function() {
                 onclick: (e)=>{addMessage("ShowInventory");}
             },
             {
+                label: "Send a Private Message",
+                onclick: (e)=>{addMessage("SendPrivateMessage");}
+            },
+            {
                 label: "Custom Speech >",
                 onclick: (e)=>{openDropdown(e,"CustomSpeech",1);}
             },
             {
                 label: "Change Character Image >",
                 onclick: (e)=>{openDropdown(e,"CustomCharacter",1);}
-            },
-            {
-                label: "Send a Private Message",
-                onclick: (e)=>{addMessage("SendPrivateMessage");}
-            },
-            {
-                label: "Your macros >",
-                onclick: (e)=>{openDropdown(e,"Macros",1);}
-            },
+            }
+        ],
+        "Advanced2": [
             {
                 label: "Petrify >",
                 onclick: (e)=>{openDropdown(e,"Petrify",1);}
@@ -657,13 +663,14 @@ For example, to add a and dhmis this is how the macro would look like: </div>
         if(mesWhitelist.includes(mesUser)) {
             return true;
         }
-        GUI.instance.DisplayMessage(`${mesUser} is not whitelisted`);
+        //GUI.instance.DisplayMessage(`${mesUser} is not whitelisted`);
         return false;
     }
 
     function cast(params) {
         if(checkIfcastPossible(params)) {
             ACTION_BAR.TriggerMacro("",`${params.message}`);
+            console.log(params.message);
         }
     }
 
@@ -1159,24 +1166,24 @@ For example, to add a and dhmis this is how the macro would look like: </div>
             if(speechRules[i].isSpecial) {
                 switch (speechRules[i].regex) {
                     case "ALL":
-                        console.log("In all");
-                        console.log(speechRules[i]);
+                        //console.log("In all");
+                        //console.log(speechRules[i]);
                         newMes = newMes.replace(/(.+)/gm,speechRules[i].function);
                         return newMes;
                         break;
                     case "START":
-                        console.log("In start");
-                        console.log(speechRules[i]);
+                        //console.log("In start");
+                        //console.log(speechRules[i]);
                         newMes = newMes.replace(/^(.)/gm,speechRules[i].function);
                         break;
                     case "END":
-                        console.log("In end");
-                        console.log(speechRules[i]);
+                        //console.log("In end");
+                        //console.log(speechRules[i]);
                         newMes = newMes.replace(/(.)$/gm,speechRules[i].function);
                         break;
                     default:
-                        console.log("In default");
-                        console.log(speechRules[i]);
+                        //console.log("In default");
+                        //console.log(speechRules[i]);
                         newMes = newMes.replace(speechRules[i].regex,speechRules[i].function);
                 }
             }
@@ -1189,34 +1196,34 @@ For example, to add a and dhmis this is how the macro would look like: </div>
         let star2 = nthIndex(message, "*", 2);
         let par1 = nthIndex(message,"(",1);
         let par2 = par1+nthIndex(message.substring(par1), ")",1);
-        console.log(`1*: ${star1},\n2*: ${star2},\n1(: ${par1},\n2): ${par2}`);
+        //console.log(`1*: ${star1},\n2*: ${star2},\n1(: ${par1},\n2): ${par2}`);
         if(star1 != -1 && star2 != -1 && (star1 < par1||par1 == -1)) {
             //Tokenize **
-            console.log("In *, must copy");
-            console.log(message.substring(star1,star2+1));
+            //console.log("In *, must copy");
+            //console.log(message.substring(star1,star2+1));
             if(star1!=0) {
                 tokens.push(message.substring(0,star1));
             }
             tokens.push(message.substring(star1,star2+1));
             message = message.substring(star2+1);
-            console.log("Remaining:");
-            console.log(message);
+            //console.log("Remaining:");
+            //console.log(message);
 
         } else if (par1 != -1 && par2 > par1 && (par1 < star1||star1 == -1)) {
             //Tokenize ()
-            console.log("In (), must copy");
-            console.log(message.substring(par1,par2+1));
+            //console.log("In (), must copy");
+            //console.log(message.substring(par1,par2+1));
             if(par1!=0) {
                 tokens.push(message.substring(0,par1));
             }
             tokens.push(message.substring(par1,par2+1));
             message = message.substring(par2+1);
-            console.log("Remaining:");
-            console.log(message);
+            //console.log("Remaining:");
+            //console.log(message);
         } else {
             //The last one
-            console.log("Last");
-            console.log(message);
+            //console.log("Last");
+            //console.log(message);
             if(message) {
                 tokens.push(message);
             }
@@ -1599,7 +1606,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
     function getMyIntervalsInAMessage() {
         let theMes = "";
         for(let i in currentIntervals) {
-            theMes += `${i}) id: ${i}, name: ${currentIntervals[i].name}\n`;
+            theMes += `${i}) id: ${currentIntervals[i].id}, name: ${currentIntervals[i].name}\n`;
         }
         return theMes!=""?theMes:"I have no intervals :c";
     }
@@ -1619,8 +1626,12 @@ For example, to add a and dhmis this is how the macro would look like: </div>
     } 
 
     function removeInterval(intervalId) {
-        clearInterval(currentIntervals[Number(intervalId)].id);
-        currentIntervals.splice(Number(intervalId),1);
+        for(let i = 0; i<currentIntervals.length; i++) {
+            if(currentIntervals[i].id == Number(intervalId)) {
+                clearInterval(Number(intervalId));
+                currentIntervals.splice(i,1);
+            }
+        }
     }
 
     MESSAGECAST.cast = cast;
