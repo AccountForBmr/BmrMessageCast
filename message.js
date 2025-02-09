@@ -196,6 +196,10 @@ var messageCast = function() {
             {
                 label: "Ask for the current rules",
                 onclick: (e)=>{addMessage("ShowSpeechRules");}
+            },
+            {
+                label: "Examples >",
+                onclick: (e)=>{openDropdown(e,"SpeechExamples",1);}
             }
         ],
         "AddSpecialRules": [
@@ -214,6 +218,12 @@ var messageCast = function() {
             {
                 label: "Generic Special Rule",
                 onclick: (e)=>{addMessage("AddSpecialRuleTemplate");}
+            }
+        ],
+        "SpeechExamples": [
+            {
+                label: "Third Person Speech",
+                onclick: (e)=>{addMessage("InsertThirdPersonSpeech");}
             }
         ],
         "CustomCharacter": [
@@ -351,6 +361,7 @@ var messageCast = function() {
         "Crown": "/use Crown, Coin Toss ",
         "Consumable": "/use consumableName ",
         "UseToy": "/use toyName, toyAction ",
+        /*Location*/
         "GoToDormitory": '${GAME_MANAGER.instance.Send("Location",{nextLocation:"Dormitory",avoidEncounters:false,event:false,waitForEncounter:false})}',
         "GoToArboretum": '${GAME_MANAGER.instance.Send("Location",{nextLocation:"Arboretum",avoidEncounters:false,event:false,waitForEncounter:false})}',
         "GoToAuditorium": '${GAME_MANAGER.instance.Send("Location",{nextLocation:"Auditorium",avoidEncounters:false,event:false,waitForEncounter:false})}',
@@ -360,6 +371,7 @@ var messageCast = function() {
         "GoToWard": '${GAME_MANAGER.instance.Send("Location",{nextLocation:"Ward",avoidEncounters:false,event:false,waitForEncounter:false})}',
         "GoToStop": '${GAME_MANAGER.instance.Send("Location",{nextLocation:true,avoidEncounters:false,event:false,waitForEncounter:false})}',
         "ShowInventory": `\${theMes=MESSAGECAST.getMyInventoryInAMessage(0);GAME_MANAGER.instance.WaitFor("Message",{receiver:"${GAME_MANAGER.instance.username}",message:theMes,load:true});}`,
+        /*speech*/
         "SpeechToggle": "${MESSAGECAST.loadCustomSpeech();MESSAGECAST.activeCustomSpeech=true;}",
         "AddSpeechRule": '${MESSAGECAST.loadCustomSpeech();MESSAGECAST.addSpeechRule(/replaceThis/gm, (mes)=>{return "replacedWith";});}',
         /*"AddSpecialRule": '${MESSAGECAST.loadCustomSpeech();MESSAGECAST.addSpeechRuleSpecial("ALL/START/END", (mes)=>{return "replacedWith"});}',*/
@@ -370,15 +382,19 @@ var messageCast = function() {
         "RemoveSpecificSpeechRule": "${MESSAGECAST.loadCustomSpeech();MESSAGECAST.removeSpeechRule(0);}",
         "RemoveAllSpeechRules": '${MESSAGECAST.loadCustomSpeech();MESSAGECAST.removeSpeechRule("ALL");}',
         "ShowSpeechRules": `\${theMes=MESSAGECAST.getMySpeechRulesInAMessage();GAME_MANAGER.instance.WaitFor("Message",{receiver:"${GAME_MANAGER.instance.username}",message:theMes,load:true});}`,
+        "InsertThirdPersonSpeech": `\${MESSAGECAST.loadCustomSpeech();MESSAGECAST.addMultipleRules([{regex:${/\bam\b \bi\b/gi},function:(mes)=>{return "is".concat(" {name}");}},{regex:${/\bhave\b \bi\b/gi},function:(mes)=>{return "has".concat(" {name}");}},{regex:${/\bdon't\b \bi\b/gi},function:(mes)=>{return "doesn't".concat(' {name}');}},{regex:${/\bdo\b \bi\b/gi},function:(mes)=>{return "does".concat(' {name}');}},{regex:${/\b((ca|must|should|may|might|wo|shall|would|did)n't)\b \bi\b/gi},function:(mes)=>{return arguments[1].concat(' {name}');}}]);}`,
+        /*Change Character*/
         "ChangeCharacterLeft": `\${MESSAGECAST.changeCharacterImage(0,"imgUrl",{scale:"1,1",backgroundSize:"auto 100%"});}`,
         "ChangeCharacterRight": `\${MESSAGECAST.changeCharacterImage(1,"imgUrl",{scale:"1,1",backgroundSize:"auto 100%"});}`,
         "ResetCharacterLeft": `\${MESSAGECAST.resetCharacterImage(0);}`,
         "ResetCharacterRight": `\${MESSAGECAST.resetCharacterImage(1);}`,
         "SendPrivateMessage": '${GAME_MANAGER.instance.WaitFor("Message",{receiver:"usernameReceiver",message:"yourMessage",load:true});}',
+        /*Petrify*/
         "PetrifyPart": '${MESSAGECAST.petrifyPart("Underpants");}',
         "PetrifyResetPart": '${MESSAGECAST.unpetrifyPart("Underpants");}',
         "PetrifyAll": '${MESSAGECAST.petrifyAll();}',
         "PetrifyResetAll": '${MESSAGECAST.unpetrifyAll();}',
+        /*Lock/Unlock*/
         "LockMovement": '${MESSAGECAST.lockMovement();}',
         "UnlockMovement": '${MESSAGECAST.unlockMovement();}',
         "LockVoice": '${MESSAGECAST.lockVoice();}',
@@ -391,6 +407,7 @@ var messageCast = function() {
         "UnlockSpellsMinor": '${MESSAGECAST.unlockSpellsMinor();}',
         "LockSpellsMajor": '${MESSAGECAST.lockSpellsMajor();}',
         "UnlockSpellsMajor": '${MESSAGECAST.unlockSpellsMajor();}',
+        /*Intervals*/
         "GenericInterval": '${let tmpInterval={};let intervalId = setInterval(()=>{let possibleMessages=["Option1","Option2"];let mes=possibleMessages[Math.floor(Math.random()*possibleMessages.length)];if(Math.random()<0.0083) {ACTION_BAR.TriggerMacro("",mes);};},30000);tmpInterval.id = intervalId;tmpInterval.name = "Interval"+intervalId;currentIntervals.push(tmpInterval);}',
         "SayInterval": '${MESSAGECAST.addInterval({ outcomes: ["Hi","Hello"], probability: 0.0083, checkEvery: 30000, prefix: "/s ", name:""});}',
         "CastInterval": '${MESSAGECAST.addInterval({ outcomes: ["Shrink","Soft Skin"], probability: 0.0083, checkEvery: 30000, prefix: "/cast [@player] ", name:""});}',
@@ -1137,6 +1154,10 @@ For example, to add a and dhmis this is how the macro would look like: </div>
         speechRules.push({regex:where,function:replaceFunction,isSpecial:true});
     }
 
+    function addMultipleRules(allTheRules) {
+        speechRules = speechRules.concat(allTheRules);
+    }
+
     function removeSpeechRule(index) {
         if(index == "ALL") {
             speechRules = [];
@@ -1650,6 +1671,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
     MESSAGECAST.addSpeechRuleSpecial = addSpeechRuleSpecial;
     MESSAGECAST.removeSpeechRule = removeSpeechRule;
     MESSAGECAST.getMySpeechRulesInAMessage = getMySpeechRulesInAMessage;
+    MESSAGECAST.addMultipleRules = addMultipleRules;
 
     MESSAGECAST.characterImagesUrl = ["",""];
     MESSAGECAST.changeCharacterImage = changeCharacterImage;
