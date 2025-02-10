@@ -382,7 +382,8 @@ var messageCast = function() {
         "RemoveSpecificSpeechRule": "${MESSAGECAST.loadCustomSpeech();MESSAGECAST.removeSpeechRule(0);}",
         "RemoveAllSpeechRules": '${MESSAGECAST.loadCustomSpeech();MESSAGECAST.removeSpeechRule("ALL");}',
         "ShowSpeechRules": `\${theMes=MESSAGECAST.getMySpeechRulesInAMessage();GAME_MANAGER.instance.WaitFor("Message",{receiver:"${GAME_MANAGER.instance.username}",message:theMes,load:true});}`,
-        "InsertThirdPersonSpeech": `\${MESSAGECAST.loadCustomSpeech();MESSAGECAST.addMultipleRules([{regex:${/\bam\b \bi\b/gi},function:(mes)=>{return "is".concat(" {name}");}},{regex:${/\bhave\b \bi\b/gi},function:(mes)=>{return "has".concat(" {name}");}},{regex:${/\bdon't\b \bi\b/gi},function:(mes)=>{return "doesn't".concat(' {name}');}},{regex:${/\bdo\b \bi\b/gi},function:(mes)=>{return "does".concat(' {name}');}},{regex:${/\b((ca|must|should|may|might|wo|shall|would|did)n't)\b \bi\b/gi},function:(mes)=>{return arguments[1].concat(' {name}');}}]);}`,
+
+        "InsertThirdPersonSpeech": `\${MESSAGECAST.loadCustomSpeech();MESSAGECAST.addSpeechRule(${/\bam\b \bi\b/gi},(mes)=>{return "is".concat(" {name}");});MESSAGECAST.addSpeechRule(${/\bhave\b \bi\b/gi},(mes)=>{return "has".concat(" {name}");});MESSAGECAST.addSpeechRule(${new RegExp(/\bdon't\b \bi\b/gi)},(mes)=>{return "doesn't".concat(' {name}');});MESSAGECAST.addSpeechRule(/\bdo\b \bi\b/gi,(mes)=>{return "does".concat(' {name}');});MESSAGECAST.addSpeechRule(/\b((ca|must|should|may|might|wo|shall|would|did)n't)\b \bi\b/gi,(mes)=>{return arguments[1].concat(' {name}');});}`,
         /*Change Character*/
         "ChangeCharacterLeft": `\${MESSAGECAST.changeCharacterImage(0,"imgUrl",{scale:"1,1",backgroundSize:"auto 100%"});}`,
         "ChangeCharacterRight": `\${MESSAGECAST.changeCharacterImage(1,"imgUrl",{scale:"1,1",backgroundSize:"auto 100%"});}`,
@@ -1131,8 +1132,8 @@ For example, to add a and dhmis this is how the macro would look like: </div>
         return theMes!=""?theMes:"My inventory is empty";
     }
 
+    function loadCustomSpeech(customSpeechOnOff = true) {
     //stuff for the custom speech
-    function loadCustomSpeech() {
         let macroAddedCheck = document.getElementById("macroAddedCheck");
         if(macroAddedCheck!=null && !macroAddedCheck.classList.contains("MESSAGECASTCustomSpeech")) {
             let previousSend = GAME_MANAGER.instance.Send;
@@ -1144,9 +1145,12 @@ For example, to add a and dhmis this is how the macro would look like: </div>
             };
             macroAddedCheck.classList.add("MESSAGECASTCustomSpeech");
         }
+        MESSAGECAST.activeCustomSpeech = customSpeechOnOff;
     }
 
     function addSpeechRule(replaceRegex,replaceFunction) {
+        console.log(replaceRegex);
+        console.log(replaceFunction);
         speechRules.push({regex:replaceRegex,function:replaceFunction});
     }
 
