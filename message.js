@@ -382,8 +382,7 @@ var messageCast = function() {
         "RemoveSpecificSpeechRule": "${MESSAGECAST.loadCustomSpeech();MESSAGECAST.removeSpeechRule(0);}",
         "RemoveAllSpeechRules": '${MESSAGECAST.loadCustomSpeech();MESSAGECAST.removeSpeechRule("ALL");}',
         "ShowSpeechRules": `\${theMes=MESSAGECAST.getMySpeechRulesInAMessage();GAME_MANAGER.instance.WaitFor("Message",{receiver:"${GAME_MANAGER.instance.username}",message:theMes,load:true});}`,
-
-        "InsertThirdPersonSpeech": `\${MESSAGECAST.loadCustomSpeech();MESSAGECAST.addSpeechRule(${/\bam\b \bi\b/gi},(mes)=>{return "is".concat(" {name}");});MESSAGECAST.addSpeechRule(${/\bhave\b \bi\b/gi},(mes)=>{return "has".concat(" {name}");});MESSAGECAST.addSpeechRule(${new RegExp(/\bdon't\b \bi\b/gi)},(mes)=>{return "doesn't".concat(' {name}');});MESSAGECAST.addSpeechRule(/\bdo\b \bi\b/gi,(mes)=>{return "does".concat(' {name}');});MESSAGECAST.addSpeechRule(/\b((ca|must|should|may|might|wo|shall|would|did)n't)\b \bi\b/gi,(mes)=>{return arguments[1].concat(' {name}');});}`,
+        "InsertThirdPersonSpeech": `\${MESSAGECAST.loadCustomSpeech();MESSAGECAST.addSpeechRule(/\\bam\\b \\bi\\b/gi,(mes)=>{return "is".concat(" {"+"name}");});MESSAGECAST.addSpeechRule(/\\bhave\\b \\bi\\b/gi,(mes)=>{return "has".concat(" {"+"name}");});MESSAGECAST.addSpeechRule(/\\bdon't\\b \\bi\\b/gi,(mes)=>{return "doesn't".concat(' {'+'name}');});MESSAGECAST.addSpeechRule(/\\bdo\\b \\bi\\b/gi,(mes)=>{return "does".concat(' {'+'name}');});MESSAGECAST.addSpeechRule(MESSAGECAST.complicatedRegex[0],(...arguments)=>{return arguments[1].concat(' {'+'name}');});MESSAGECAST.addSpeechRule(MESSAGECAST.complicatedRegex[1],(...arguments)=>{return arguments[1].concat(' {'+'name}');});MESSAGECAST.addSpeechRule(MESSAGECAST.complicatedRegex[2],(...arguments)=>{console.log(arguments);res='{'+'name}';wrongGuess=['need','feed','seed','bleed','weed','heed','proceed','speed','succeed','bed','wed','shed','shred','sled'];if(wrongGuess.includes(arguments[3])){return arguments[0];}if(arguments[1]!=undefined){res=res.concat(' ',arguments[1])}return res.concat(' ',arguments[3]);});MESSAGECAST.addSpeechRule(MESSAGECAST.complicatedRegex[3],(...arguments)=>{console.log(arguments);return arguments[1]==undefined?'{'+'name}'.concat(' has'):'{'+'name} '.concat(arguments[1],' has');});MESSAGECAST.addSpeechRule(MESSAGECAST.complicatedRegex[4],(...arguments)=>{console.log(arguments);return arguments[1]==undefined?'{'+'name}'.concat(' is'):'{'+'name} '.concat(arguments[1],' is');});MESSAGECAST.addSpeechRule(MESSAGECAST.complicatedRegex[5],(...arguments)=>{console.log(arguments);return arguments[1]==undefined?'{'+'name}'.concat(" hasn't"):'{'+'name} '.concat(arguments[1]," hasn't");});MESSAGECAST.addSpeechRule(MESSAGECAST.complicatedRegex[6],(...arguments)=>{console.log(arguments);return arguments[1]==undefined?'{'+'name}'.concat(" doesn't"):'{'+'name} '.concat(arguments[1]," doesn't");});MESSAGECAST.addSpeechRule(MESSAGECAST.complicatedRegex[7],(...arguments)=>{console.log(arguments);return arguments[1]==undefined?'{'+'name}'.concat(' ',arguments[3]):'{'+'name} '.concat(arguments[1],' ',arguments[3]);});MESSAGECAST.addSpeechRule(MESSAGECAST.complicatedRegex[8],(...arguments)=>{console.log(arguments);return arguments[1]==undefined?'{'+'name}'.concat(' ',arguments[3]):'{'+'name} '.concat(arguments[1],' ',arguments[3]);});MESSAGECAST.addSpeechRule(/\\bi'm\\b/gi,(mes)=>{return '{'+'name}'.concat("'s");});MESSAGECAST.addSpeechRule(/\\bi've\\b/gi,(mes)=>{return '{'+'name}'.concat("'s");});MESSAGECAST.addSpeechRule(MESSAGECAST.complicatedRegex[9],(...arguments)=>{console.log(arguments);return arguments[1]==undefined?'{'+'name}'.concat(' ',arguments[3].slice(0,-1),'ies'):'{'+'name} '.concat(arguments[1],' ',arguments[3].slice(0,-1),'ies');});MESSAGECAST.addSpeechRule(MESSAGECAST.complicatedRegex[10],(...arguments)=>{console.log(arguments);res='{'+'name}'; if(arguments[1]!=undefined){res=res.concat(' ',arguments[1]);}return String(arguments[4]).endsWith('y')?res.concat(' ',arguments[3].slice(0,-1),'ies'):res.concat(' ',arguments[3],'es');});MESSAGECAST.addSpeechRule(MESSAGECAST.complicatedRegex[11],(...arguments)=>{console.log(arguments);return arguments[1]==undefined?'{'+'name}'.concat(' ',arguments[3],'s'):'{'+'name} '.concat(arguments[1],' ',arguments[3],'s');});MESSAGECAST.addSpeechRule(/\\bi\\b/gi,(mes)=>{return '{'+'name}';});MESSAGECAST.addSpeechRule(/\\bme\\b/gi,(mes)=>{return '{'+'name}';});MESSAGECAST.addSpeechRule(/\\bmy\\b/gi,(mes)=>{return "{"+"name}'s";});MESSAGECAST.addSpeechRule(/\\bmyself\\b/gi,(mes)=>{return 'herself';});MESSAGECAST.addSpeechRule(/\\bmine\\b/gi,(mes)=>{return 'hers';});MESSAGECAST.addSpeechRule(MESSAGECAST.complicatedRegex[12],(...arguments)=>{console.log(arguments);console.log(arguments[1]);return arguments[1].toUpperCase();});}`,
         /*Change Character*/
         "ChangeCharacterLeft": `\${MESSAGECAST.changeCharacterImage(0,"imgUrl",{scale:"1,1",backgroundSize:"auto 100%"});}`,
         "ChangeCharacterRight": `\${MESSAGECAST.changeCharacterImage(1,"imgUrl",{scale:"1,1",backgroundSize:"auto 100%"});}`,
@@ -507,6 +506,21 @@ var messageCast = function() {
     25 = Soul Imprint,
     29 = Conjure Item.
     */
+   var complicatedRegex = [
+    /\b((ca|must|should|may|might|wo|shall|would|did)n't)\b \bi\b/gi,
+    /\b(can|must|should|may|might|will|shall|would|did)\b \bi\b/gi,
+    /\bi\b\s*(\b(always|also|hardly ever|often just|often|\w+ly|never|ever|even|seldom|sometimes|once|twice|now|then|already|last|next|yesterday|today|after|afterwards|later|since|still|just|seldom|fast|hard|so|straight|well|lots|somewhat|very much|very|much|most likely|most|quite likely|quite|too|enough|almost|far)\b)* \b(arose|awoke|bore|became|began|bent|bound|bit|bled|blew|broke|bred|brought|built|burnt|bought|could|caught|chose|clung|came|crept|dealt|dug|did|drew|dreamt|drank|drove|ate|fell|fed|felt|fought|found|flew|forbade|forgot|forgave|froze|got|gave|went|ground|grew|hung|had|heard|hid|held|kept|knelt|knew|laid|led|leant|learnt|left|lent|lay|lied|lit|lost|made|might|meant|met|mowed|had|to|overtook|paid|rode|rang|rose|ran|sawed|said|saw|sold|sent|sewed|shook|should|shone|shot|showed|shrank|sang|sank|sat|slept|slid|smelt|sowed|spoke|spelt|spent|spilt|spun|spat|stood|stole|stuck|stung|stank|struck|swore|swept|swelled|swam|swung|took|taught|tore|told|thought|threw|understood|was|woke|wore|wept|would|won|wound|wrote|[\w]+ed)\b/gi,
+    /\bi\b\s*(\b(always|also|hardly ever|often just|often|\w+ly|never|ever|even|seldom|sometimes|once|twice|now|then|already|last|next|yesterday|today|after|afterwards|later|since|still|just|seldom|fast|hard|so|straight|well|lots|somewhat|very much|very|much|most likely|most|quite likely|quite|too|enough|almost|far)\b)* \bhave\b/gi,
+    /\bi\b\s*(\b(always|also|hardly ever|often just|often|\w+ly|never|ever|even|seldom|sometimes|once|twice|now|then|already|last|next|yesterday|today|after|afterwards|later|since|still|just|seldom|fast|hard|so|straight|well|lots|somewhat|very much|very|much|most likely|most|quite likely|quite|too|enough|almost|far)\b)* \bam\b/gi,
+    /\bi\b\s*(\b(always|also|hardly ever|often just|often|\w+ly|never|ever|even|seldom|sometimes|once|twice|now|then|already|last|next|yesterday|today|after|afterwards|later|since|still|just|seldom|fast|hard|so|straight|well|lots|somewhat|very much|very|much|most likely|most|quite likely|quite|too|enough|almost|far)\b)* \bhaven't\b/gi,
+    /\bi\b\s*(\b(always|also|hardly ever|often just|often|\w+ly|never|ever|even|seldom|sometimes|once|twice|now|then|already|last|next|yesterday|today|after|afterwards|later|since|still|just|seldom|fast|hard|so|straight|well|lots|somewhat|very much|very|much|most likely|most|quite likely|quite|too|enough|almost|far)\b)* \bdon't\b/gi,
+    /\bi\b\s*(\b(always|also|hardly ever|often just|often|\w+ly|never|ever|even|seldom|sometimes|once|twice|now|then|already|last|next|yesterday|today|after|afterwards|later|since|still|just|seldom|fast|hard|so|straight|well|lots|somewhat|very much|very|much|most likely|most|quite likely|quite|too|enough|almost|far)\b)* \b((could|must|should|may|might|wo|shall|would|did)n't)\b/gi,
+    /\bi\b\s*(\b(always|also|hardly ever|often just|often|\w+ly|never|ever|even|seldom|sometimes|once|twice|now|then|already|last|next|yesterday|today|after|afterwards|later|since|still|just|seldom|fast|hard|so|straight|well|lots|somewhat|very much|very|much|most likely|most|quite likely|quite|too|enough|almost|far)\b)* \b(can|must|should|may|might|will|shall|did)\b/gi,
+    /\bi\b\s*(\b(always|also|hardly ever|often just|often|\w+ly|never|ever|even|seldom|sometimes|once|twice|now|then|already|last|next|yesterday|today|after|afterwards|later|since|still|just|seldom|fast|hard|so|straight|well|lots|somewhat|very much|very|much|most likely|most|quite likely|quite|too|enough|almost|far)\b)* \b(apply|ally|bully|belly|butterfly|comply|colly|dolly|dilly|dally|dillydally|disally|fly|gully|gally|grilly|imply|injelly|jelly|jolly|misapply|multiply|misally|medly|overfly|oversupply|outfly|overply|overmultiply|ply|reply|rally|rely|reapply|resupply|sully|sally|supply|shillyshally|skelly|tally)\b/gi,
+    /\bi\b\s*(\b(always|also|hardly ever|often just|often|\w+ly|never|ever|even|seldom|sometimes|once|twice|now|then|already|last|next|yesterday|today|after|afterwards|later|since|still|just|seldom|fast|hard|so|straight|well|lots|somewhat|very much|very|much|most likely|most|quite likely|quite|too|enough|almost|far)\b)* \b((?!also)[\w]+(s|x|z|sh|ch|o|[^aeioul]y))\b/gi,
+    /\bi\b\s*(\b(always|also|hardly ever|often just|often|\w+ly|never|ever|even|seldom|sometimes|once|twice|now|then|already|last|next|yesterday|today|after|afterwards|later|since|still|just|seldom|fast|hard|so|straight|well|lots|somewhat|very much|very|much|most likely|most|quite likely|quite|too|enough|almost|far)\b)* \b(\w+)\b/gi,
+    /(^\w|[\.\?\!]\s*\w)/gi];
+    var _speechRuleId = 0;
     
     function load() {
         if(insertHelperMacros()) {
@@ -1149,25 +1163,28 @@ For example, to add a and dhmis this is how the macro would look like: </div>
     }
 
     function addSpeechRule(replaceRegex,replaceFunction) {
-        console.log(replaceRegex);
-        console.log(replaceFunction);
-        speechRules.push({regex:replaceRegex,function:replaceFunction});
+        speechRules.push({regex:replaceRegex,function:replaceFunction,id:_speechRuleId+=1});
     }
 
     function addSpeechRuleSpecial(where,replaceFunction) {
-        speechRules.push({regex:where,function:replaceFunction,isSpecial:true});
+        speechRules.push({regex:where,function:replaceFunction,id:_speechRuleId+=1,isSpecial:true});
     }
 
     function addMultipleRules(allTheRules) {
         speechRules = speechRules.concat(allTheRules);
     }
 
-    function removeSpeechRule(index) {
-        if(index == "ALL") {
+    function removeSpeechRule(speechId) {
+        if(speechId == "ALL") {
             speechRules = [];
             return;
         }
-        speechRules.splice(Number(index),1);
+        for(let i = 0; i<speechRules.length; i++) {
+            if(speechRules[i].id == Number(speechId)) {
+                speechRules.splice(i,1);
+                return;
+            }
+        }
     }
 
     function applySpeech(message) {
@@ -1271,11 +1288,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
     function getMySpeechRulesInAMessage() {
         let theMes = "";
         for(let i in speechRules) {
-            if(!speechRules[i].isSpecial) {
-                theMes += `${i}) regex: ${speechRules[i].regex}, function: ${speechRules[i].function}\n`;
-            } else {
-                theMes += `${i}) regex: ${speechRules[i].regex}, function: ${speechRules[i].function}\n`;
-            }
+            theMes += `${i}) id:${speechRules[i].id}, regex: ${speechRules[i].regex}, function: ${speechRules[i].function}\n`;
         }
         return theMes!=""?theMes:"I have no rules >:3";
     }
@@ -1553,7 +1566,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
     function unlockVoice() {
         for(let i=0;i<speechRules.length;i++) {
             if(speechRules[i].regex.toString()=="/(((.+)))/gm") {
-                removeSpeechRule(i);
+                removeSpeechRule(speechRules[i].id);
                 return;
             }
         }
@@ -1712,6 +1725,8 @@ For example, to add a and dhmis this is how the macro would look like: </div>
     MESSAGECAST.getMyIntervalsInAMessage = getMyIntervalsInAMessage;
     MESSAGECAST.addInterval = addInterval;
     MESSAGECAST.removeInterval = removeInterval;
+
+    MESSAGECAST.complicatedRegex = complicatedRegex;
 
     load();
 
