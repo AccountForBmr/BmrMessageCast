@@ -354,6 +354,16 @@ var messageCast = function() {
             {
                 label: "Ask for the current intervals",
                 onclick: (e)=>{addMessage("ShowIntervals");}
+            },
+            {
+                label: "Examples",
+                onclick: (e)=>{openDropdown(e,"IntervalsExamples",1);}
+            }
+        ],
+        "IntervalsExamples": [
+            {
+                label: "Petrify Interval",
+                onclick: (e)=>{addMessage("PetrificationInterval");}
             }
         ]
     };
@@ -429,6 +439,7 @@ var messageCast = function() {
         "LockInterval": '${MESSAGECAST.addInterval({ outcomes: ["${MESSAGECAST.lockMovement()}","${MESSAGECAST.unlockMovement()}"], probability: 0.0083, checkEvery: 30000, prefix: "", name:""});}',
         "SillyInterval": `\${MESSAGECAST.addInterval({ outcomes: ["/cast [@player] Change Name, ${GAME_MANAGER.instance.character.name}'s Underwear","/s P-Please, let me be your underwear","/s I want to hug you tightly~","/blush","/kneel","Why did you not turn me into your underwear yet?","/cast [@player] Soft Skin"], probability: 0.25, checkEvery: 10000, prefix: "", name:""});}`,
         "RemoveInterval": '${MESSAGECAST.removeInterval(id);}',
+        "PetrificationInterval": '${let tmpInterval={};let intervalId = setInterval(()=>{MESSAGECAST.petrifyIntervalIndex = MESSAGECAST.petrifyIntervalIndex || 0;let petrificationOrder=[3,2,5,1,4,7,6,0];let mes="${MESSAGECAST.petrifyPart("+petrificationOrder[MESSAGECAST.petrifyIntervalIndex]+")}";ACTION_BAR.TriggerMacro("",mes);MESSAGECAST.petrifyIntervalIndex+=1;if(MESSAGECAST.petrifyIntervalIndex==petrificationOrder.length){MESSAGECAST.petrifyIntervalIndex=0;MESSAGECAST.removeInterval(intervalId);}},6000);tmpInterval.id = intervalId;tmpInterval.name = "PetrifyInterval"+intervalId;currentIntervals.push(tmpInterval);}',
         "ShowIntervals": `\${theMes=MESSAGECAST.getMyIntervalsInAMessage();GAME_MANAGER.instance.WaitFor("Message",{receiver:"${GAME_MANAGER.instance.username}",message:theMes,load:true});}`,
     }
 
@@ -441,35 +452,35 @@ var messageCast = function() {
     var _allConjureItems = ["Anal Beads","Aviator Glasses","Ball Gag","Barmaid Dress","Belt Collar","Big Butt Plug","Bikini Bottom","Bikini Top","Body Bow","Bow Dress","Boxer Briefs","Bra","Briefs","Bunny Tail Plug","Butt Plug","Cage Bra","Cage Panties","Cat Tail Plug","Catsuit","Chastity Belt","Chastity Cage","Cheerleader Uniform","Cock Dildo","Collar","Converse Shoes","Dildo","Dotted Bra","Dotted Bralette","Dotted Panties","Dress Pants","Dress Shirt","Feather Duster","Feathered Jacket","Feathered Masquerade Mask","Fox Tail Plug","French Maid Dress","French Maid Headband","Frilly Shirt","G-String","Gala Dress","Glasses","Goggles","Heels","High Neck Leather Collar","Holiday Babydoll","Howie Lab Coat","Huge Butt Plug","Iron Collar","Iron Cuffs","Jeans","Keyhole Sweater","Kitsune Tails Plug","Lab Coat","Latex French Maid Dress","Leather Belt","Leather Collar","Leather Cuffs","Leather Jacket","Leather Skirt","Leather Trench Coat","Leggings","Long Skirt","Long Tuxedo Shorts","Long-Sleeved Crop Top","Mary Janes","Masquerade Mask","Massive Butt Plug","Overbust Corset","Oxfords","Panties","Pareo","Plaid Skirt","Plaid Tie","Plain Bralette","Plain Panties","Pretty Ballerinas","Protective Rubber Boots","Protective Rubber Gloves","Push-Up Bra","Ring","Round Glasses","Runners","School Uniform","Shirt","Short Dress","Short-Sleeved Dress Shirt","Silk Gloves","Silk Opera Gloves","Skimpy String Bra","Skirt","Slippers","Small Butt Plug","Sorceress Dress","Statuette Dildo","Steel Collar","Stockings","Striped Bra","Striped Bralette","Striped Long-Sleeved Crop Top","Striped Panties","Striped Shirt","Studded Collar","Suit Jacket","Suitpants","Summer Hat","Sweater","Swimming Trunks","T-Shirt","Tanga Panties","Thigh High Socks","Thong","Tie","Tights","Top Hat","Triangle Bra","Tube Top","Tuxedo Shorts","Vest","Victorian Jacket","Vinyl Leotard","Vinyl Opera Gloves","Vinyl Pencil Skirt","Vinyl Thigh High Boots","Vinyl Tube Top","Virgin Killer Sweater","Wedding Bouquette","Wedding Dress","Wedding Gloves","Wedding Ring","Wedding Veil","Winter Hat","Witch Hat","Women's Dress Shirt","Women's Jeans","Women's T-Shirt"];
     var _petrifyParts = [
         {
-            message: ["{name}'s nipples have never been more hard.","{name}'s boobs feel way heavier as they are now made of stone."],
+            message: ["{name}'s nipples hardens and perk up as they are now made of stone.","{name}'s boobs are nothing more than some round and sensitive piece of stone hanging from their chest now."],
             additionalEffect: []
         },
         {
-            message: ["{name} now has chiseled abs. Quite literally."],
+            message: ["{name}'s hips and abdomen have been chiseled out into a perfectly smooth piece of stone below their chest."],
             additionalEffect: []
         },
         {
-            message: ["{name}'s cock is now rock hard.","{name}'s pussy is now rock hard."],
+            message: ["{name}'s cock is now nothing more than a rock hard decorative dick stuck on {name}'s crotch, and it is constantly reminding {name} about how horny and needy it can be.","{name}'s pussy is now nothing more than a decorative petrified pleasure hole stuck on {name}'s crotch, and it is constantly reminding {name} about how horny and needy it can be."],
             additionalEffect: [lockLust]
         },
         {
-            message: ["{name}'s arms are now locked in place."],
+            message: ["{name}'s arms are now locked in place as a petrifying spell targets them."],
             additionalEffect: [lockSpellsMinor]
         },
         {
-            message: ["{name}'s expression will not change anymore.","{name}'s expression has been locked into one of pure bliss."],
+            message: ["{name}'s expression will not change anymore due to a petrification spell.","{name}'s expression has been locked into one of pure bliss thanks to a petrification spell."],
             additionalEffect: [lockVoice]
         },
         {
-            message: ["{name}'s body feels more stiff as it petrifies slightly."],
+            message: ["{name}'s body feels more stiff as a petrifying curse is spreading through each joint."],
             additionalEffect: []
         },
         {
-            message: ["{name}'s butt can't jiggle anymore as it's now made of stone.","{name}'s butt can't jiggle anymore as it's now made of stone. Also, {name}'s tail has unfortunately lost its fluffness."],
+            message: ["{name}'s ass fat feels way more heavy now that {name}'s butt is made of stone.","{name}'s ass fat feels way more heavy now that {name}'s butt is made of stone. Unfortunately, the petrification also spread through {name}'s tail, which can't wag, swish, twitch or do anything but be a cute piece decorating {name}'s back at the moment."],
             additionalEffect: []
         },
         {
-            message: ["{name}'s feet and legs are now stuck in place. Hope they weren't in an uncomfortable position."],
+            message: ["{name}'s feet and legs are now stuck in place in whatever position they were as petrification starts spreading through them."],
             additionalEffect: [lockMovement]
         }
     ];
@@ -559,7 +570,6 @@ var messageCast = function() {
                 MENU.Messages.AppendMessage = async (message) => {
                     if(macroEnabled) {
                         let checkCast = checkIfCastNeeded(message);
-                        console.log(checkCast);
                         //oldAppendMessage(message);
                         if (checkCast) {
                             cast(message);
@@ -738,7 +748,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
     }
 
     async function deleteNotification(params) {
-        console.log("I'm in deleteNotification check");
+        //console.log("I'm in deleteNotification check");
         if(params.message.includes(deleteKeyword)&&!MENU.Messages.active) {
             if(!checkIfcastPossible(params)) {
                 return false;
@@ -747,9 +757,9 @@ For example, to add a and dhmis this is how the macro would look like: </div>
             let unreadMes = document.getElementById("frame_top_right").getElementsByClassName("unread_messages")[0].getElementsByTagName("div")[1].textContent;
             GUI.instance.SetUnreadMessages(Number(unreadMes)-1);
 
-            console.log("Deleting message");
-            console.log("----------------");
-            let username = params.sender.username;
+            //console.log("Deleting message");
+            //console.log("----------------");
+            //let username = params.sender.username;
             //let howManyUnread = Number(document.getElementById("frame_top_right").getElementsByClassName("unread_messages")[0].getElementsByTagName("div")[1].textContent);
             //GUI.instance.SetUnreadMessages(howManyUnread-1);
             //let isInbox = getCurrentView() === 0;
@@ -764,12 +774,11 @@ For example, to add a and dhmis this is how the macro would look like: </div>
             }
             return true;
         }
-        console.log("I'm returning false");
         return false;
     }
 
     async function deleteNotificationFromAppend(params) {
-        console.log("I'm in deleteNotification check");
+        //console.log("I'm in deleteNotification check");
         if(params.message.includes(deleteKeyword)&&checkIfCastNeeded(params)) {
             if(!checkIfcastPossible(params)) {
                 return false;
@@ -778,9 +787,9 @@ For example, to add a and dhmis this is how the macro would look like: </div>
             let unreadMes = document.getElementById("frame_top_right").getElementsByClassName("unread_messages")[0].getElementsByTagName("div")[1].textContent;
             GUI.instance.SetUnreadMessages(Number(unreadMes)-1);
 
-            console.log("Deleting message");
-            console.log("----------------");
-            let username = params.sender.username;
+            //console.log("Deleting message");
+            //console.log("----------------");
+            //let username = params.sender.username;
             //let howManyUnread = Number(document.getElementById("frame_top_right").getElementsByClassName("unread_messages")[0].getElementsByTagName("div")[1].textContent);
             //GUI.instance.SetUnreadMessages(howManyUnread-1);
             //let isInbox = getCurrentView() === 0;
@@ -789,7 +798,6 @@ For example, to add a and dhmis this is how the macro would look like: </div>
             console.log("Message deleted");
             return true;
         }
-        console.log("I'm returning false");
         return false;
     }
 
@@ -1023,7 +1031,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
         _dropdownLayer = layer;
         */
         if(document.getElementById(dropId)) {
-            console.log("already here");
+            //console.log("already here");
             return;
         }
 
@@ -1334,7 +1342,6 @@ For example, to add a and dhmis this is how the macro would look like: </div>
         if(macroAddedCheck!=null && !macroAddedCheck.classList.contains("MESSAGECASTCustomImages")) {
             let oldUpdateLocation = SCENE.instance.UpdateLocation;
             SCENE.instance.UpdateLocation = async (location) => {
-                console.log(location);
                 await oldUpdateLocation(location);
                 MESSAGECAST.changeCharacterImage(0);
                 MESSAGECAST.changeCharacterImage(1);
