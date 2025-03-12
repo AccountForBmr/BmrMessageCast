@@ -25,6 +25,14 @@ var messageCast = function() {
                 onclick: (e)=>{openDropdown(e,"Advanced",1);}
             },
             {
+                label: "Advanced2 >",
+                onclick: (e)=>{openDropdown(e,"Advanced2",1);}
+            },
+            {
+                label: "Your macros >",
+                onclick: (e)=>{openDropdown(e,"Macros",1);}
+            },
+            {
                 label: "Hide Message",
                 onclick: (e)=>{addMessage("Delete");}
             }
@@ -73,21 +81,19 @@ var messageCast = function() {
                 onclick: (e)=>{addMessage("ShowInventory");}
             },
             {
+                label: "Send a Private Message",
+                onclick: (e)=>{addMessage("SendPrivateMessage");}
+            },
+            {
                 label: "Custom Speech >",
                 onclick: (e)=>{openDropdown(e,"CustomSpeech",1);}
             },
             {
                 label: "Change Character Image >",
                 onclick: (e)=>{openDropdown(e,"CustomCharacter",1);}
-            },
-            {
-                label: "Send a Private Message",
-                onclick: (e)=>{addMessage("SendPrivateMessage");}
-            },
-            {
-                label: "Your macros >",
-                onclick: (e)=>{openDropdown(e,"Macros",1);}
-            },
+            }
+        ],
+        "Advanced2": [
             {
                 label: "Petrify >",
                 onclick: (e)=>{openDropdown(e,"Petrify",1);}
@@ -172,6 +178,10 @@ var messageCast = function() {
                 onclick: (e)=>{addMessage("SpeechToggle");}
             },
             {
+                label: "Examples >",
+                onclick: (e)=>{openDropdown(e,"SpeechExamples",1);}
+            },
+            {
                 label: "Add Rule",
                 onclick: (e)=>{addMessage("AddSpeechRule");}
             },
@@ -208,6 +218,24 @@ var messageCast = function() {
             {
                 label: "Generic Special Rule",
                 onclick: (e)=>{addMessage("AddSpecialRuleTemplate");}
+            }
+        ],
+        "SpeechExamples": [
+            {
+                label: "Third Person Speech",
+                onclick: (e)=>{addMessage("InsertThirdPersonSpeech");}
+            },
+            {
+                label: "Stutter",
+                onclick: (e)=>{addMessage("InsertStutterSpeech");}
+            },
+            {
+                label: "Random Moans",
+                onclick: (e)=>{addMessage("InsertSpeechRandomMoans");}
+            },
+            {
+                label: "How to use | and {name}",
+                onclick: (e)=>{addMessage("InsertSpeechTutorial");}
             }
         ],
         "CustomCharacter": [
@@ -304,6 +332,14 @@ var messageCast = function() {
                 onclick: (e)=>{addMessage("GenericInterval");}
             },
             {
+                label: "Examples >",
+                onclick: (e)=>{openDropdown(e,"IntervalsExamples",1);}
+            },
+            {
+                label: "Tf Sequences >",
+                onclick: (e)=>{openDropdown(e,"TfSequences",1);}
+            },
+            {
                 label: "Say Interval",
                 onclick: (e)=>{addMessage("SayInterval");}
             },
@@ -316,16 +352,36 @@ var messageCast = function() {
                 onclick: (e)=>{addMessage("LockInterval");}
             },
             {
-                label: "Silly Interval",
-                onclick: (e)=>{addMessage("SillyInterval");}
-            },
-            {
                 label: "Remove Interval",
                 onclick: (e)=>{addMessage("RemoveInterval");}
             },
             {
                 label: "Ask for the current intervals",
                 onclick: (e)=>{addMessage("ShowIntervals");}
+            }
+        ],
+        "IntervalsExamples": [
+            {
+                label: "Petrify Interval",
+                onclick: (e)=>{addMessage("PetrificationInterval");}
+            },
+            {
+                label: "Silly Interval",
+                onclick: (e)=>{addMessage("SillyInterval");}
+            }
+        ],
+        "TfSequences": [
+            {
+                label: "Female Bun to Shark Pooltoy",
+                onclick: (e)=>{addMessage("TfSequenceBun2Shork");}
+            },
+            {
+                label: "Male to Female Statue",
+                onclick: (e)=>{addMessage("TfSequenceM2FStatue");}
+            },
+            {
+                label: "Male to Succubus",
+                onclick: (e)=>{addMessage("TfSequenceM2FSuccubus");}
             }
         ]
     };
@@ -345,6 +401,7 @@ var messageCast = function() {
         "Crown": "/use Crown, Coin Toss ",
         "Consumable": "/use consumableName ",
         "UseToy": "/use toyName, toyAction ",
+        /*Location*/
         "GoToDormitory": '${GAME_MANAGER.instance.Send("Location",{nextLocation:"Dormitory",avoidEncounters:false,event:false,waitForEncounter:false})}',
         "GoToArboretum": '${GAME_MANAGER.instance.Send("Location",{nextLocation:"Arboretum",avoidEncounters:false,event:false,waitForEncounter:false})}',
         "GoToAuditorium": '${GAME_MANAGER.instance.Send("Location",{nextLocation:"Auditorium",avoidEncounters:false,event:false,waitForEncounter:false})}',
@@ -354,6 +411,7 @@ var messageCast = function() {
         "GoToWard": '${GAME_MANAGER.instance.Send("Location",{nextLocation:"Ward",avoidEncounters:false,event:false,waitForEncounter:false})}',
         "GoToStop": '${GAME_MANAGER.instance.Send("Location",{nextLocation:true,avoidEncounters:false,event:false,waitForEncounter:false})}',
         "ShowInventory": `\${theMes=MESSAGECAST.getMyInventoryInAMessage(0);GAME_MANAGER.instance.WaitFor("Message",{receiver:"${GAME_MANAGER.instance.username}",message:theMes,load:true});}`,
+        /*speech*/
         "SpeechToggle": "${MESSAGECAST.loadCustomSpeech();MESSAGECAST.activeCustomSpeech=true;}",
         "AddSpeechRule": '${MESSAGECAST.loadCustomSpeech();MESSAGECAST.addSpeechRule(/replaceThis/gm, (mes)=>{return "replacedWith";});}',
         /*"AddSpecialRule": '${MESSAGECAST.loadCustomSpeech();MESSAGECAST.addSpeechRuleSpecial("ALL/START/END", (mes)=>{return "replacedWith"});}',*/
@@ -364,15 +422,22 @@ var messageCast = function() {
         "RemoveSpecificSpeechRule": "${MESSAGECAST.loadCustomSpeech();MESSAGECAST.removeSpeechRule(0);}",
         "RemoveAllSpeechRules": '${MESSAGECAST.loadCustomSpeech();MESSAGECAST.removeSpeechRule("ALL");}',
         "ShowSpeechRules": `\${theMes=MESSAGECAST.getMySpeechRulesInAMessage();GAME_MANAGER.instance.WaitFor("Message",{receiver:"${GAME_MANAGER.instance.username}",message:theMes,load:true});}`,
+        "InsertThirdPersonSpeech": `\${MESSAGECAST.loadCustomSpeech();MESSAGECAST.addSpeechRule(/\\bam\\b \\bi\\b/gi,(mes)=>{return "is".concat(" {"+"name}");});MESSAGECAST.addSpeechRule(/\\bhave\\b \\bi\\b/gi,(mes)=>{return "has".concat(" {"+"name}");});MESSAGECAST.addSpeechRule(/\\bdon't\\b \\bi\\b/gi,(mes)=>{return "doesn't".concat(' {'+'name}');});MESSAGECAST.addSpeechRule(/\\bdo\\b \\bi\\b/gi,(mes)=>{return "does".concat(' {'+'name}');});MESSAGECAST.addSpeechRule(MESSAGECAST.complicatedRegex[0],(...arguments)=>{return arguments[1].concat(' {'+'name}');});MESSAGECAST.addSpeechRule(MESSAGECAST.complicatedRegex[1],(...arguments)=>{return arguments[1].concat(' {'+'name}');});MESSAGECAST.addSpeechRule(MESSAGECAST.complicatedRegex[2],(...arguments)=>{res='{'+'name}';wrongGuess=['need','feed','seed','bleed','weed','heed','proceed','speed','succeed','bed','wed','shed','shred','sled'];if(wrongGuess.includes(arguments[3])){return arguments[0];}if(arguments[1]!=undefined){res=res.concat(' ',arguments[1])}return res.concat(' ',arguments[3]);});MESSAGECAST.addSpeechRule(MESSAGECAST.complicatedRegex[3],(...arguments)=>{return arguments[1]==undefined?'{'+'name}'.concat(' has'):'{'+'name} '.concat(arguments[1],' has');});MESSAGECAST.addSpeechRule(MESSAGECAST.complicatedRegex[4],(...arguments)=>{return arguments[1]==undefined?'{'+'name}'.concat(' is'):'{'+'name} '.concat(arguments[1],' is');});MESSAGECAST.addSpeechRule(MESSAGECAST.complicatedRegex[5],(...arguments)=>{return arguments[1]==undefined?'{'+'name}'.concat(" hasn't"):'{'+'name} '.concat(arguments[1]," hasn't");});MESSAGECAST.addSpeechRule(MESSAGECAST.complicatedRegex[6],(...arguments)=>{return arguments[1]==undefined?'{'+'name}'.concat(" doesn't"):'{'+'name} '.concat(arguments[1]," doesn't");});MESSAGECAST.addSpeechRule(MESSAGECAST.complicatedRegex[7],(...arguments)=>{return arguments[1]==undefined?'{'+'name}'.concat(' ',arguments[3]):'{'+'name} '.concat(arguments[1],' ',arguments[3]);});MESSAGECAST.addSpeechRule(MESSAGECAST.complicatedRegex[8],(...arguments)=>{return arguments[1]==undefined?'{'+'name}'.concat(' ',arguments[3]):'{'+'name} '.concat(arguments[1],' ',arguments[3]);});MESSAGECAST.addSpeechRule(/\\bi'm\\b/gi,(mes)=>{return '{'+'name}'.concat("'s");});MESSAGECAST.addSpeechRule(/\\bi've\\b/gi,(mes)=>{return '{'+'name}'.concat("'s");});MESSAGECAST.addSpeechRule(MESSAGECAST.complicatedRegex[9],(...arguments)=>{return arguments[1]==undefined?'{'+'name}'.concat(' ',arguments[3].slice(0,-1),'ies'):'{'+'name} '.concat(arguments[1],' ',arguments[3].slice(0,-1),'ies');});MESSAGECAST.addSpeechRule(MESSAGECAST.complicatedRegex[10],(...arguments)=>{res='{'+'name}'; if(arguments[1]!=undefined){res=res.concat(' ',arguments[1]);}return String(arguments[4]).endsWith('y')?res.concat(' ',arguments[3].slice(0,-1),'ies'):res.concat(' ',arguments[3],'es');});MESSAGECAST.addSpeechRule(MESSAGECAST.complicatedRegex[11],(...arguments)=>{return arguments[1]==undefined?'{'+'name}'.concat(' ',arguments[3],'s'):'{'+'name} '.concat(arguments[1],' ',arguments[3],'s');});MESSAGECAST.addSpeechRule(/\\bi\\b/gi,(mes)=>{return '{'+'name}';});MESSAGECAST.addSpeechRule(/\\bme\\b/gi,(mes)=>{return '{'+'name}';});MESSAGECAST.addSpeechRule(/\\bmy\\b/gi,(mes)=>{return "{"+"name}'s";});MESSAGECAST.addSpeechRule(/\\bmyself\\b/gi,(mes)=>{return 'herself';});MESSAGECAST.addSpeechRule(/\\bmine\\b/gi,(mes)=>{return 'hers';});MESSAGECAST.addSpeechRule(MESSAGECAST.complicatedRegex[12],(...arguments)=>{return arguments[1].toUpperCase();});}`,
+        "InsertStutterSpeech": `\${MESSAGECAST.loadCustomSpeech();MESSAGECAST.addSpeechRule(/(?<!\\u007B)(\\b([^\\s])[^\\s]*\\b)+/gm, (...arguments)=>{let lustModifier = STATUS.player.lust||0.05; let stutterChance = 0.9*lustModifier;if(Math.random()<stutterChance){let stutterPart = arguments[2]+"-";let numberOfStutters = 1; let additionalStutterChance=Math.random(); if(additionalStutterChance < 0.25){numberOfStutters+=1;}if(additionalStutterChance < 0.03){numberOfStutters+=1;}let actualStutter="";for(let i = 0; i< numberOfStutters;i++){actualStutter+=stutterPart;}return actualStutter+arguments[1];}else{return arguments[1];}});}`,
+        "InsertSpeechTutorial": `\${MESSAGECAST.loadCustomSpeech();MESSAGECAST.addSpeechRule(/hell[o]|[g]reeting[s]|[w]elcome/gm, (mes)=>{return "I said either hello, greetings, or welcome. Additionally, this is what you'd to if you want to add your target's name/height -> {"+"name}, cause otherwise you'd be sending your own. If you're seeing this in a message, i wrote'{'+'name' earlier.";});}`,
+        "InsertSpeechRandomMoans": `\${MESSAGECAST.loadCustomSpeech();MESSAGECAST.addSpeechRule(/\\s/gm, (mes)=>{if(Math.random()<0.09){let mesList=["*moans*","*sooo horny*","*drools*"];return mesList[Math.floor(Math.random()*mesList.length)];}else{return mes;}});}`,
+        /*Change Character*/
         "ChangeCharacterLeft": `\${MESSAGECAST.changeCharacterImage(0,"imgUrl",{scale:"1,1",backgroundSize:"auto 100%"});}`,
         "ChangeCharacterRight": `\${MESSAGECAST.changeCharacterImage(1,"imgUrl",{scale:"1,1",backgroundSize:"auto 100%"});}`,
         "ResetCharacterLeft": `\${MESSAGECAST.resetCharacterImage(0);}`,
         "ResetCharacterRight": `\${MESSAGECAST.resetCharacterImage(1);}`,
         "SendPrivateMessage": '${GAME_MANAGER.instance.WaitFor("Message",{receiver:"usernameReceiver",message:"yourMessage",load:true});}',
+        /*Petrify*/
         "PetrifyPart": '${MESSAGECAST.petrifyPart("Underpants");}',
         "PetrifyResetPart": '${MESSAGECAST.unpetrifyPart("Underpants");}',
         "PetrifyAll": '${MESSAGECAST.petrifyAll();}',
         "PetrifyResetAll": '${MESSAGECAST.unpetrifyAll();}',
+        /*Lock/Unlock*/
         "LockMovement": '${MESSAGECAST.lockMovement();}',
         "UnlockMovement": '${MESSAGECAST.unlockMovement();}',
         "LockVoice": '${MESSAGECAST.lockVoice();}',
@@ -385,13 +450,19 @@ var messageCast = function() {
         "UnlockSpellsMinor": '${MESSAGECAST.unlockSpellsMinor();}',
         "LockSpellsMajor": '${MESSAGECAST.lockSpellsMajor();}',
         "UnlockSpellsMajor": '${MESSAGECAST.unlockSpellsMajor();}',
-        "GenericInterval": '${let tmpInterval={};let intervalId = setInterval(()=>{let possibleMessages=["Option1","Option2"];let mes=possibleMessages[Math.floor(Math.random()*possibleMessages.length)];if(Math.random()<0.0083) {ACTION_BAR.TriggerMacro("",mes);};},30000);tmpInterval.id = intervalId;tmpInterval.name = "Interval"+intervalId;currentIntervals.push(tmpInterval);}',
+        /*Intervals*/
+        "GenericInterval": '${let tmpInterval={};let intervalId = setInterval(()=>{let possibleMessages=["Option1","Option2"];let mes=possibleMessages[Math.floor(Math.random()*possibleMessages.length)];if(Math.random()<0.0083) {ACTION_BAR.TriggerMacro("",mes);};},30000);tmpInterval.id = intervalId;tmpInterval.name = "Interval"+intervalId;currentIntervals.push(tmpInterval);o="";}',
         "SayInterval": '${MESSAGECAST.addInterval({ outcomes: ["Hi","Hello"], probability: 0.0083, checkEvery: 30000, prefix: "/s ", name:""});}',
         "CastInterval": '${MESSAGECAST.addInterval({ outcomes: ["Shrink","Soft Skin"], probability: 0.0083, checkEvery: 30000, prefix: "/cast [@player] ", name:""});}',
         "LockInterval": '${MESSAGECAST.addInterval({ outcomes: ["${MESSAGECAST.lockMovement()}","${MESSAGECAST.unlockMovement()}"], probability: 0.0083, checkEvery: 30000, prefix: "", name:""});}',
         "SillyInterval": `\${MESSAGECAST.addInterval({ outcomes: ["/cast [@player] Change Name, ${GAME_MANAGER.instance.character.name}'s Underwear","/s P-Please, let me be your underwear","/s I want to hug you tightly~","/blush","/kneel","Why did you not turn me into your underwear yet?","/cast [@player] Soft Skin"], probability: 0.25, checkEvery: 10000, prefix: "", name:""});}`,
         "RemoveInterval": '${MESSAGECAST.removeInterval(id);}',
-        "ShowIntervals": `\${theMes=MESSAGECAST.getMyIntervalsInAMessage();GAME_MANAGER.instance.WaitFor("Message",{receiver:"${GAME_MANAGER.instance.username}",message:theMes,load:true});}`,
+        "PetrificationInterval": '${let tmpInterval={};let intervalId = setInterval(()=>{MESSAGECAST.petrifyIntervalIndex = MESSAGECAST.petrifyIntervalIndex || 0;let petrificationOrder=[3,2,5,1,4,7,6,0];let mes="${MESSAGECAST.petrifyPart("+petrificationOrder[MESSAGECAST.petrifyIntervalIndex]+")}";ACTION_BAR.TriggerMacro("",mes);MESSAGECAST.petrifyIntervalIndex+=1;if(MESSAGECAST.petrifyIntervalIndex==petrificationOrder.length){MESSAGECAST.petrifyIntervalIndex=0;MESSAGECAST.removeInterval(intervalId);}},600000);tmpInterval.id = intervalId;tmpInterval.name = "PetrifyInterval"+intervalId;currentIntervals.push(tmpInterval);}',
+        "ShowIntervals": `\${theMes=MESSAGECAST.getMyIntervalsInAMessage();GAME_MANAGER.instance.WaitFor("Message",{receiver:"${GAME_MANAGER.instance.username}",message:theMes,load:true});o="";}`,
+        /*Tf Sequences*/
+        "TfSequenceBun2Shork": `\${let startFrom = 0;let firstOneNow = true; let timeBetween = 900000;let tfSequence=[['\${MESSAGECAST.changeCharacterImage(0,"https://i.ibb.co/Q3XNXRbX/lazuli-base.png",{scale:"1,1",backgroundSize:"auto 100%"})}','/s *{'+"name} is now a really cute bun! No really, just look at that soft floofy brown fur covering their whole body, at those loooong sensitive ears popping out of their head, and at that cute puffy ball of a tail sprouting out from their back, and try telling yourself that they are not the epitome of cuteness at the moment! If they didn't want to be a bun...too bad, being a bun is mandatory here, and so is being cute, so they're both of those now~ *"],['\${MESSAGECAST.changeCharacterImage(0,"https://i.ibb.co/zc1FSMD/lazuli1.png",{scale:"-1.1,1.1",backgroundSize:"auto 100%"})}','/s *Oh! Looks like this cute bun found a nice shark pooltoy around the academy, and as soon as they laid their eyes upon it, there was just one thing on their mind...this would look soooo cute on them! So they put it on and it fits like a glove around their waist! Maybe a bit too snug though...and it kinda felt as if that donut shark pooltoy was squishing and squeezing their waist more than it should, but surely that is not going to have any kind of consequence whatsoever~ *',"/cast [@player] Smooth Skin"],['\${MESSAGECAST.changeCharacterImage(0,"https://i.ibb.co/W4NrSXV4/lazuli2.png",{scale:"-1.1,1.1",backgroundSize:"auto 100%"})}','/s *Oh no! Looks like that weird pooltoy that \$n put on was indeed cursed! It was starting to feel more comfy and warm against their skin, kinda making them forget about it for a moment, until a glance down makes them realize that the comfy squeaky pooltoy was no more, replaced instead by a melted down inflatable goop that had already started spreading through their skin! Any attempt that they make at removing that warm slime is completely worthless, just making the situation worse as the substance was being smeared across their skin like some sunscreen, and as if that wasn'+"'"+'t enough, the goop had actually started entering their body through their crotch, and was being absorbed by their skin! It felt sooooo good having that slime becoming part of them, almost as if someone was eating out their pussy, rubbing it, groping their breast, massaging their body...all at the same time, and all to distract them from the growing squeakiness of their skin, that already looked like some prime quality inflatable plastic.*', "/cast [@player] Smooth Skin"],['\${MESSAGECAST.changeCharacterImage(0,"https://i.ibb.co/0pLhPTrN/lazuli3.png",{scale:"-1.1,1.1",backgroundSize:"auto 100%"})}','/s *The goop that had started spreading through \$n'+"'"+'s body had now completely enveloped them, rubbing, groping, kissing, licking and pleasuring its host in any way that it could find, until it was finally completely absorbed by their body...which was not showing much of a change at first other than the smooth pvc skin, but soon, \$n start hearing a wooshing noise, followed by hot aphrodisiacal air coursing through every hole of their body, leaving them in too much of an ecstatic shape to even be bothered with doing anything about it! The lustful breeze quickly starts invading every part of them, their body starting to inflate and change all over, their movements rapidly becoming more awkard as their feet bounce around the floor, each little digit merging together into a single stubby foot, not to mention how hard it was for them to even pleasure themselves now that their hands had grown to be as big as their head, their fingers so massive and short that it really would be a surprise if they even still could firmly grasp anything. And still, the changes weren'+"'"+'t done yet, as whatever that donut pooltoy was starts molding \$n to their liking, expanding their tail into a long, thick and squeaky shark appendage that was almost as heavy and long as their entire body, next, their face would change too, becoming more sharklike, but not really in a dangerous and menacing way...no, their face was now simply drawn over their smooth skin, the sound of their voice not coming anymore from the drawn sharp-toother maw, but rather from a speaker that was hidden within, wouldn'+"'"+'t want this cute toy to be unable to speak after all~ Lastly, as all the air finally settles in within them, \$n would feel all of their holes immediately starting to seal themselves on their own, blocking the air from ever going out, and sealing their now non-existent pussy in that permanently horny state they had been sealed in, but no worries! If someone wants to deflate this toy, there are four convenient air nozzles on them, 2 around their nipples and 2 against their plump thighs for anyone to use! Finally, as a cute squeak escapes this toy'+"'"+'s mouth, the transformation was finished, and \$n had been completely transformed into a cute shark pooltoy! Enjoy all the squeaking they now make whenever they move or try to talk, it'+"'"+'s going to be hard for them to resist doing so~*',"/cast [@player] Smooth Skin","\${MESSAGECAST.lockLust();}","\${MESSAGECAST.loadCustomSpeech();MESSAGECAST.addSpeechRule(/s/gmi, (mes)=>{let posOpt=['qrk','ss','sqrks'];let whatToDo=posOpt[Math.floor(Math.random()*posOpt.length)];return Math.random()>=0.90?mes+whatToDo:mes;});MESSAGECAST.addSpeechRule(/ /gm, (mes)=>{let whatToSend = mes; let possibleOptions=['*SQUEAK!*','*SQUEE!*','*SQRRKK!*','*SQRRT!*','*SQKK!*','*SQUEEEEAK!*'];if(Math.random()>0.80){whatToSend=possibleOptions[Math.floor(Math.random()*possibleOptions.length)];}return whatToSend;});}"]];if(firstOneNow){for(let i in tfSequence[startFrom]){ACTION_BAR.TriggerMacro("",tfSequence[startFrom][i])}startFrom+=1;}let tmpInterval={};let intervalId = setInterval(()=>{if(startFrom>=tfSequence.length){MESSAGECAST.removeInterval(intervalId);}else{for(let i in tfSequence[startFrom]){ACTION_BAR.TriggerMacro("",tfSequence[startFrom][i])}startFrom+=1;if(startFrom>=tfSequence.length){MESSAGECAST.removeInterval(intervalId);}}},timeBetween);tmpInterval.id = intervalId;tmpInterval.name = "Interval"+intervalId;currentIntervals.push(tmpInterval);o="";}`,
+        "TfSequenceM2FStatue": `\${let startFrom = 0;let firstOneNow = true; let timeBetween = 900000; let tfSequence=[['\${MESSAGECAST.changeCharacterImage(0,"https://i.ibb.co/PvHBXmjR/nominu1.png",{scale:"-1.1,1.1",backgroundSize:"auto 100%"})}',"/s *\$n wasn't really sure why, but he suddenly felt the urge to show his body off to everyone, immediately throwing all of their clothes away, and standing naked proudly over there, his dick also growing slightly erect simply from the pleasure he was feeling from having it exposed like that.*","/cast [@player] Stoke Libido \${for(let i =0;i<8;i++){ACTION_BAR.TriggerMacro('','/remove '+i);}}"],['\${MESSAGECAST.changeCharacterImage(0,"https://i.ibb.co/qYhf2P2d/nominu2.png",{scale:"-1.1,1.1",backgroundSize:"auto 100%"})}',"/s *\$n could start feeling a warm sensation starting to spread through his body, his movements becoming more stiff and awkard...especially so as he notices that a layer of clay had started replacing his body, starting down from his feet! It's not long before the clay spreads through his legs, and continues over to his cock, leaving it all stuck and erect for anyone to admire it! It's not long before he realizes that his movement and cock had been completely locked away from him...but why would he ever want to move? It felt so good being looked at by everyone like that, having so many people admiring that rock hard cock of him, being exposed for the horny attention slut that he is...hmpf~ That cock was definitely not going to go down during this process~*","\${MESSAGECAST.lockMovement();}",'/cast [@player] Stoke Libido'],['\${MESSAGECAST.changeCharacterImage(0,"https://i.ibb.co/Kjv52X9S/nominu3.png",{scale:"-1.1,1.1",backgroundSize:"auto 100%"})}','/s *The clay had been creeping up along \$n\\'s body keeps expanding more and more, covering his chest, his arms, his neck, his face...everything about him, and yet, there was something within him telling him that he shouldn\\'t fight whatever was happening. Sure, his body had now been completely turned into a conveniently moldable piece of clay in his image, but in his current depraved pose, and with his dick out in and open and exposed to everyone, he couldn\\'t but just feel his lust continuing to raise more and more...too bad that he could do nothing about it with his arms locked up like that. Oh well, surely that issue will be solved with the next stage, \$n could feel that his changes weren\\'t done yet!*','/cast [@player] Stoke Libido'],['\${MESSAGECAST.changeCharacterImage(0,"https://i.ibb.co/CsHptR3H/nominu4.png",{scale:"-1.1,1.1",backgroundSize:"auto 100%"})}','/s *It\\'s hard to tell how much time did actually pass since \$n had been turned into the clay statue that he currently is with him being just clay and all, but finally he could feel something new happening to himself! It was hard to tell at first, but he could feel as if some invisible hands had found their way to his body, and had started giving him a massage to relax him, but it\\'s not long before that massage becomes way more pleasurable for him  as the hands move down towards his cock, and start stroking it vigorously! \$n\\'s mind was being completely overwhelmed by the pleasure, with bits of his clay starting to spew out from the tip of his cock almost as if to resemble his own cum, too bad that his current state didn\\'t really allow him to relieve himself just like that, the spurts of clay from his cock really only serving as a mockery of his current self. And as if that wasn\\'t enough, the hands kept removing small bits and pieces of that cock with their vigorous strokes for a really long time, only stopping when there was nothing at all left of \$n\\s dick! The spot on his crotch that was occupied by his penis was now completely blank, really removing any hope that \$n might have had about pleasuring himself...but the hands didn\\'t go away yet. They were still down there, rubbing on that blank spot as if to remind him of what he had just lost, making sure to keep him all hot and bothered for his next change!*','/cast [@player] Stoke Libido'],['\${MESSAGECAST.changeCharacterImage(0,"https://i.ibb.co/ZRf59Fwg/nominu5.png",{scale:"-1.1,1.1",backgroundSize:"auto 100%"})}','/s *It was a bit hard to tell what the invisible hands that were warping \$n\\'s body were still doing down there, continuing to tease him with their rubs over his smooth clay skin for apparently no reason other than to mess with him, that is until they start carving an opening through that clay, and while the hole wasn\\'t nearly finished yet, it was clear what the function of it was going to be, and \$n\\'s thoughts are only confirmed when he feels the remains of his own cock lumped up together, and mushed up against his chest as nothing but two big orbs attached against it! Plus, with his facial features starting to melt down into a more feminine shape, and his hair elongating up to his waist, it was clear that he was not going to remain a \\'He\\' for much longer~*','/cast [@player] Change Appearance: Feminine'],['\${MESSAGECAST.changeCharacterImage(0,"https://i.ibb.co/vCsFj2K4/nominu6.png",{scale:"-1.1,1.1",backgroundSize:"auto 100%"})}','/s *The invisible hands that were sculpting \$n into his new form were continuing to mold every part about him. The two orbs that had been lumped into his chest were now a firm and round pair of tits hanging from his chest, the nipples sculpted to be perked up, hard, and oh, so sensitive, just to reflect the state that \$n was currently in. The melted down face and hair that he previously had were now also properly sculpted into a new form, his jaw lowered a bit, his chin becoming slightly more pointy, his eyelashes becoming more well-defined, and even his lips and nose were looking a bit different, really making it hard for someone to even tell that the clay face they were staring at right now had been \$n\\'s face at some point in time, especially considering the long hair that were now framing his head. Finally, after all those changes were done, the hands decide to all focus down on \$n\\'s crotch, carving and detailing that hole they had started sculpting down there as if they were the hands of the best sculptor in the world, never stopping to tease him for even a moment while they completely changed and rearranged \$n\\'s body to be completely anatomically correct for \\'Her\\' new gender! There was nothing left of \$n\\'s manhood anymore, just a cute and tight pussy that was burning with desire and sooooo needy for attention! Too bad that the invisible hands immediately left the area once they finished sculpting that body, so they were not rubbing up on her needy and overly sensitive clit anymore,which wasn\\'t helping \$n\\'s out with the lust that was currently overwhelming her body at all! Well, she probably could still muster up some of her own magic to try and change back, even just enough to allow her hands down to try and pleasure herself...but, when she tries to, she finds that whenever she tried to cast something on herself, her magic was being redirectered in other areas instead, and with other effects! Her legs had now started to harden up, becoming more smooth and polished, the clay they were made out of starting to be swapped with more perfect and durable marble instead! Doesn\\'t look like there is much time left for her in her clay state~*',"\${MESSAGECAST.doUntil(\\"\${if(GAME_MANAGER.instance.actions.spells>=1){ACTION_BAR.TriggerMacro('','/cast [@player] Change Appearance: Feminine')}}\\",()=>{return GAME_MANAGER.instance.character.genitalia==2;});}"],['\${MESSAGECAST.changeCharacterImage(0,"https://i.ibb.co/60tt09dp/nominu7.png",{scale:"-1.1,1.1",backgroundSize:"auto 100%"})}','/s *\$n could feel her magic starting to be sapped by her own body, her weak and moldable clay shell rapidly getting swapped by a stronger marble one instead, that she knew would be harder to break, way harder to dispel...and yet, like the horny slut that she is, \$n decided to just feed all of her magic to this new form. It was making every inch of her body soooooo sensitive, simply having the air brushing up against her marble clit was stimulating her like no vibrator, dildo or sex toy had ever pleasured her before, her mind getting completely overwhelmed and addicted by the overstimulation she was being subjected with, so much so that she doesn\\'t even realize when her body gets completely sealed up and locked into her new marble prison. She was just wayyyy to horny to even care about that in her current state, and as if that wasn\\'t enough, she knew that now EVERYONE would look up at her, at her naked body, at her exposed sex, and at her perky breasts, judging her for the slut that she is and that she always will be, with her unable to do anything about it but keep being horny and enjoy herself, cause she\\'s just the statue of a slut now, unable to cast spells on herself, to talk, or even to just relieve herself, so, until someone shows up and notices that the statue of this slut was actually supposed to be some guy that fell victim to some weird new spell, and then decides to help her out of her predicament...well, looks like \$n is going to spend quite some time as a statue of her slutty female self~*','/cast [@player] Change Appearance: Feminine','\${MESSAGECAST.lockVoice();MESSAGECAST.lockSelfCast();MESSAGECAST.lockLust();}']];if(firstOneNow){for(let i in tfSequence[startFrom]){ACTION_BAR.TriggerMacro("",tfSequence[startFrom][i])}startFrom+=1;}let tmpInterval={};let intervalId = setInterval(()=>{if(startFrom>=tfSequence.length){MESSAGECAST.removeInterval(intervalId);}else{for(let i in tfSequence[startFrom]){ACTION_BAR.TriggerMacro("",tfSequence[startFrom][i])}startFrom+=1;if(startFrom>=tfSequence.length){MESSAGECAST.removeInterval(intervalId);}}},timeBetween);tmpInterval.id = intervalId;tmpInterval.name = "Interval"+intervalId;currentIntervals.push(tmpInterval);o="";}`,
+        "TfSequenceM2FSuccubus": `\${let startFrom = 0;let firstOneNow = true; let timeBetween=900000; let tfSequence=[['\${MESSAGECAST.changeCharacterImage(0,"https://i.ibb.co/GQFJw5KR/luxM2S1.png",{scale:"-1,1",backgroundSize:"auto 100%"})}',"/s *\$n was just an average human male that was probably just minding his own business, until something glimmering in the distance caught the attention of his eyes. He took no time reaching out for that shiny object, and to his suprise, it was none other than...A flask! Not just an empty flask though, no, the flask was filled with a luscious red fluid, and just a quick glance would reveal that the liquid in there was clearly magical too! Well, everyone knows that there is only one thing to do when finding some mysterious magical potion in this academy, and that's drinking it! Soooo...bottoms up!*","/cast [@player] Stoke Libido"],['\${MESSAGECAST.changeCharacterImage(0,"https://i.ibb.co/Q31hQCVs/luxM2S2.png",{scale:"-1,1",backgroundSize:"auto 100%"})}',"/s *As \$n drinks that potion, he'd notice that the taste wasn't really bad at all, a mixture of sweet fruits, that also felt a bit dry, kinda like drinking red wine, if he ignored that it also was leaving a weird aftertaste reminding him of semen for whatever reason, but that was probably nothing. Once he finished drinking it all up, an immediate wave of arousal hit him, shortly after followed by a surging heat within his body that was really focusing on his groin, his cock rapidly starting to bulge within his outfit and...god, could he go for a quick fuck right about now~ Maybe that thing was an aphrodisiacal? Kinda weird for an aphrodisiacal to also enlong his hair though, not to mention that he could feel as if his dick was getting smaller too...oh well, too late to stop this now~*","/cast [@player] Stoke Libido"],['\${MESSAGECAST.changeCharacterImage(0,"https://i.ibb.co/Rk1ZWkjd/luxM2S3.png",{scale:"1,1",backgroundSize:"auto 100%"})}',"/s *\$n's lust kept going higher and higher, but it would be clear to him that the potion wasn't just an aphrodisiacal as he feels that burning heat that started down on his crotch starting to spread through his body, starting to turn his skin light red, but also starting to make more noticeable changes to his body! First, he'd feel his chest suddenly balooning outward, ripping through his clothes as a pair of small and sensitive boobs appears down there, but he doesn't even have time to process the changes, as right after he'd feel his lower outfit starting to rip and tear, as his hips were becoming more wide, his thighs more thick, and his waist more narrow, kinda giving him the typical hourglass figure. Moreover, he couldn't help but get distracted by the new parts that were being added to his body, two pointy red horns starting to extend from the top sides of his cranium, and a pair of small wings also starting to form on his back! And in all of this \$n could just think about just how horny He was! Going to rub his cock, just to realize that...it was almost gone. At least though, his cock had never felt more sensitive than now!*","/cast [@player] Stoke Libido"],['\${MESSAGECAST.changeCharacterImage(0,"https://i.ibb.co/gFgjJMG0/luxM2S4.png",{scale:"1,1",backgroundSize:"auto 100%"})}',"/s *\$n was about to fall on the floor from how aroused he was, his now plump and thick thighs barely holding him up, barely helping him at balancing himself as his chest and ass cheeks inflate in size once more, the wings that had now grown to be as long as his arms on his back not really being of much help either since he couldn't control them yet...but really, \$n couldn't care less for his changing body right now, he knew that his horns were recurving a bit, he could feel the tip of his spine extending into a long and flexible tail with an heart tip, and he definitely noticed that every inch of his skin felt like it was capable of arousing him now, and yet, all he could was continuing to rub, and stroke, and rub...until finally*NNNnngggggaaaaaaahhhhhhh!*He moans and squirms loudly, not because he finally reached orgasm, no, but because his dick had completely shriveled down to a minuscole size, before suddenly turning into the clit of a new opening that had formed down there, a cute new feminine slit that definitely showed that \$n was not going to be a male anymore, but rather a female from now on! 'She' was still sooooooooo horny though~ She didn't even need to think twice before she started fingering her new sex...too bad that she'd soon find out that it will be a bit harder reaching orgasm in her current form~ Oh well, her transformation is almost done, just have to wait a bit more~*","/cast [@player] Stoke Libido"],['\${MESSAGECAST.changeCharacterImage(0,"https://i.ibb.co/YF0gWBHQ/luxM2S5.png",{scale:"-1.1,1.1",backgroundSize:"auto 100%"})}',"/s *\$n's body had finally reached the last stage of her transformation, every part of her body starting to feel more natural, as if it always was like that in the first place, her sensitive deep crimson skin that got her more aroused as she simply moved around, her bat wings on her back fluttering excitedly at every horny though, her tail rubbing its tip lewdly on her sensitive bits on those of others just to tease...\$n was not finding anything wrong with all of those thoughts, they are part of what she is after all! And of course, the insatiable heat that had been feasting on her body up till now, and that is still quite present within her hadn't gone away at all! But that was normal for her, after all, she had just been turned into a complete succubus now! As a being of pute lust and carnal desire, hunger, thirst, sleep...every basic need had now become completely useless to her, every single one of her needs suddenly being replaced by a single one alone: The need to please other people and feast on their lust and desires! \$n was also not allowed to relieve herself of her own lust on her own, it went against every bits of her being to do that, cause as a succubus, lust was what she now used to cast and empower her own spells, spells that of course would now be used simply to make herself as attractive and seductive as possible, while also making sure to use them to fulfill every single perverted desires of your food-sorry, partners! And a creature of pure seduction like her would never stood so low as to go against that core rule that every succubus certainly had! Sure, it had been a while since her last feeding, and she REALLY needed to find someone now, her pussy aching with desire simply with her standing there in place, but she could go for a bit longer...surely....nah, she can't~ It's hard to tell if her current look made her a dominant seductive mistress that will take her semen one way or another from her toys, a meek whore begging for cocks and sex, or a failure of a succubus that won't be able to handle the overwhelming lust of her form and will simply end up part of the inventory of a greater being, but one thing's for sure, this succubus is REALLY horny right now, and if someone's nearby, they better be ready for it!*","\${MESSAGECAST.doUntil(\\"\${if(GAME_MANAGER.instance.actions.spells>=1){ACTION_BAR.TriggerMacro('','/cast [@player] Change Appearance: Feminine')}}\\",()=>{if(GAME_MANAGER.instance.character.genitalia==2){MESSAGECAST.doUntil(\\"\${if(GAME_MANAGER.instance.actions.spells>=1){ACTION_BAR.TriggerMacro('','/cast [@player] Mythic Form: Demon')}}\\",()=>{let curChar=GAME_MANAGER.instance.character.body; return curChar[0]==1&&curChar[2]==1&&curChar[3]==1;});}return GAME_MANAGER.instance.character.genitalia==2;});}"]];if(firstOneNow){for(let i in tfSequence[startFrom]){ACTION_BAR.TriggerMacro("",tfSequence[startFrom][i])}startFrom+=1;}let tmpInterval={};let intervalId = setInterval(()=>{if(startFrom>=tfSequence.length){MESSAGECAST.removeInterval(intervalId);}else{for(let i in tfSequence[startFrom]){ACTION_BAR.TriggerMacro("",tfSequence[startFrom][i])}startFrom+=1;if(startFrom>=tfSequence.length){MESSAGECAST.removeInterval(intervalId);}}},timeBetween);tmpInterval.id = intervalId;tmpInterval.name = "Interval"+intervalId;currentIntervals.push(tmpInterval);o="";}`,
     }
 
     var _dropdownLayerMax = 10;
@@ -403,35 +474,35 @@ var messageCast = function() {
     var _allConjureItems = ["Anal Beads","Aviator Glasses","Ball Gag","Barmaid Dress","Belt Collar","Big Butt Plug","Bikini Bottom","Bikini Top","Body Bow","Bow Dress","Boxer Briefs","Bra","Briefs","Bunny Tail Plug","Butt Plug","Cage Bra","Cage Panties","Cat Tail Plug","Catsuit","Chastity Belt","Chastity Cage","Cheerleader Uniform","Cock Dildo","Collar","Converse Shoes","Dildo","Dotted Bra","Dotted Bralette","Dotted Panties","Dress Pants","Dress Shirt","Feather Duster","Feathered Jacket","Feathered Masquerade Mask","Fox Tail Plug","French Maid Dress","French Maid Headband","Frilly Shirt","G-String","Gala Dress","Glasses","Goggles","Heels","High Neck Leather Collar","Holiday Babydoll","Howie Lab Coat","Huge Butt Plug","Iron Collar","Iron Cuffs","Jeans","Keyhole Sweater","Kitsune Tails Plug","Lab Coat","Latex French Maid Dress","Leather Belt","Leather Collar","Leather Cuffs","Leather Jacket","Leather Skirt","Leather Trench Coat","Leggings","Long Skirt","Long Tuxedo Shorts","Long-Sleeved Crop Top","Mary Janes","Masquerade Mask","Massive Butt Plug","Overbust Corset","Oxfords","Panties","Pareo","Plaid Skirt","Plaid Tie","Plain Bralette","Plain Panties","Pretty Ballerinas","Protective Rubber Boots","Protective Rubber Gloves","Push-Up Bra","Ring","Round Glasses","Runners","School Uniform","Shirt","Short Dress","Short-Sleeved Dress Shirt","Silk Gloves","Silk Opera Gloves","Skimpy String Bra","Skirt","Slippers","Small Butt Plug","Sorceress Dress","Statuette Dildo","Steel Collar","Stockings","Striped Bra","Striped Bralette","Striped Long-Sleeved Crop Top","Striped Panties","Striped Shirt","Studded Collar","Suit Jacket","Suitpants","Summer Hat","Sweater","Swimming Trunks","T-Shirt","Tanga Panties","Thigh High Socks","Thong","Tie","Tights","Top Hat","Triangle Bra","Tube Top","Tuxedo Shorts","Vest","Victorian Jacket","Vinyl Leotard","Vinyl Opera Gloves","Vinyl Pencil Skirt","Vinyl Thigh High Boots","Vinyl Tube Top","Virgin Killer Sweater","Wedding Bouquette","Wedding Dress","Wedding Gloves","Wedding Ring","Wedding Veil","Winter Hat","Witch Hat","Women's Dress Shirt","Women's Jeans","Women's T-Shirt"];
     var _petrifyParts = [
         {
-            message: ["{name}'s nipples have never been more hard.","{name}'s boobs feel way heavier as they are now made of stone."],
+            message: ["{name}'s nipples hardens and perk up as they are now made of stone.","{name}'s boobs are nothing more than some round and sensitive piece of stone hanging from their chest now."],
             additionalEffect: []
         },
         {
-            message: ["{name} now has chiseled abs. Quite literally."],
+            message: ["{name}'s hips and abdomen have been chiseled out into a perfectly smooth piece of stone below their chest."],
             additionalEffect: []
         },
         {
-            message: ["{name}'s cock is now rock hard.","{name}'s pussy is now rock hard."],
+            message: ["{name}'s cock is now nothing more than a rock hard decorative dick stuck on {name}'s crotch, and it is constantly reminding {name} about how horny and needy it can be.","{name}'s pussy is now nothing more than a decorative petrified pleasure hole stuck on {name}'s crotch, and it is constantly reminding {name} about how horny and needy it can be."],
             additionalEffect: [lockLust]
         },
         {
-            message: ["{name}'s arms are now locked in place."],
+            message: ["{name}'s arms are now locked in place as a petrifying spell targets them."],
             additionalEffect: [lockSpellsMinor]
         },
         {
-            message: ["{name}'s expression will not change anymore.","{name}'s expression has been locked into one of pure bliss."],
+            message: ["{name}'s expression will not change anymore due to a petrification spell.","{name}'s expression has been locked into one of pure bliss thanks to a petrification spell."],
             additionalEffect: [lockVoice]
         },
         {
-            message: ["{name}'s body feels more stiff as it petrifies slightly."],
+            message: ["{name}'s body feels more stiff as a petrifying curse is spreading through each joint."],
             additionalEffect: []
         },
         {
-            message: ["{name}'s butt can't jiggle anymore as it's now made of stone.","{name}'s butt can't jiggle anymore as it's now made of stone. Also, {name}'s tail has unfortunately lost its fluffness."],
+            message: ["{name}'s ass fat feels way more heavy now that {name}'s butt is made of stone.","{name}'s ass fat feels way more heavy now that {name}'s butt is made of stone. Unfortunately, the petrification also spread through {name}'s tail, which can't wag, swish, twitch or do anything but be a cute piece decorating {name}'s back at the moment."],
             additionalEffect: []
         },
         {
-            message: ["{name}'s feet and legs are now stuck in place. Hope they weren't in an uncomfortable position."],
+            message: ["{name}'s feet and legs are now stuck in place in whatever position they were as petrification starts spreading through them."],
             additionalEffect: [lockMovement]
         }
     ];
@@ -483,6 +554,21 @@ var messageCast = function() {
     25 = Soul Imprint,
     29 = Conjure Item.
     */
+   var complicatedRegex = [
+    /\b((ca|must|should|may|might|wo|shall|would|did)n't)\b \bi\b/gi,
+    /\b(can|must|should|may|might|will|shall|would|did)\b \bi\b/gi,
+    /\bi\b\s*(\b(always|also|hardly ever|often just|often|\w+ly|never|ever|even|seldom|sometimes|once|twice|now|then|already|last|next|yesterday|today|after|afterwards|later|since|still|just|seldom|fast|hard|so|straight|well|lots|somewhat|very much|very|much|most likely|most|quite likely|quite|too|enough|almost|far)\b)* \b(arose|awoke|bore|became|began|bent|bound|bit|bled|blew|broke|bred|brought|built|burnt|bought|could|caught|chose|clung|came|crept|dealt|dug|did|drew|dreamt|drank|drove|ate|fell|fed|felt|fought|found|flew|forbade|forgot|forgave|froze|got|gave|went|ground|grew|hung|had|heard|hid|held|kept|knelt|knew|laid|led|leant|learnt|left|lent|lay|lied|lit|lost|made|might|meant|met|mowed|had|to|overtook|paid|rode|rang|rose|ran|sawed|said|saw|sold|sent|sewed|shook|should|shone|shot|showed|shrank|sang|sank|sat|slept|slid|smelt|sowed|spoke|spelt|spent|spilt|spun|spat|stood|stole|stuck|stung|stank|struck|swore|swept|swelled|swam|swung|took|taught|tore|told|thought|threw|understood|was|woke|wore|wept|would|won|wound|wrote|[\w]+ed)\b/gi,
+    /\bi\b\s*(\b(always|also|hardly ever|often just|often|\w+ly|never|ever|even|seldom|sometimes|once|twice|now|then|already|last|next|yesterday|today|after|afterwards|later|since|still|just|seldom|fast|hard|so|straight|well|lots|somewhat|very much|very|much|most likely|most|quite likely|quite|too|enough|almost|far)\b)* \bhave\b/gi,
+    /\bi\b\s*(\b(always|also|hardly ever|often just|often|\w+ly|never|ever|even|seldom|sometimes|once|twice|now|then|already|last|next|yesterday|today|after|afterwards|later|since|still|just|seldom|fast|hard|so|straight|well|lots|somewhat|very much|very|much|most likely|most|quite likely|quite|too|enough|almost|far)\b)* \bam\b/gi,
+    /\bi\b\s*(\b(always|also|hardly ever|often just|often|\w+ly|never|ever|even|seldom|sometimes|once|twice|now|then|already|last|next|yesterday|today|after|afterwards|later|since|still|just|seldom|fast|hard|so|straight|well|lots|somewhat|very much|very|much|most likely|most|quite likely|quite|too|enough|almost|far)\b)* \bhaven't\b/gi,
+    /\bi\b\s*(\b(always|also|hardly ever|often just|often|\w+ly|never|ever|even|seldom|sometimes|once|twice|now|then|already|last|next|yesterday|today|after|afterwards|later|since|still|just|seldom|fast|hard|so|straight|well|lots|somewhat|very much|very|much|most likely|most|quite likely|quite|too|enough|almost|far)\b)* \bdon't\b/gi,
+    /\bi\b\s*(\b(always|also|hardly ever|often just|often|\w+ly|never|ever|even|seldom|sometimes|once|twice|now|then|already|last|next|yesterday|today|after|afterwards|later|since|still|just|seldom|fast|hard|so|straight|well|lots|somewhat|very much|very|much|most likely|most|quite likely|quite|too|enough|almost|far)\b)* \b((could|must|should|may|might|wo|shall|would|did)n't)\b/gi,
+    /\bi\b\s*(\b(always|also|hardly ever|often just|often|\w+ly|never|ever|even|seldom|sometimes|once|twice|now|then|already|last|next|yesterday|today|after|afterwards|later|since|still|just|seldom|fast|hard|so|straight|well|lots|somewhat|very much|very|much|most likely|most|quite likely|quite|too|enough|almost|far)\b)* \b(can|must|should|may|might|will|shall|did)\b/gi,
+    /\bi\b\s*(\b(always|also|hardly ever|often just|often|\w+ly|never|ever|even|seldom|sometimes|once|twice|now|then|already|last|next|yesterday|today|after|afterwards|later|since|still|just|seldom|fast|hard|so|straight|well|lots|somewhat|very much|very|much|most likely|most|quite likely|quite|too|enough|almost|far)\b)* \b(apply|ally|bully|belly|butterfly|comply|colly|dolly|dilly|dally|dillydally|disally|fly|gully|gally|grilly|imply|injelly|jelly|jolly|misapply|multiply|misally|medly|overfly|oversupply|outfly|overply|overmultiply|ply|reply|rally|rely|reapply|resupply|sully|sally|supply|shillyshally|skelly|tally)\b/gi,
+    /\bi\b\s*(\b(always|also|hardly ever|often just|often|\w+ly|never|ever|even|seldom|sometimes|once|twice|now|then|already|last|next|yesterday|today|after|afterwards|later|since|still|just|seldom|fast|hard|so|straight|well|lots|somewhat|very much|very|much|most likely|most|quite likely|quite|too|enough|almost|far)\b)* \b((?!also)[\w]+(s|x|z|sh|ch|o|[^aeioul]y))\b/gi,
+    /\bi\b\s*(\b(always|also|hardly ever|often just|often|\w+ly|never|ever|even|seldom|sometimes|once|twice|now|then|already|last|next|yesterday|today|after|afterwards|later|since|still|just|seldom|fast|hard|so|straight|well|lots|somewhat|very much|very|much|most likely|most|quite likely|quite|too|enough|almost|far)\b)* \b(\w+)\b/gi,
+    /(^\w|[\.\?\!]\s*\w)/gi];
+    var _speechRuleId = 0;
     
     function load() {
         if(insertHelperMacros()) {
@@ -710,13 +796,14 @@ For example, to add a and dhmis this is how the macro would look like: </div>
         if(mesWhitelist.includes(mesUser)) {
             return true;
         }
-        GUI.instance.DisplayMessage(`${mesUser} is not whitelisted`);
+        //GUI.instance.DisplayMessage(`${mesUser} is not whitelisted`);
         return false;
     }
 
     function cast(params) {
         if(checkIfcastPossible(params)) {
             ACTION_BAR.TriggerMacro("",`${params.message}`);
+            console.log(params.message);
         }
     }
 
@@ -737,7 +824,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
     }
 
     async function deleteNotification(params) {
-        console.log("I'm in deleteNotification check");
+        //console.log("I'm in deleteNotification check");
         if(params.message.includes(deleteKeyword)&&!MENU.Messages.active) {
             if(!checkIfcastPossible(params)) {
                 return false;
@@ -746,9 +833,9 @@ For example, to add a and dhmis this is how the macro would look like: </div>
             let unreadMes = document.getElementById("frame_top_right").getElementsByClassName("unread_messages")[0].getElementsByTagName("div")[1].textContent;
             GUI.instance.SetUnreadMessages(Number(unreadMes)-1);
 
-            console.log("Deleting message");
-            console.log("----------------");
-            let username = params.sender.username;
+            //console.log("Deleting message");
+            //console.log("----------------");
+            //let username = params.sender.username;
             //let howManyUnread = Number(document.getElementById("frame_top_right").getElementsByClassName("unread_messages")[0].getElementsByTagName("div")[1].textContent);
             //GUI.instance.SetUnreadMessages(howManyUnread-1);
             //let isInbox = getCurrentView() === 0;
@@ -763,12 +850,11 @@ For example, to add a and dhmis this is how the macro would look like: </div>
             }
             return true;
         }
-        console.log("I'm returning false");
         return false;
     }
 
     async function deleteNotificationFromAppend(params) {
-        console.log("I'm in deleteNotification check");
+        //console.log("I'm in deleteNotification check");
         if(params.message.includes(deleteKeyword)&&checkIfCastNeeded(params)) {
             if(!checkIfcastPossible(params)) {
                 return false;
@@ -777,9 +863,9 @@ For example, to add a and dhmis this is how the macro would look like: </div>
             let unreadMes = document.getElementById("frame_top_right").getElementsByClassName("unread_messages")[0].getElementsByTagName("div")[1].textContent;
             GUI.instance.SetUnreadMessages(Number(unreadMes)-1);
 
-            console.log("Deleting message");
-            console.log("----------------");
-            let username = params.sender.username;
+            //console.log("Deleting message");
+            //console.log("----------------");
+            //let username = params.sender.username;
             //let howManyUnread = Number(document.getElementById("frame_top_right").getElementsByClassName("unread_messages")[0].getElementsByTagName("div")[1].textContent);
             //GUI.instance.SetUnreadMessages(howManyUnread-1);
             //let isInbox = getCurrentView() === 0;
@@ -788,7 +874,6 @@ For example, to add a and dhmis this is how the macro would look like: </div>
             console.log("Message deleted");
             return true;
         }
-        console.log("I'm returning false");
         return false;
     }
 
@@ -1022,7 +1107,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
         _dropdownLayer = layer;
         */
         if(document.getElementById(dropId)) {
-            console.log("already here");
+            //console.log("already here");
             return;
         }
 
@@ -1160,8 +1245,8 @@ For example, to add a and dhmis this is how the macro would look like: </div>
         return theMes!=""?theMes:"My inventory is empty";
     }
 
+    function loadCustomSpeech(customSpeechOnOff = true) {
     //stuff for the custom speech
-    function loadCustomSpeech() {
         let macroAddedCheck = document.getElementById("macroAddedCheck");
         if(macroAddedCheck!=null && !macroAddedCheck.classList.contains("MESSAGECASTCustomSpeech")) {
             let previousSend = GAME_MANAGER.instance.Send;
@@ -1173,22 +1258,32 @@ For example, to add a and dhmis this is how the macro would look like: </div>
             };
             macroAddedCheck.classList.add("MESSAGECASTCustomSpeech");
         }
+        MESSAGECAST.activeCustomSpeech = customSpeechOnOff;
     }
 
     function addSpeechRule(replaceRegex,replaceFunction) {
-        speechRules.push({regex:replaceRegex,function:replaceFunction});
+        speechRules.push({regex:replaceRegex,function:replaceFunction,id:_speechRuleId+=1});
     }
 
     function addSpeechRuleSpecial(where,replaceFunction) {
-        speechRules.push({regex:where,function:replaceFunction,isSpecial:true});
+        speechRules.push({regex:where,function:replaceFunction,id:_speechRuleId+=1,isSpecial:true});
     }
 
-    function removeSpeechRule(index) {
-        if(index == "ALL") {
+    function addMultipleRules(allTheRules) {
+        speechRules = speechRules.concat(allTheRules);
+    }
+
+    function removeSpeechRule(speechId) {
+        if(speechId == "ALL") {
             speechRules = [];
             return;
         }
-        speechRules.splice(Number(index),1);
+        for(let i = 0; i<speechRules.length; i++) {
+            if(speechRules[i].id == Number(speechId)) {
+                speechRules.splice(i,1);
+                return;
+            }
+        }
     }
 
     function applySpeech(message) {
@@ -1212,24 +1307,24 @@ For example, to add a and dhmis this is how the macro would look like: </div>
             if(speechRules[i].isSpecial) {
                 switch (speechRules[i].regex) {
                     case "ALL":
-                        console.log("In all");
-                        console.log(speechRules[i]);
+                        //console.log("In all");
+                        //console.log(speechRules[i]);
                         newMes = newMes.replace(/(.+)/gm,speechRules[i].function);
                         return newMes;
                         break;
                     case "START":
-                        console.log("In start");
-                        console.log(speechRules[i]);
+                        //console.log("In start");
+                        //console.log(speechRules[i]);
                         newMes = newMes.replace(/^(.)/gm,speechRules[i].function);
                         break;
                     case "END":
-                        console.log("In end");
-                        console.log(speechRules[i]);
+                        //console.log("In end");
+                        //console.log(speechRules[i]);
                         newMes = newMes.replace(/(.)$/gm,speechRules[i].function);
                         break;
                     default:
-                        console.log("In default");
-                        console.log(speechRules[i]);
+                        //console.log("In default");
+                        //console.log(speechRules[i]);
                         newMes = newMes.replace(speechRules[i].regex,speechRules[i].function);
                 }
             }
@@ -1242,34 +1337,34 @@ For example, to add a and dhmis this is how the macro would look like: </div>
         let star2 = nthIndex(message, "*", 2);
         let par1 = nthIndex(message,"(",1);
         let par2 = par1+nthIndex(message.substring(par1), ")",1);
-        console.log(`1*: ${star1},\n2*: ${star2},\n1(: ${par1},\n2): ${par2}`);
+        //console.log(`1*: ${star1},\n2*: ${star2},\n1(: ${par1},\n2): ${par2}`);
         if(star1 != -1 && star2 != -1 && (star1 < par1||par1 == -1)) {
             //Tokenize **
-            console.log("In *, must copy");
-            console.log(message.substring(star1,star2+1));
+            //console.log("In *, must copy");
+            //console.log(message.substring(star1,star2+1));
             if(star1!=0) {
                 tokens.push(message.substring(0,star1));
             }
             tokens.push(message.substring(star1,star2+1));
             message = message.substring(star2+1);
-            console.log("Remaining:");
-            console.log(message);
+            //console.log("Remaining:");
+            //console.log(message);
 
         } else if (par1 != -1 && par2 > par1 && (par1 < star1||star1 == -1)) {
             //Tokenize ()
-            console.log("In (), must copy");
-            console.log(message.substring(par1,par2+1));
+            //console.log("In (), must copy");
+            //console.log(message.substring(par1,par2+1));
             if(par1!=0) {
                 tokens.push(message.substring(0,par1));
             }
             tokens.push(message.substring(par1,par2+1));
             message = message.substring(par2+1);
-            console.log("Remaining:");
-            console.log(message);
+            //console.log("Remaining:");
+            //console.log(message);
         } else {
             //The last one
-            console.log("Last");
-            console.log(message);
+            //console.log("Last");
+            //console.log(message);
             if(message) {
                 tokens.push(message);
             }
@@ -1292,11 +1387,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
     function getMySpeechRulesInAMessage() {
         let theMes = "";
         for(let i in speechRules) {
-            if(!speechRules[i].isSpecial) {
-                theMes += `${i}) regex: ${speechRules[i].regex}, function: ${speechRules[i].function}\n`;
-            } else {
-                theMes += `${i}) regex: ${speechRules[i].regex}, function: ${speechRules[i].function}\n`;
-            }
+            theMes += `${i}) id:${speechRules[i].id}, regex: ${speechRules[i].regex}, function: ${speechRules[i].function}\n`;
         }
         return theMes!=""?theMes:"I have no rules >:3";
     }
@@ -1327,7 +1418,6 @@ For example, to add a and dhmis this is how the macro would look like: </div>
         if(macroAddedCheck!=null && !macroAddedCheck.classList.contains("MESSAGECASTCustomImages")) {
             let oldUpdateLocation = SCENE.instance.UpdateLocation;
             SCENE.instance.UpdateLocation = async (location) => {
-                console.log(location);
                 await oldUpdateLocation(location);
                 MESSAGECAST.changeCharacterImage(0);
                 MESSAGECAST.changeCharacterImage(1);
@@ -1574,7 +1664,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
     function unlockVoice() {
         for(let i=0;i<speechRules.length;i++) {
             if(speechRules[i].regex.toString()=="/(((.+)))/gm") {
-                removeSpeechRule(i);
+                removeSpeechRule(speechRules[i].id);
                 return;
             }
         }
@@ -1652,7 +1742,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
     function getMyIntervalsInAMessage() {
         let theMes = "";
         for(let i in currentIntervals) {
-            theMes += `${i}) id: ${i}, name: ${currentIntervals[i].name}\n`;
+            theMes += `${i}) id: ${currentIntervals[i].id}, name: ${currentIntervals[i].name}\n`;
         }
         return theMes!=""?theMes:"I have no intervals :c";
     }
@@ -1672,8 +1762,22 @@ For example, to add a and dhmis this is how the macro would look like: </div>
     } 
 
     function removeInterval(intervalId) {
-        clearInterval(currentIntervals[Number(intervalId)].id);
-        currentIntervals.splice(Number(intervalId),1);
+        for(let i = 0; i<currentIntervals.length; i++) {
+            if(currentIntervals[i].id == Number(intervalId)) {
+                clearInterval(Number(intervalId));
+                currentIntervals.splice(i,1);
+            }
+        }
+    }
+
+    function doUntil(what, checkFunc) {
+        let intId = setInterval(()=>{
+            if(!checkFunc()) {
+                ACTION_BAR.TriggerMacro("",what);
+            } else {
+                clearInterval(intId);
+            }
+        },3500);
     }
 
     MESSAGECAST.cast = cast;
@@ -1692,6 +1796,7 @@ For example, to add a and dhmis this is how the macro would look like: </div>
     MESSAGECAST.addSpeechRuleSpecial = addSpeechRuleSpecial;
     MESSAGECAST.removeSpeechRule = removeSpeechRule;
     MESSAGECAST.getMySpeechRulesInAMessage = getMySpeechRulesInAMessage;
+    MESSAGECAST.addMultipleRules = addMultipleRules;
 
     MESSAGECAST.characterImagesUrl = ["",""];
     MESSAGECAST.changeCharacterImage = changeCharacterImage;
@@ -1728,11 +1833,14 @@ For example, to add a and dhmis this is how the macro would look like: </div>
     MESSAGECAST.getMyIntervalsInAMessage = getMyIntervalsInAMessage;
     MESSAGECAST.addInterval = addInterval;
     MESSAGECAST.removeInterval = removeInterval;
+    MESSAGECAST.doUntil = doUntil;
+
+    MESSAGECAST.complicatedRegex = complicatedRegex;
 
     load();
 
     let scriptCss=document.createElement('link');
-    scriptCss.href='https://cdn.jsdelivr.net/gh/AccountForBmr/BmrMessageCast@v0.6.6/message.css';
+    scriptCss.href='https://cdn.jsdelivr.net/gh/AccountForBmr/BmrMessageCast@v0.9.5/message.css';
     scriptCss.rel="stylesheet";
     document.body.appendChild(scriptCss);
     scriptCss.onload = () => {
