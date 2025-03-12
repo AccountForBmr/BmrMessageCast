@@ -161,3 +161,6 @@ You get access to:
 - **unpetrifyAll**: function unpetrifyAll(): Look at Petrify.
 - **unpetrifyPart**: function unpetrifyPart(index)Look at Petrify.
 - **updateMacroSettings**: function updateMacroSettings(setting$, settingWhitelist): function to update the settings.
+
+## More
+You can change the **deleteKeyword** of **Hide Message** from **${DELETETHIS="";}** to something else, however, I don't recommend doing so. You will send your **deleteKeyword** if you use **Hide Message**, and it's likely that other people won't have your keyword unless you changed it for them.

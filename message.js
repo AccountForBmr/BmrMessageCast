@@ -7,7 +7,6 @@ var macroEnabled = true;
 var runOption = false;
 var useWhitelist = false;
 var mesWhitelist = [];
-var NotificationsEnabled = true;
 var deleteKeyword = '${DELETETHIS="";}';
 var speechRules = [];
 var currentIntervals = [];
@@ -1786,14 +1785,13 @@ For example, to add a and dhmis this is how the macro would look like: </div>
     load();
 
     let scriptCss=document.createElement('link');
-    scriptCss.href='https://cdn.jsdelivr.net/gh/AccountForBmr/BmrMessageCast@v0.9.5/message.css';
+    scriptCss.href='https://cdn.jsdelivr.net/gh/AccountForBmr/BmrMessageCast@v1.0.0/message.css';
     scriptCss.rel="stylesheet";
     document.body.appendChild(scriptCss);
     scriptCss.onload = () => {
       GUI.instance.DisplayMessage("Css Loaded");
     }
 
-    GUI.instance.DisplayMessage("Loaded, Hopefully!");
 }
 
 MESSAGECAST.load = messageCast;
