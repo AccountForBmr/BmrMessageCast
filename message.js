@@ -466,7 +466,7 @@ var messageCast = function() {
 
     var _dropdownLayerMax = 10;
     var _emotes = ["/awe ","/bark ","/bite ","/bleat ","/blowkiss ","/blush ","/bounce ","/catty ","/closeeyes ","/dance ","/drool ","/flap ","/gasp ","/gaze ","/giggle ","/glare ","/grovel ","/hiss ","/kneel ","/lick ","/meow ","/moan ","/moo ","/neigh ","/oink ","/pout ","/purr ","/shake ","/shimmy ","/shy ","/sleep ","/smile ","/smirk ","/snap ","/stand "];
-    var _allSpells = ["Attack","Breast Enlargement","Breast Reduction","Change Appearance: Elven","Change Appearance: Feminine","Change Appearance: Masculine","Change Height","Change Name","Conjure Item >","Enchant Item","Enlarge","Impair Speech: Bimbo","Impair Speech: Canine","Impair Speech: Feline","Impair Speech: French Maid","Impair Speech: Milk Maiden","Impair Speech: Nekomimi","Inflate Breasts","Lactation","Magic Bolt","Mythic Form: Angel","Mythic Form: Demon","Mythic Form: Kitsune","Polymorph: Bunny","Polymorph: Canine","Polymorph: Cow","Polymorph: Feline","Polymorph: Fox","Polymorph: Sheep","Restore Self","Shrink","Smooth Skin","Soft Skin","Soul Imprint","Stoke Libido","Transform Item >","Special Actions"];
+    var _allSpells = ["Attack","Breast Enlargement","Breast Reduction","Change Appearance: Elven","Change Appearance: Feminine","Change Appearance: Masculine","Change Height","Change Name","Conjure Item >","Enchant Item","Enlarge","Impair Speech: Bimbo","Impair Speech: Canine","Impair Speech: Feline","Impair Speech: French Maid","Impair Speech: Milk Maiden","Impair Speech: Nekomimi","Inflate Breasts","Lactation","Magic Bolt","Mythic Form: Angel","Mythic Form: Demon","Mythic Form: Kitsune","Penis Enlargement","Penis Reduction","Polymorph: Bunny","Polymorph: Canine","Polymorph: Cow","Polymorph: Feline","Polymorph: Fox","Polymorph: Sheep","Restore Self","Shrink","Smooth Skin","Soft Skin","Soul Imprint","Stoke Libido","Transform Item >","Special Actions"];
     var _parametersSpells = ["Change Height","Change Name","Enchant Item"];
     var _dropdownSpells = ["Conjure Item >","Transform Item >","Special Actions"];
     var _allTransformItems = ["Aviator Glasses","Ball Gag","Belt Collar","Bikini Bottom","Bikini Top","Body Bow","Bow Dress","Boxer Briefs","Bra","Briefs","Butt Plug","Cage Bra","Cage Panties","Catsuit","Collar","Color: Blue","Color: Cyan","Color: Dark","Color: Green","Color: Light","Color: Orange","Color: Pink","Color: Purple","Color: Red","Color: Yellow","Converse Shoes","Dotted Bra","Dotted Bralette","Dotted Panties","Dress Pants","Dress Shirt","Feathered Jacket","Feathered Masquerade Mask","Frilly Shirt","G-String","Glasses","Heels","High Neck Leather Collar","Holiday Babydoll","Jeans","Keyhole Sweater","Leather Belt","Leather Collar","Leather Cuffs","Leather Jacket","Leather Skirt","Leather Trench Coat","Leggings","Long Skirt","Long Tuxedo Shorts","Long-Sleeved Crop Top","Mary Janes","Masquerade Mask","Overbust Corset","Oxfords","Panties","Pareo","Plaid Skirt","Plaid Tie","Plain Bralette","Plain Panties","Pretty Ballerinas","Push-Up Bra","Ring","Round Glasses","Runners","School Uniform","Shirt","Short Dress","Short-Sleeved Dress Shirt","Skimpy String Bra","Skirt","Slippers","Small Butt Plug","Sorceress Dress","Steel Collar","Stockings","Striped Bra","Striped Bralette","Striped Long-Sleeved Crop Top","Striped Panties","Striped Shirt","Studded Collar","Summer Hat","Sweater","Swimming Trunks","T-Shirt","Tanga Panties","Thigh High Socks","Thong","Tie","Tights","Top Hat","Triangle Bra","Tube Top","Tuxedo Shorts","Vest","Victorian Jacket","Vinyl Leotard","Vinyl Opera Gloves","Vinyl Pencil Skirt","Vinyl Thigh High Boots","Vinyl Tube Top","Virgin Killer Sweater","Winter Hat","Witch Hat","Women's Dress Shirt","Women's Jeans","Women's T-Shirt"];
@@ -775,13 +775,13 @@ For example, to add a and dhmis this is how the macro would look like: </div>
                 return false;
             }
             //removing the message icon
-            let unreadMes = document.getElementById("frame_top_right").getElementsByClassName("unread_messages")[0].getElementsByTagName("div")[1].textContent;
+            let unreadMes = document.getElementById("notification_icons").getElementsByClassName("unread_messages")[0].getElementsByTagName("div")[1].textContent;
             GUI.instance.SetUnreadMessages(Number(unreadMes)-1);
 
             //console.log("Deleting message");
             //console.log("----------------");
             //let username = params.sender.username;
-            //let howManyUnread = Number(document.getElementById("frame_top_right").getElementsByClassName("unread_messages")[0].getElementsByTagName("div")[1].textContent);
+            //let howManyUnread = Number(document.getElementById("notification_icons").getElementsByClassName("unread_messages")[0].getElementsByTagName("div")[1].textContent);
             //GUI.instance.SetUnreadMessages(howManyUnread-1);
             //let isInbox = getCurrentView() === 0;
             let deleted = await GAME_MANAGER.instance.WaitFor("Message",{delete:true,ids:[params.id],thread:0});
@@ -805,13 +805,13 @@ For example, to add a and dhmis this is how the macro would look like: </div>
                 return false;
             }
             //removing the message icon
-            let unreadMes = document.getElementById("frame_top_right").getElementsByClassName("unread_messages")[0].getElementsByTagName("div")[1].textContent;
+            let unreadMes = document.getElementById("notification_icons").getElementsByClassName("unread_messages")[0].getElementsByTagName("div")[1].textContent;
             GUI.instance.SetUnreadMessages(Number(unreadMes)-1);
 
             //console.log("Deleting message");
             //console.log("----------------");
             //let username = params.sender.username;
-            //let howManyUnread = Number(document.getElementById("frame_top_right").getElementsByClassName("unread_messages")[0].getElementsByTagName("div")[1].textContent);
+            //let howManyUnread = Number(document.getElementById("notification_icons").getElementsByClassName("unread_messages")[0].getElementsByTagName("div")[1].textContent);
             //GUI.instance.SetUnreadMessages(howManyUnread-1);
             //let isInbox = getCurrentView() === 0;
             let deleted = await GAME_MANAGER.instance.WaitFor("Message",{delete:true,ids:[params.id],thread:0});
@@ -918,10 +918,14 @@ For example, to add a and dhmis this is how the macro would look like: </div>
     function rewrittenDropdownFunction(e) {
         let _menuButton = document.getElementById("menu").getElementsByClassName("button")[0];
         let curFunc = _menuButton.onclick.toString(); 
-        let newFunc = curFunc.substring(curFunc.indexOf("{")+1,curFunc.length-1);
-        newFunc = newFunc.replace(/_menuButton/gm,'document.getElementById("menu").getElementsByClassName("button")[0]');
-        let restOfTheFunc = 'MENU.Spells.Open({}) },\n{ label: "MessageCast", onclick: () => MESSAGECAST.openSettings()}'
-        newFunc = newFunc.replace(/MENU\.Spells\.Open\({}\) }/gm,restOfTheFunc);
+        let newFunc = curFunc.substring(curFunc.indexOf("DROPDOWN"),curFunc.length);
+        if(newFunc.endsWith(")\n}")) {
+            newFunc = newFunc.slice(0,-1);
+        } 
+        //Not used anymore
+        //newFunc = newFunc.replace(/_menuButton/gm,'document.getElementById("menu").getElementsByClassName("button")[0]');
+        let restOfTheFunc = 'MENU.Social.Open() },\n{ label: "MessageCast", onclick: () => MESSAGECAST.openSettings()}'
+        newFunc = newFunc.replace(/MENU\.Social\.Open\(\) }/gm,restOfTheFunc);
         newFunc = newFunc.replace(/this\.ExitAlert\(\)/gm,"GUI.instance.ExitAlert()");
         
         return new Function("e",newFunc);
